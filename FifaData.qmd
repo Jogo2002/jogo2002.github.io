@@ -28,3 +28,9 @@ ggplot(fifa, aes(x = population_share, y = tv_audience_share, color = confederat
 
 ```
 
+Source:
+
+https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv#L4
+
+Data from: FIFA 
+
