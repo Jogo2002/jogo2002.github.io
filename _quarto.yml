@@ -10,12 +10,15 @@ website:
         text: Home
       - about.qmd
       - resources.qmd
+      - href: analysis.qmd
+        text: "text analyis"
       - text: "Data Viz"
         menu:
           - text: "Fifa Data"
             href: FifaData.qmd
           - text: "Fast Food Cals"
             href: FastFoodCals.qmd
+      
 
 
 format:
