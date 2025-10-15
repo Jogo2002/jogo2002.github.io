@@ -1,7 +1,105 @@
 ---
-title: "Text Analysis"
+title: "Project 2: Netflix Text Analysis"
+author: "Josh Goldhaber"
+format:
+  html:
+    code-fold: true
+    echo: true
+    warning: false
+    message: false
+    fig-cap-location: bottom
+editor: visual
 ---
 
-# Text Analysis
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 6,
+  fig.height = 4
+)
+library(tidyverse)
+library(stringr)
+library(tidytext)
+library(ggplot2)
+```
 
-This is a test page.
+
+```{r}
+netflix_titles <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv')
+
+
+```
+
+```{r}
+netflix_titles <- netflix_titles |>
+  mutate(has_number = str_detect(title, "\\d+"))
+
+table(netflix_titles$has_number)
+
+netflix_titles <- netflix_titles |>
+  mutate(
+    love_mentions = str_count(description, regex("\\blove\\b", ignore_case = TRUE)),
+    death_mentions = str_count(description, regex("\\bdeath\\b", ignore_case = TRUE)),
+    mystery_mentions = str_count(description, regex("\\bmystery\\b", ignore_case = TRUE))
+  )
+
+theme_counts <- netflix_titles |>
+  summarise(
+    love = sum(love_mentions, na.rm = TRUE),
+    death = sum(death_mentions, na.rm = TRUE),
+    mystery = sum(mystery_mentions, na.rm = TRUE)
+  ) %>%
+  pivot_longer(cols = everything(), names_to = "theme", values_to = "count")
+
+ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
+  geom_col() +
+  labs(
+    title = "Common Themes in Netflix Descriptions",
+    x = "Theme",
+    y = "Count of Mentions"
+  ) +
+  theme_minimal()
+
+
+story_words <- netflix_titles %>%
+  mutate(adj_before_story = str_extract(description, "(?<=\\b)\\w+(?= story)")) %>%
+  filter(!is.na(adj_before_story))
+
+head(story_words$adj_before_story, 10)
+
+
+data("stop_words")
+
+top_words <- netflix_titles %>%
+  unnest_tokens(word, description) %>%
+  anti_join(stop_words, by = "word") %>%
+  count(word, sort = TRUE) %>%
+  slice_head(n = 15)
+
+ggplot(top_words, aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Most Frequent Words in Netflix Descriptions",
+    x = "Word",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+
+
+cat("
+From this analysis:
+- Titles with numbers are surprisingly common (e.g., '13 Reasons Why').
+- 'Love' appears far more often than 'death' or 'mystery'.
+- Descriptions often use adjectives like 'true', 'incredible', or 'untold' before 'story'.
+")
+```
+
+Sourcing:
+
+[Kaggle Netflix Titles Dataset](https://www.kaggle.com/shivamb/netflix-shows)  
+Netflix metadata compiled by Shivam Bansal  
+CC-BY-SA 4.0 License
+
