@@ -26,11 +26,14 @@ library(ggplot2)
 ```
 
 
+
 ```{r}
-netflix_titles <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv')
-
-
+netflix_titles <- readr::read_csv(
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv"
+)
 ```
+
+
 
 ```{r}
 netflix_titles <- netflix_titles |>
@@ -38,6 +41,14 @@ netflix_titles <- netflix_titles |>
 
 table(netflix_titles$has_number)
 
+#Here, we use the `str_detect()` function with the regular expression `\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  
+#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.
+
+#The table above shows how many Netflix titles contain numbers compared to those that do not.')
+
+
+
+#2. Counting Thematic Keywords in Descriptions
 netflix_titles <- netflix_titles |>
   mutate(
     love_mentions = str_count(description, regex("\\blove\\b", ignore_case = TRUE)),
@@ -50,7 +61,7 @@ theme_counts <- netflix_titles |>
     love = sum(love_mentions, na.rm = TRUE),
     death = sum(death_mentions, na.rm = TRUE),
     mystery = sum(mystery_mentions, na.rm = TRUE)
-  ) %>%
+  ) |>
   pivot_longer(cols = everything(), names_to = "theme", values_to = "count")
 
 ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
@@ -58,24 +69,54 @@ ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   labs(
     title = "Common Themes in Netflix Descriptions",
     x = "Theme",
-    y = "Count of Mentions"
+    y = "Count of Mentions",
+    fill = "Theme"
   ) +
   theme_minimal()
+```
+
+Interpretation: 
+
+This plot compares the frequency of the words “love,” “death,” and “mystery” across all Netflix descriptions.  
+We can see that “love” dominates, revealing that romantic themes are heavily used.  
+“Death” and “mystery” occur less often, but still signal important narrative categories.
+
+This visualization illustrates how simple word counting can reveal broad narrative trends.
 
 
-story_words <- netflix_titles %>%
-  mutate(adj_before_story = str_extract(description, "(?<=\\b)\\w+(?= story)")) %>%
-  filter(!is.na(adj_before_story))
+Finding Adjectives That Appear Before “Story” (Lookaround Example)
 
-head(story_words$adj_before_story, 10)
+```{r}
+story_words <- netflix_titles |>
+  mutate(adj_before_story = str_extract(description, "\\b\\w+(?= story)")) |>
+  filter(!is.na(adj_before_story)) |>
+  mutate(adj_before_story = tolower(adj_before_story)) |>
+  anti_join(stop_words, by = c("adj_before_story" = "word")) |>
+  count(adj_before_story, sort = TRUE)
+
+head(story_words, 10)
+
+```
 
 
+Here we use a regular expression with a lookahead — `(?= story)` — to extract the word immediately before “story” in each description.  
+For example, in a phrase like “an incredible story”, the pattern will capture “incredible.” 
+
+
+Interpretation:
+Looking at the top 10 words preceding story, it is clear that "true" is a clear winner. After a sharp fall off, love, life and origin take places 2-4. This trend reveals that almost all of the words before 'story' are adjectives describing the story.  
+ 
+
+
+Most Frequent Words in Descriptions (Excluding filler)
+
+```{r}
 data("stop_words")
 
-top_words <- netflix_titles %>%
-  unnest_tokens(word, description) %>%
-  anti_join(stop_words, by = "word") %>%
-  count(word, sort = TRUE) %>%
+top_words <- netflix_titles |>
+  unnest_tokens(word, description) |>
+  anti_join(stop_words, by = "word") |>
+  count(word, sort = TRUE) |>
   slice_head(n = 15)
 
 ggplot(top_words, aes(x = reorder(word, n), y = n)) +
@@ -87,19 +128,27 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
     y = "Frequency"
   ) +
   theme_minimal()
-
-
-cat("
-From this analysis:
-- Titles with numbers are surprisingly common (e.g., '13 Reasons Why').
-- 'Love' appears far more often than 'death' or 'mystery'.
-- Descriptions often use adjectives like 'true', 'incredible', or 'untold' before 'story'.
-")
 ```
 
-Sourcing:
+Interpretation:
 
-[Kaggle Netflix Titles Dataset](https://www.kaggle.com/shivamb/netflix-shows)  
-Netflix metadata compiled by Shivam Bansal  
-CC-BY-SA 4.0 License
+This bar chart shows the 15 most common non-stop words found in Netflix descriptions.  
+Words like “life,” “family,” “world,” and “love” appear prominently — reinforcing the emotional and human-centered tone of Netflix’s catalog.  
+This kind of frequency analysis helps identify how streaming services position their content around universal, relatable ideas.
 
+
+Summary of Insights
+
+From these visual and textual analyses, we can draw several conclusions:
+
+- Titles with numbers are relatively common.
+- The word “love” overwhelmingly dominates thematic keywords, suggesting that romantic and emotional themes are heavily emphasized.  
+- Descriptions frequently include adjectives like “true” or “untold" before “story,” reflecting Netflix’s use of authenticity and intrigue in marketing language.  
+- The most common descriptive words — life, family, world — reveal that Netflix’s storytelling appeals to broad, shared human experiences.
+
+
+ Data Sources
+
+- Accessed via TidyTuesday (R4DS project): [TidyTuesday Netflix Dataset – 2021-04-20](https://github.com/rfordatascience/tidytuesday/tree/main/data/2021/2021-04-20)  
+- Original source: Kaggle – [Netflix Movies and TV Shows Dataset by Shivam Bansal](https://www.kaggle.com/shivamb/netflix-shows) (CC-BY-SA 4.0 License)
+- Shivam Bansal last updated this source 4 years ago
