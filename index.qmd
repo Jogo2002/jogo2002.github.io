@@ -12,7 +12,3 @@ about:
 ---
 
 I am Josh Goldhaber, a sophomore at Pitzer College majoring in Data Science at Claremont McKenna College
-
-```{r}
-1 + 1
-```

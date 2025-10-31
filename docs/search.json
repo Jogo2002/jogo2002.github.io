@@ -82,5 +82,26 @@
     "title": "Project 2: Netflix Text Analysis",
     "section": "Data Sources",
     "text": "Data Sources\n\nAccessed via TidyTuesday (R4DS project): TidyTuesday Netflix Dataset – 2021-04-20\n\nOriginal source: Kaggle – Netflix Movies and TV Shows Dataset by Shivam Bansal (CC-BY-SA 4.0 License)\nShivam Bansal last updated this source 4 years ago"
+  },
+  {
+    "objectID": "PermutationTest.html",
+    "href": "PermutationTest.html",
+    "title": "Project 3: Are Gold and Silver Equally Volatile?",
+    "section": "",
+    "text": "In this project, I investigate whether gold and silver exhibit the same level of day-to-day price volatility.\nGold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver also has heavy industrial demand.\nUsing daily price data from Yahoo Finance (tickers GC=F for gold and SI=F for silver), I compute daily log returns and perform a permutation test under the null hypothesis that the two metals have equal volatility (standard deviation of daily returns).\nBecause financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality."
+  },
+  {
+    "objectID": "PermutationTest.html#introduction",
+    "href": "PermutationTest.html#introduction",
+    "title": "Project 3: Are Gold and Silver Equally Volatile?",
+    "section": "",
+    "text": "In this project, I investigate whether gold and silver exhibit the same level of day-to-day price volatility.\nGold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver also has heavy industrial demand.\nUsing daily price data from Yahoo Finance (tickers GC=F for gold and SI=F for silver), I compute daily log returns and perform a permutation test under the null hypothesis that the two metals have equal volatility (standard deviation of daily returns).\nBecause financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality."
+  },
+  {
+    "objectID": "PermutationTest.html#load-packages-and-import-data",
+    "href": "PermutationTest.html#load-packages-and-import-data",
+    "title": "Project 3: Are Gold and Silver Equally Volatile?",
+    "section": "Load packages and import data",
+    "text": "Load packages and import data\nlibrary(quantmod) library(tidyverse) library(infer) library(purrr)"
   }
 ]

@@ -1,0 +1,43 @@
+---
+title: "Project 3: Are Gold and Silver Equally Volatile?"
+author: "Josh Goldhaber"
+format:
+  html:
+    code-fold: true
+    theme: flatly
+---
+
+## Introduction
+
+In this project, I investigate whether gold and silver exhibit the same level of day-to-day price volatility.  
+Gold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver also has heavy industrial demand.
+
+Using daily price data from **Yahoo Finance** (tickers `GC=F` for gold and `SI=F` for silver), I compute daily log returns and perform a **permutation test** under the null hypothesis that the two metals have equal volatility (standard deviation of daily returns).  
+
+Because financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality.
+
+---
+
+## Load packages and import data
+```{r message=FALSE, warning=FALSE}
+library(quantmod)
+library(tidyverse)
+library(infer)
+library(purrr)
+
+# Download daily gold and silver futures prices
+getSymbols("GC=F", src = "yahoo", from = "2020-01-01", to = Sys.Date())
+getSymbols("SI=F", src = "yahoo", from = "2020-01-01", to = Sys.Date())
+
+# Extract closing prices and compute daily log returns
+returns <- tibble(
+  date = index(Cl(`GC=F`)),
+  Gold = as.numeric(dailyReturn(Cl(`GC=F`), type = "log")),
+  Silver = as.numeric(dailyReturn(Cl(`SI=F`), type = "log"))
+) |> drop_na()
+
+# Pivot to long format
+returns_long <- returns |>
+  pivot_longer(cols = c(Gold, Silver),
+               names_to = "Metal",
+               values_to = "Return")
