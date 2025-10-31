@@ -2,16 +2,16 @@
   {
     "objectID": "PermutationTest.html",
     "href": "PermutationTest.html",
-    "title": "Project 3: Are Gold and Silver Equally Volatile?",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
     "section": "",
-    "text": "In this project, I investigate whether gold and silver exhibit the same level of day-to-day price volatility.\nGold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver also has heavy industrial demand.\nUsing daily price data from Yahoo Finance (tickers GC=F for gold and SI=F for silver), I compute daily log returns and perform a permutation test under the null hypothesis that the two metals have equal volatility (standard deviation of daily returns).\nBecause financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality."
+    "text": "In this project, I investigate whether silver is more volatile than gold over recent months.\nGold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver also has heavy industrial demand.\nDetermining which metal trades at a “volatility premium” — that is, which has a higher expected volatility — is important to assess the stable liquidity of gold vs. silver. This is especially useful when evaluating which metal serves as a more effective portfolio hedge under uncertainty.\nUsing daily price data from Yahoo Finance (tickers GC=F for gold and SI=F for silver), I compute daily log returns and perform a one-tailed permutation test under the null hypothesis that the two metals have equal volatility.\nBecause financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality."
   },
   {
     "objectID": "PermutationTest.html#introduction",
     "href": "PermutationTest.html#introduction",
-    "title": "Project 3: Are Gold and Silver Equally Volatile?",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
     "section": "",
-    "text": "In this project, I investigate whether gold and silver exhibit the same level of day-to-day price volatility.\nGold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver also has heavy industrial demand.\nUsing daily price data from Yahoo Finance (tickers GC=F for gold and SI=F for silver), I compute daily log returns and perform a permutation test under the null hypothesis that the two metals have equal volatility (standard deviation of daily returns).\nBecause financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality."
+    "text": "In this project, I investigate whether silver is more volatile than gold over recent months.\nGold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver also has heavy industrial demand.\nDetermining which metal trades at a “volatility premium” — that is, which has a higher expected volatility — is important to assess the stable liquidity of gold vs. silver. This is especially useful when evaluating which metal serves as a more effective portfolio hedge under uncertainty.\nUsing daily price data from Yahoo Finance (tickers GC=F for gold and SI=F for silver), I compute daily log returns and perform a one-tailed permutation test under the null hypothesis that the two metals have equal volatility.\nBecause financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality."
   },
   {
     "objectID": "PermutationTest.html#load-packages-and-import-data",
@@ -58,9 +58,9 @@
   {
     "objectID": "PermutationTest.html#visualize-permutation-distribution",
     "href": "PermutationTest.html#visualize-permutation-distribution",
-    "title": "Project 3: Are Gold and Silver Equally Volatile?",
-    "section": "Visualize permutation distribution",
-    "text": "Visualize permutation distribution\n\n\nCode\nggplot(sim_df, aes(x = diff_sd)) +\ngeom_histogram(bins = 30, fill = \"skyblue\", color = \"white\") +\ngeom_vline(xintercept = obs_diff, color = \"red\", linetype = \"dashed\", size = 1) +\nlabs(\ntitle = \"Permutation Distribution of Difference in Volatility (Silver − Gold)\",\nx = \"Difference in SD under Null (permuted)\",\ny = \"Count\"\n) +\ntheme_minimal()\n\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead."
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Visualize Permutation Distribution",
+    "text": "Visualize Permutation Distribution\nThis histogram shows the null distribution of SD differences.\nThe red dashed line represents the actual observed difference.\nIf it’s far to the right, that provides evidence that silver is truly more volatile.\n\n\nCode\nggplot(sim_df, aes(x = diff_sd)) +\n  geom_histogram(bins = 30, fill = \"skyblue\", color = \"white\") +\n  geom_vline(xintercept = obs_diff, color = \"red\", linetype = \"dashed\", size = 1) +\n  labs(\n    title = \"Permutation Distribution of Difference in Volatility (Silver − Gold)\",\n    subtitle = \"Red dashed line shows the observed difference\",\n    x = \"Difference in SD under Null (permuted)\",\n    y = \"Count\"\n  ) +\n  theme_minimal()\n\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\n\n\n\n\n\n\n\n\nInterpretation:\nThe observed value lies far in the upper tail of the distribution — suggesting that such a large difference would be very unlikely by chance if the metals were equally volatile."
   },
   {
     "objectID": "PermutationTest.html#calculating-p-value",
@@ -68,5 +68,68 @@
     "title": "Project 3: Are Gold and Silver Equally Volatile?",
     "section": "Calculating p-value",
     "text": "Calculating p-value\n\n\nCode\np_val &lt;- mean(sim_diffs &gt;= obs_diff)\ncat(\"Observed difference in SD:\", round(obs_diff, 5), \"\\n\")\n\n\nObserved difference in SD: 0.01042 \n\n\nCode\ncat(\"Approximate permutation p-value:\", round(p_val, 20), \"\\n\")\n\n\nApproximate permutation p-value: 0"
+  },
+  {
+    "objectID": "PermutationTest.html#load-packages-and-prepare-data",
+    "href": "PermutationTest.html#load-packages-and-prepare-data",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Load Packages and Prepare Data",
+    "text": "Load Packages and Prepare Data\nWe use quantmod to pull daily futures data from Yahoo Finance and tidyverse for data wrangling. Log returns are computed using dailyReturn(..., type = \"log\") for stability and symmetry.\n\n\nCode\nlibrary(quantmod)\nlibrary(tidyverse)\nlibrary(infer)\nlibrary(purrr)\n\n# Download daily futures prices (August 2025 – Present)\ngetSymbols(\"GC=F\", src = \"yahoo\", from = \"2025-08-01\", to = Sys.Date())\n\n\n[1] \"GC=F\"\n\n\nCode\ngetSymbols(\"SI=F\", src = \"yahoo\", from = \"2025-08-01\", to = Sys.Date())\n\n\n[1] \"SI=F\"\n\n\nCode\n# Compute log returns\ngold_ret &lt;- dailyReturn(Cl(`GC=F`), type = \"log\")\nsilver_ret &lt;- dailyReturn(Cl(`SI=F`), type = \"log\")\n\n# Combine and reshape to long format\nreturns_long &lt;- tibble(\n  date = index(gold_ret),\n  Gold = as.numeric(gold_ret),\n  Silver = as.numeric(silver_ret)\n) |&gt;\n  drop_na() |&gt;\n  pivot_longer(cols = c(Gold, Silver), names_to = \"Metal\", values_to = \"Return\")"
+  },
+  {
+    "objectID": "PermutationTest.html#plot-daily-returns",
+    "href": "PermutationTest.html#plot-daily-returns",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Plot Daily Returns",
+    "text": "Plot Daily Returns\nThis plot shows the raw time series of daily log returns for gold and silver.\nIt helps the reader visually compare volatility over time — wider fluctuations suggest higher variance.\n\n\nCode\nggplot(returns_long, aes(x = date, y = Return, color = Metal)) +\n  geom_line(alpha = 0.6) +\n  labs(\n    title = \"Daily Log Returns for Gold and Silver (August–Present)\",\n    x = \"Date\", y = \"Daily Log Return\",\n    color = \"Metal\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nAnalysis:\nWe observe that silver (in blue) exhibits more frequent and larger daily swings compared to gold.\nThis visual pattern suggests that silver may indeed have higher volatility — which we now test more formally."
+  },
+  {
+    "objectID": "PermutationTest.html#define-permutation-function",
+    "href": "PermutationTest.html#define-permutation-function",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Define Permutation Function",
+    "text": "Define Permutation Function\nThis function performs one simulation of the null hypothesis by randomly shuffling the Metal labels.\nThis breaks the link between returns and metal type, simulating a world where there is no real difference in volatility.\n\n\nCode\n# This function simulates one permutation of the null hypothesis\nsimulate_diff_sd &lt;- function(df) {\n  df |&gt;\n    mutate(Metal = sample(Metal)) |&gt;\n    group_by(Metal) |&gt;\n    summarise(sd = sd(Return), .groups = \"drop\") |&gt;\n    summarise(diff_sd = diff(sd)) |&gt;\n    pull(diff_sd)\n}"
+  },
+  {
+    "objectID": "PermutationTest.html#observed-difference-in-sd",
+    "href": "PermutationTest.html#observed-difference-in-sd",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Observed Difference in SD",
+    "text": "Observed Difference in SD\nWe compute the actual observed difference in standard deviations — this is our test statistic.\nA positive value means silver is more volatile than gold.\n\n\nCode\nobs_diff &lt;- returns_long |&gt;\n  group_by(Metal) |&gt;\n  summarise(sd = sd(Return), .groups = \"drop\") |&gt;\n  summarise(diff_sd = diff(sd)) |&gt;\n  pull(diff_sd)\n\nobs_diff\n\n\n[1] 0.007858926\n\n\nInterpretation:\nThis number captures how much larger silver’s return variability is, compared to gold’s.\nWe’ll compare this observed difference to the null distribution next."
+  },
+  {
+    "objectID": "PermutationTest.html#simulate-null-distribution",
+    "href": "PermutationTest.html#simulate-null-distribution",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Simulate Null Distribution",
+    "text": "Simulate Null Distribution\nWe repeat the permutation process 1000 times using map_dbl() to create a distribution of SD differences expected under the null hypothesis (i.e., if metals were equally volatile).\n\n\nCode\nset.seed(123)  # for reproducibility\n\n# Perform 1000 permutations under the null hypothesis\nsim_diffs &lt;- map_dbl(1:1000, ~simulate_diff_sd(returns_long))\n\n# Store in tibble for plotting\nsim_df &lt;- tibble(diff_sd = sim_diffs)"
+  },
+  {
+    "objectID": "PermutationTest.html#calculate-approximate-p-value",
+    "href": "PermutationTest.html#calculate-approximate-p-value",
+    "title": "Project 3: Gold and Silver’s Volatility from August to October?",
+    "section": "Calculate Approximate p-value",
+    "text": "Calculate Approximate p-value\n\n\nCode\np_val &lt;- mean(sim_diffs &gt;= obs_diff)\n\ncat(\"Observed difference in SD:\", round(obs_diff, 5), \"\\n\")\n\n\nObserved difference in SD: 0.00786 \n\n\nCode\ncat(\"Approximate permutation p-value:\", format(p_val, scientific = TRUE, digits = 10), \"\\n\")\n\n\nApproximate permutation p-value: 3.4e-02"
+  },
+  {
+    "objectID": "PermutationTest.html#experiment-setup",
+    "href": "PermutationTest.html#experiment-setup",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Experiment Setup",
+    "text": "Experiment Setup\nWe compare the standard deviations of daily log returns for gold and silver.\n\nNull Hypothesis (H₀): The standard deviation of daily returns is the same for gold and silver.\n[ {} = {} ]\nAlternative Hypothesis (H₁): Silver is more volatile than gold.\n[ {} &gt; {} ]\n\nInstead of relying on a theoretical distribution (like a t-test or F-test), we use a permutation test, which simulates what differences we’d expect purely due to chance under the null hypothesis."
+  },
+  {
+    "objectID": "PermutationTest.html#calculate-one-tailed-p-value",
+    "href": "PermutationTest.html#calculate-one-tailed-p-value",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Calculate One-Tailed p-value",
+    "text": "Calculate One-Tailed p-value\nWe calculate the proportion of permuted SD differences that are greater than or equal to the observed one.\nThis gives a right-tailed p-value for the hypothesis that silver is more volatile than gold.\n\n\nCode\n# One-tailed test: is Silver more volatile than Gold?\np_val &lt;- mean(sim_diffs &gt;= obs_diff)\n\ncat(\"Observed difference in SD (Silver − Gold):\", round(obs_diff, 5), \"\\n\")\n\n\nObserved difference in SD (Silver − Gold): 0.00786 \n\n\nCode\ncat(\"Approximate one-tailed permutation p-value:\",\n    format(p_val, scientific = TRUE, digits = 10), \"\\n\")\n\n\nApproximate one-tailed permutation p-value: 3.4e-02 \n\n\nInterpretation:\nA very small p-value implies that the observed volatility difference is unlikely under the null —\nwe have statistical evidence to reject the null hypothesis and conclude that silver is more volatile."
+  },
+  {
+    "objectID": "PermutationTest.html#final-conclusion",
+    "href": "PermutationTest.html#final-conclusion",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Final Conclusion",
+    "text": "Final Conclusion\nThis simulation-based test supports the claim that silver exhibits greater daily price variability than gold from August to October 2025.\nGiven the industrial use of silver and its smaller market size, this result is consistent with economic intuition: silver’s price tends to react more sharply to both macroeconomic shocks and commodity supply disruptions.\nThe one-tailed permutation test not only confirms this difference but does so without relying on normality assumptions, making it a robust method for comparing volatility in real-world financial data."
   }
 ]

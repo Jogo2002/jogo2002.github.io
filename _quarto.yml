@@ -13,14 +13,14 @@ website:
       - href: analysis.qmd
         text: "text analyis"
       - text: "Data Viz"
+      - href: PermutationTest.qmd
+      - text: Permutation Tests
         menu:
           - text: "Fifa Data"
             href: FifaData.qmd
           - text: "Fast Food Cals"
             href: FastFoodCals.qmd
-      - href: Hypothesis 
-      
-
+     
 
 format:
   html:
