@@ -1,5 +1,6 @@
 ---
 title: "Project 3: Is Silver More Volatile Than Gold (August–October)?"
+navbar: false
 author: "Josh Goldhaber"
 format:
   html:

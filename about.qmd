@@ -1,5 +1,9 @@
 ---
 title: "About"
+format:
+  html:
+    code-fold: true
+    theme: flatly
 ---
 
 This site is a project for my super cool Data Science Class. 
