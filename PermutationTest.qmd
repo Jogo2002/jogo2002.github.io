@@ -29,11 +29,15 @@ library(purrr)
 getSymbols("GC=F", src = "yahoo", from = "2020-01-01", to = Sys.Date())
 getSymbols("SI=F", src = "yahoo", from = "2020-01-01", to = Sys.Date())
 
-# Extract closing prices and compute daily log returns
+# Compute log returns (first!)
+gold_ret <- dailyReturn(Cl(`GC=F`), type = "log")
+silver_ret <- dailyReturn(Cl(`SI=F`), type = "log")
+
+# Create a tibble with matching dates
 returns <- tibble(
-  date = index(Cl(`GC=F`)),
-  Gold = as.numeric(dailyReturn(Cl(`GC=F`), type = "log")),
-  Silver = as.numeric(dailyReturn(Cl(`SI=F`), type = "log"))
+  date = index(gold_ret),
+  Gold = as.numeric(gold_ret),
+  Silver = as.numeric(silver_ret)
 ) |> drop_na()
 
 # Pivot to long format
@@ -41,3 +45,78 @@ returns_long <- returns |>
   pivot_longer(cols = c(Gold, Silver),
                names_to = "Metal",
                values_to = "Return")
+
+```
+
+
+```{r}
+ggplot(returns_long, aes(x = date, y = Return, color = Metal)) +
+geom_line(alpha = 0.6) +
+labs(
+title = "Daily Log Returns for Gold and Silver (2020–Present)",
+x = "Date", y = "Daily Log Return",
+color = "Metal"
+) +
+theme_minimal()
+
+```
+
+```{r}
+simulate_diff_sd <- function(df) {
+df |>
+mutate(Metal = sample(Metal)) |>
+group_by(Metal) |>
+summarise(sd = sd(Return)) |>
+summarise(diff_sd = diff(sd)) |>
+pull(diff_sd)
+}
+
+```
+
+```{r}
+obs_diff <- returns_long |>
+group_by(Metal) |>
+summarise(sd = sd(Return)) |>
+summarise(diff_sd = diff(sd)) |>
+pull(diff_sd)
+
+obs_diff
+
+```
+
+
+```{r}
+set.seed(123)
+
+# Simulate 1000 permutations
+
+sim_diffs <- map_dbl(1:1000, ~simulate_diff_sd(returns_long))
+
+# Store in a tibble for plotting
+
+sim_df <- tibble(diff_sd = sim_diffs)
+
+```
+
+#Visualize permutation distribution
+```{r}
+ggplot(sim_df, aes(x = diff_sd)) +
+geom_histogram(bins = 30, fill = "skyblue", color = "white") +
+geom_vline(xintercept = obs_diff, color = "red", linetype = "dashed", size = 1) +
+labs(
+title = "Permutation Distribution of Difference in Volatility (Silver − Gold)",
+x = "Difference in SD under Null (permuted)",
+y = "Count"
+) +
+theme_minimal()
+
+```
+
+#calculating p value 
+```{r}
+p_val <- mean(sim_diffs >= obs_diff)
+cat("Observed difference in SD:", round(obs_diff, 5), "\n")
+cat("Approximate permutation p-value:", round(p_val, 4), "\n")
+
+```
+
