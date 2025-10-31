@@ -11,10 +11,10 @@ website:
       - about.qmd
       - resources.qmd
       - href: analysis.qmd
-        text: "text analyis"
+        text: "Text Analyis"
       - href: PermutationTest.qmd
-        text: Project 3
-      - text: "Data Viz"
+        text: "Project 3: Is Silver More Volatile Than Gold (August–October)?"
+      - text: "Data Visualization"
         menu:
           - text: "Fifa Data"
             href: FifaData.qmd
