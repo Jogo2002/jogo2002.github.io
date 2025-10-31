@@ -8,19 +8,20 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
-      - resources.qmd
+      - href: about.qmd
+        text: About
+      - href: resources.qmd
+        text: "All my fav resources!"
       - href: analysis.qmd
-        text: "Text Analyis"
+        text: "Text Analysis"
       - href: PermutationTest.qmd
-        text: "Project 3: Is Silver More Volatile Than Gold (August–October)?"
+        text: "Project 3"
       - text: "Data Visualization"
         menu:
           - text: "Fifa Data"
             href: FifaData.qmd
           - text: "Fast Food Cals"
             href: FastFoodCals.qmd
-     
 
 format:
   html:
