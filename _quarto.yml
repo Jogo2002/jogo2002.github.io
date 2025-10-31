@@ -12,9 +12,10 @@ website:
       - resources.qmd
       - href: analysis.qmd
         text: "text analyis"
-      - text: "Data Viz"
       - href: PermutationTest.qmd
       - text: Permutation Tests
+      - text: "Data Viz"
+
         menu:
           - text: "Fifa Data"
             href: FifaData.qmd
