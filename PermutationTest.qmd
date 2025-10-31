@@ -14,7 +14,7 @@ Gold and silver are both precious metals often used as investment hedges against
 
 Determining which metal trades at a **"volatility premium"** — that is, which has a higher expected volatility — is important to assess the **stable liquidity** of gold vs. silver. This is especially useful when evaluating which metal serves as a more effective **portfolio hedge** under uncertainty.
 
-Using daily price data from **Yahoo Finance** (tickers `GC=F` for gold and `SI=F` for silver), I compute daily log returns and perform a **one-tailed permutation test** under the null hypothesis that the two metals have equal volatility.
+Using daily price data from **Yahoo Finance** (tickers `GC=F` for gold and `SI=F` for silver), I compute daily log returns and perform a one-tailed permutation test under the null hypothesis that the two metals have equal volatility.
 
 Because financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality.
 
@@ -25,14 +25,8 @@ Because financial returns are often non-normal, a permutation test is a robust, 
 We compare the **standard deviations of daily log returns** for gold and silver.
 
 - **Null Hypothesis (H₀):** The standard deviation of daily returns is the same for gold and silver.  
-  \[
-  \sigma_{\text{Silver}} = \sigma_{\text{Gold}}
-  \]
 
 - **Alternative Hypothesis (H₁):** Silver is **more volatile** than gold.  
-  \[
-  \sigma_{\text{Silver}} > \sigma_{\text{Gold}}
-  \]
 
 Instead of relying on a theoretical distribution (like a t-test or F-test), we use a **permutation test**, which simulates what differences we’d expect **purely due to chance** under the null hypothesis.
 
@@ -132,10 +126,10 @@ We’ll compare this observed difference to the null distribution next.
 
 ## Simulate Null Distribution
 
-We repeat the permutation process **1000 times** using `map_dbl()` to create a distribution of SD differences expected under the null hypothesis (i.e., if metals were equally volatile).
+We repeat the permutation process **1000 times** using `map_dbl()` to create a distribution of SD differences expected under the null hypothesis (i.e., if metals were equally volatile). The map_() function allows us to repeat this process smoothly and efficiently. 
 
 ```{r simulate-null}
-set.seed(123)  # for reproducibility
+set.seed(47)
 
 # Perform 1000 permutations under the null hypothesis
 sim_diffs <- map_dbl(1:1000, ~simulate_diff_sd(returns_long))
@@ -188,7 +182,57 @@ cat("Approximate one-tailed permutation p-value:",
 A very small p-value implies that the observed volatility difference is unlikely under the null —  
 we have statistical evidence to **reject the null hypothesis** and conclude that **silver is more volatile**.
 
----
+
+## Simulation: Type I Error Rate of the Permutation Test
+
+We now simulate a world where **gold and silver have the same true volatility**, and check how often our permutation test **falsely rejects the null**.
+
+This helps us assess how well the test controls the Type I error rate.
+
+```{r simulate-type1}
+simulate_type1_error <- function(n = 30, reps = 20, perms = 100, seed = 47) {
+  set.seed(seed)  # ensures reproducibility
+
+  p_vals <- numeric(reps)
+
+  for (i in 1:reps) {
+    group1 <- rnorm(n)
+    group2 <- rnorm(n)
+
+    df <- tibble(
+      Return = c(group1, group2),
+      Metal = rep(c("Gold", "Silver"), each = n)
+    )
+
+    obs_diff <- df |>
+      group_by(Metal) |>
+      summarise(sd = sd(Return), .groups = "drop") |>
+      summarise(diff_sd = diff(sd)) |>
+      pull(diff_sd)
+
+    sim_diffs <- replicate(perms, {
+      df |>
+        mutate(Metal = sample(Metal)) |>
+        group_by(Metal) |>
+        summarise(sd = sd(Return), .groups = "drop") |>
+        summarise(diff_sd = diff(sd)) |>
+        pull(diff_sd)
+    })
+
+    p_vals[i] <- mean(sim_diffs >= obs_diff)
+  }
+
+  mean(p_vals < 0.05)
+}
+
+simulate_type1_error(n = 30, reps = 20, perms = 100)
+
+```
+
+**Interpretation:**  
+This number tells us how often the permutation test **incorrectly rejects H₀** when there is no true difference.  
+
+While it differs depending on the seed, 47 gives us .05. The test is behaving well, giving us a Type I Error only .05 of the time If much higher or lower, it may be too liberal or conservative under certain conditions.
 
 ## Final Conclusion
 

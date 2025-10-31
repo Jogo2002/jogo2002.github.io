@@ -188,6 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#simulate-null-distribution" id="toc-simulate-null-distribution" class="nav-link" data-scroll-target="#simulate-null-distribution">Simulate Null Distribution</a></li>
   <li><a href="#visualize-permutation-distribution" id="toc-visualize-permutation-distribution" class="nav-link" data-scroll-target="#visualize-permutation-distribution">Visualize Permutation Distribution</a></li>
   <li><a href="#calculate-one-tailed-p-value" id="toc-calculate-one-tailed-p-value" class="nav-link" data-scroll-target="#calculate-one-tailed-p-value">Calculate One-Tailed p-value</a></li>
+  <li><a href="#simulation-type-i-error-rate-of-the-permutation-test" id="toc-simulation-type-i-error-rate-of-the-permutation-test" class="nav-link" data-scroll-target="#simulation-type-i-error-rate-of-the-permutation-test">Simulation: Type I Error Rate of the Permutation Test</a></li>
   <li><a href="#final-conclusion" id="toc-final-conclusion" class="nav-link" data-scroll-target="#final-conclusion">Final Conclusion</a></li>
   </ul>
 </nav>
@@ -225,7 +226,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In this project, I investigate whether <strong>silver is more volatile than gold</strong> over recent months.<br>
 Gold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver also has heavy industrial demand.</p>
 <p>Determining which metal trades at a <strong>“volatility premium”</strong> — that is, which has a higher expected volatility — is important to assess the <strong>stable liquidity</strong> of gold vs.&nbsp;silver. This is especially useful when evaluating which metal serves as a more effective <strong>portfolio hedge</strong> under uncertainty.</p>
-<p>Using daily price data from <strong>Yahoo Finance</strong> (tickers <code>GC=F</code> for gold and <code>SI=F</code> for silver), I compute daily log returns and perform a <strong>one-tailed permutation test</strong> under the null hypothesis that the two metals have equal volatility.</p>
+<p>Using daily price data from <strong>Yahoo Finance</strong> (tickers <code>GC=F</code> for gold and <code>SI=F</code> for silver), I compute daily log returns and perform a one-tailed permutation test under the null hypothesis that the two metals have equal volatility.</p>
 <p>Because financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality.</p>
 <hr>
 </section>
@@ -233,10 +234,8 @@ Gold and silver are both precious metals often used as investment hedges against
 <h2 class="anchored" data-anchor-id="experiment-setup">Experiment Setup</h2>
 <p>We compare the <strong>standard deviations of daily log returns</strong> for gold and silver.</p>
 <ul>
-<li><p><strong>Null Hypothesis (H₀):</strong> The standard deviation of daily returns is the same for gold and silver.<br>
-[ <em>{} = </em>{} ]</p></li>
-<li><p><strong>Alternative Hypothesis (H₁):</strong> Silver is <strong>more volatile</strong> than gold.<br>
-[ <em>{} &gt; </em>{} ]</p></li>
+<li><p><strong>Null Hypothesis (H₀):</strong> The standard deviation of daily returns is the same for gold and silver.</p></li>
+<li><p><strong>Alternative Hypothesis (H₁):</strong> Silver is <strong>more volatile</strong> than gold.</p></li>
 </ul>
 <p>Instead of relying on a theoretical distribution (like a t-test or F-test), we use a <strong>permutation test</strong>, which simulates what differences we’d expect <strong>purely due to chance</strong> under the null hypothesis.</p>
 <hr>
@@ -358,11 +357,11 @@ We’ll compare this observed difference to the null distribution next.</p>
 </section>
 <section id="simulate-null-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="simulate-null-distribution">Simulate Null Distribution</h2>
-<p>We repeat the permutation process <strong>1000 times</strong> using <code>map_dbl()</code> to create a distribution of SD differences expected under the null hypothesis (i.e., if metals were equally volatile).</p>
+<p>We repeat the permutation process <strong>1000 times</strong> using <code>map_dbl()</code> to create a distribution of SD differences expected under the null hypothesis (i.e., if metals were equally volatile). The map_() function allows us to repeat this process smoothly and efficiently.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  <span class="co"># for reproducibility</span></span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">47</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform 1000 permutations under the null hypothesis</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>sim_diffs <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>, <span class="sc">~</span><span class="fu">simulate_diff_sd</span>(returns_long))</span>
@@ -429,13 +428,64 @@ This gives a <strong>right-tailed p-value</strong> for the hypothesis that silve
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">format</span>(p_val, <span class="at">scientific =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">10</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Approximate one-tailed permutation p-value: 3.4e-02 </code></pre>
+<pre><code>Approximate one-tailed permutation p-value: 3.5e-02 </code></pre>
 </div>
 </div>
 <p><strong>Interpretation:</strong><br>
 A very small p-value implies that the observed volatility difference is unlikely under the null —<br>
 we have statistical evidence to <strong>reject the null hypothesis</strong> and conclude that <strong>silver is more volatile</strong>.</p>
-<hr>
+</section>
+<section id="simulation-type-i-error-rate-of-the-permutation-test" class="level2">
+<h2 class="anchored" data-anchor-id="simulation-type-i-error-rate-of-the-permutation-test">Simulation: Type I Error Rate of the Permutation Test</h2>
+<p>We now simulate a world where <strong>gold and silver have the same true volatility</strong>, and check how often our permutation test <strong>falsely rejects the null</strong>.</p>
+<p>This helps us assess how well the test controls the Type I error rate.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>simulate_type1_error <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">reps =</span> <span class="dv">20</span>, <span class="at">perms =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">47</span>) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed)  <span class="co"># ensures reproducibility</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  p_vals <span class="ot">&lt;-</span> <span class="fu">numeric</span>(reps)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>reps) {</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    group1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    group2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">Return =</span> <span class="fu">c</span>(group1, group2),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">Metal =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Gold"</span>, <span class="st">"Silver"</span>), <span class="at">each =</span> n)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    obs_diff <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(Metal) <span class="sc">|&gt;</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">sd =</span> <span class="fu">sd</span>(Return), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">diff_sd =</span> <span class="fu">diff</span>(sd)) <span class="sc">|&gt;</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(diff_sd)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    sim_diffs <span class="ot">&lt;-</span> <span class="fu">replicate</span>(perms, {</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>      df <span class="sc">|&gt;</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">Metal =</span> <span class="fu">sample</span>(Metal)) <span class="sc">|&gt;</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(Metal) <span class="sc">|&gt;</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(<span class="at">sd =</span> <span class="fu">sd</span>(Return), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(<span class="at">diff_sd =</span> <span class="fu">diff</span>(sd)) <span class="sc">|&gt;</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pull</span>(diff_sd)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    p_vals[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(sim_diffs <span class="sc">&gt;=</span> obs_diff)</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(p_vals <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a><span class="fu">simulate_type1_error</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">reps =</span> <span class="dv">20</span>, <span class="at">perms =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.05</code></pre>
+</div>
+</div>
+<p><strong>Interpretation:</strong><br>
+This number tells us how often the permutation test <strong>incorrectly rejects H₀</strong> when there is no true difference.</p>
+<p>While it differs depending on the seed, 47 gives us .05. The test is behaving well, giving us a Type I Error only .05 of the time If much higher or lower, it may be too liberal or conservative under certain conditions.</p>
 </section>
 <section id="final-conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="final-conclusion">Final Conclusion</h2>

@@ -102,7 +102,7 @@
     "href": "PermutationTest.html#simulate-null-distribution",
     "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
     "section": "Simulate Null Distribution",
-    "text": "Simulate Null Distribution\nWe repeat the permutation process 1000 times using map_dbl() to create a distribution of SD differences expected under the null hypothesis (i.e., if metals were equally volatile).\n\n\nCode\nset.seed(123)  # for reproducibility\n\n# Perform 1000 permutations under the null hypothesis\nsim_diffs &lt;- map_dbl(1:1000, ~simulate_diff_sd(returns_long))\n\n# Store in tibble for plotting\nsim_df &lt;- tibble(diff_sd = sim_diffs)"
+    "text": "Simulate Null Distribution\nWe repeat the permutation process 1000 times using map_dbl() to create a distribution of SD differences expected under the null hypothesis (i.e., if metals were equally volatile). The map_() function allows us to repeat this process smoothly and efficiently.\n\n\nCode\nset.seed(47)\n\n# Perform 1000 permutations under the null hypothesis\nsim_diffs &lt;- map_dbl(1:1000, ~simulate_diff_sd(returns_long))\n\n# Store in tibble for plotting\nsim_df &lt;- tibble(diff_sd = sim_diffs)"
   },
   {
     "objectID": "PermutationTest.html#calculate-approximate-p-value",
@@ -116,14 +116,14 @@
     "href": "PermutationTest.html#experiment-setup",
     "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
     "section": "Experiment Setup",
-    "text": "Experiment Setup\nWe compare the standard deviations of daily log returns for gold and silver.\n\nNull Hypothesis (H₀): The standard deviation of daily returns is the same for gold and silver.\n[ {} = {} ]\nAlternative Hypothesis (H₁): Silver is more volatile than gold.\n[ {} &gt; {} ]\n\nInstead of relying on a theoretical distribution (like a t-test or F-test), we use a permutation test, which simulates what differences we’d expect purely due to chance under the null hypothesis."
+    "text": "Experiment Setup\nWe compare the standard deviations of daily log returns for gold and silver.\n\nNull Hypothesis (H₀): The standard deviation of daily returns is the same for gold and silver.\nAlternative Hypothesis (H₁): Silver is more volatile than gold.\n\nInstead of relying on a theoretical distribution (like a t-test or F-test), we use a permutation test, which simulates what differences we’d expect purely due to chance under the null hypothesis."
   },
   {
     "objectID": "PermutationTest.html#calculate-one-tailed-p-value",
     "href": "PermutationTest.html#calculate-one-tailed-p-value",
     "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
     "section": "Calculate One-Tailed p-value",
-    "text": "Calculate One-Tailed p-value\nWe calculate the proportion of permuted SD differences that are greater than or equal to the observed one.\nThis gives a right-tailed p-value for the hypothesis that silver is more volatile than gold.\n\n\nCode\n# One-tailed test: is Silver more volatile than Gold?\np_val &lt;- mean(sim_diffs &gt;= obs_diff)\n\ncat(\"Observed difference in SD (Silver − Gold):\", round(obs_diff, 5), \"\\n\")\n\n\nObserved difference in SD (Silver − Gold): 0.00786 \n\n\nCode\ncat(\"Approximate one-tailed permutation p-value:\",\n    format(p_val, scientific = TRUE, digits = 10), \"\\n\")\n\n\nApproximate one-tailed permutation p-value: 3.4e-02 \n\n\nInterpretation:\nA very small p-value implies that the observed volatility difference is unlikely under the null —\nwe have statistical evidence to reject the null hypothesis and conclude that silver is more volatile."
+    "text": "Calculate One-Tailed p-value\nWe calculate the proportion of permuted SD differences that are greater than or equal to the observed one.\nThis gives a right-tailed p-value for the hypothesis that silver is more volatile than gold.\n\n\nCode\n# One-tailed test: is Silver more volatile than Gold?\np_val &lt;- mean(sim_diffs &gt;= obs_diff)\n\ncat(\"Observed difference in SD (Silver − Gold):\", round(obs_diff, 5), \"\\n\")\n\n\nObserved difference in SD (Silver − Gold): 0.00786 \n\n\nCode\ncat(\"Approximate one-tailed permutation p-value:\",\n    format(p_val, scientific = TRUE, digits = 10), \"\\n\")\n\n\nApproximate one-tailed permutation p-value: 3.5e-02 \n\n\nInterpretation:\nA very small p-value implies that the observed volatility difference is unlikely under the null —\nwe have statistical evidence to reject the null hypothesis and conclude that silver is more volatile."
   },
   {
     "objectID": "PermutationTest.html#final-conclusion",
@@ -131,5 +131,12 @@
     "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
     "section": "Final Conclusion",
     "text": "Final Conclusion\nThis simulation-based test supports the claim that silver exhibits greater daily price variability than gold from August to October 2025.\nGiven the industrial use of silver and its smaller market size, this result is consistent with economic intuition: silver’s price tends to react more sharply to both macroeconomic shocks and commodity supply disruptions.\nThe one-tailed permutation test not only confirms this difference but does so without relying on normality assumptions, making it a robust method for comparing volatility in real-world financial data."
+  },
+  {
+    "objectID": "PermutationTest.html#simulation-type-i-error-rate-of-the-permutation-test",
+    "href": "PermutationTest.html#simulation-type-i-error-rate-of-the-permutation-test",
+    "title": "Project 3: Is Silver More Volatile Than Gold (August–October)?",
+    "section": "Simulation: Type I Error Rate of the Permutation Test",
+    "text": "Simulation: Type I Error Rate of the Permutation Test\nWe now simulate a world where gold and silver have the same true volatility, and check how often our permutation test falsely rejects the null.\nThis helps us assess how well the test controls the Type I error rate.\n\n\nCode\nsimulate_type1_error &lt;- function(n = 30, reps = 20, perms = 100, seed = 47) {\n  set.seed(seed)  # ensures reproducibility\n\n  p_vals &lt;- numeric(reps)\n\n  for (i in 1:reps) {\n    group1 &lt;- rnorm(n)\n    group2 &lt;- rnorm(n)\n\n    df &lt;- tibble(\n      Return = c(group1, group2),\n      Metal = rep(c(\"Gold\", \"Silver\"), each = n)\n    )\n\n    obs_diff &lt;- df |&gt;\n      group_by(Metal) |&gt;\n      summarise(sd = sd(Return), .groups = \"drop\") |&gt;\n      summarise(diff_sd = diff(sd)) |&gt;\n      pull(diff_sd)\n\n    sim_diffs &lt;- replicate(perms, {\n      df |&gt;\n        mutate(Metal = sample(Metal)) |&gt;\n        group_by(Metal) |&gt;\n        summarise(sd = sd(Return), .groups = \"drop\") |&gt;\n        summarise(diff_sd = diff(sd)) |&gt;\n        pull(diff_sd)\n    })\n\n    p_vals[i] &lt;- mean(sim_diffs &gt;= obs_diff)\n  }\n\n  mean(p_vals &lt; 0.05)\n}\n\nsimulate_type1_error(n = 30, reps = 20, perms = 100)\n\n\n[1] 0.05\n\n\nInterpretation:\nThis number tells us how often the permutation test incorrectly rejects H₀ when there is no true difference.\nWhile it differs depending on the seed, 47 gives us .05. The test is behaving well, giving us a Type I Error only .05 of the time If much higher or lower, it may be too liberal or conservative under certain conditions."
   }
 ]
