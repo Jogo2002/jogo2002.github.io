@@ -13,9 +13,8 @@ website:
       - href: analysis.qmd
         text: "text analyis"
       - href: PermutationTest.qmd
-      - text: Permutation Tests
+        text: Project 3
       - text: "Data Viz"
-
         menu:
           - text: "Fifa Data"
             href: FifaData.qmd
@@ -25,7 +24,7 @@ website:
 
 format:
   html:
-    theme: minty
+    theme: flatly
     dark: solar
     css: styles.css
     toc: true
