@@ -98,7 +98,7 @@ sim_df <- tibble(diff_sd = sim_diffs)
 
 ```
 
-#Visualize permutation distribution
+## Visualize permutation distribution
 ```{r}
 ggplot(sim_df, aes(x = diff_sd)) +
 geom_histogram(bins = 30, fill = "skyblue", color = "white") +
@@ -112,11 +112,11 @@ theme_minimal()
 
 ```
 
-#calculating p value 
+## Calculating p-value 
 ```{r}
 p_val <- mean(sim_diffs >= obs_diff)
 cat("Observed difference in SD:", round(obs_diff, 5), "\n")
-cat("Approximate permutation p-value:", round(p_val, 4), "\n")
+cat("Approximate permutation p-value:", round(p_val, 20), "\n")
 
 ```
 

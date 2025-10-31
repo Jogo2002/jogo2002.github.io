@@ -18,6 +18,7 @@ website:
             href: FifaData.qmd
           - text: "Fast Food Cals"
             href: FastFoodCals.qmd
+      - href: Hypothesis 
       
 
 

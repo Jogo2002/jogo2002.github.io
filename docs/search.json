@@ -1,89 +1,5 @@
 [
   {
-    "objectID": "analysis.html",
-    "href": "analysis.html",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "",
-    "text": "Code\nnetflix_titles &lt;- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv')\n\n\n\n\nCode\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\n\n\n\nFALSE  TRUE \n 7361   426 \n\n\nCode\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(\n    love_mentions = str_count(description, regex(\"\\\\blove\\\\b\", ignore_case = TRUE)),\n    death_mentions = str_count(description, regex(\"\\\\bdeath\\\\b\", ignore_case = TRUE)),\n    mystery_mentions = str_count(description, regex(\"\\\\bmystery\\\\b\", ignore_case = TRUE))\n  )\n\ntheme_counts &lt;- netflix_titles |&gt;\n  summarise(\n    love = sum(love_mentions, na.rm = TRUE),\n    death = sum(death_mentions, na.rm = TRUE),\n    mystery = sum(mystery_mentions, na.rm = TRUE)\n  ) %&gt;%\n  pivot_longer(cols = everything(), names_to = \"theme\", values_to = \"count\")\n\nggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +\n  geom_col() +\n  labs(\n    title = \"Common Themes in Netflix Descriptions\",\n    x = \"Theme\",\n    y = \"Count of Mentions\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\nCode\nstory_words &lt;- netflix_titles %&gt;%\n  mutate(adj_before_story = str_extract(description, \"(?&lt;=\\\\b)\\\\w+(?= story)\")) %&gt;%\n  filter(!is.na(adj_before_story))\n\nhead(story_words$adj_before_story, 10)\n\n\n [1] \"true\"      \"love\"      \"the\"       \"s\"         \"true\"      \"their\"    \n [7] \"his\"       \"this\"      \"love\"      \"different\"\n\n\nCode\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles %&gt;%\n  unnest_tokens(word, description) %&gt;%\n  anti_join(stop_words, by = \"word\") %&gt;%\n  count(word, sort = TRUE) %&gt;%\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nFrom this analysis: - Titles with numbers are surprisingly common (e.g., ‘13 Reasons Why’). - ‘Love’ appears far more often than ‘death’ or ‘mystery’. - Descriptions often use adjectives like ‘true’, ‘incredible’, or ‘untold’ before ‘story’.\nSourcing:\nKaggle Netflix Titles Dataset\nNetflix metadata compiled by Shivam Bansal\nCC-BY-SA 4.0 License"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Josh Goldhaber",
-    "section": "",
-    "text": "I am Josh Goldhaber, a sophomore at Pitzer College majoring in Data Science at Claremont McKenna College\n\n1 + 1\n\n[1] 2"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "This site is a project for my super cool Data Science Class."
-  },
-  {
-    "objectID": "FifaData.html",
-    "href": "FifaData.html",
-    "title": "Fifa Data",
-    "section": "",
-    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.3.0\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.1.0     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nfifa &lt;- read_csv(\"data/week11_fifa_audience.csv\", show_col_types = FALSE)\n\nNew names:\n• `` -&gt; `...1`\n\nggplot(fifa, aes(x = population_share, y = tv_audience_share, color = confederation)) +\n  geom_point(alpha = 0.7, size = 3) +\n  geom_abline(slope = 1, intercept = 0, linetype = \"dashed\", color = \"red\") +\n  scale_x_log10(labels = scales::percent_format(accuracy = 0.01)) +\n  scale_y_log10(labels = scales::percent_format(accuracy = 0.01)) +\n  labs(\n    title = \"FIFA World Cup: Population Share vs. TV Audience Share (log10 scale)\",\n    x = \"Share of World Population (log scale)\",\n    y = \"Share of World Cup TV Audience (log scale)\",\n    color = \"Confederation\"\n  ) +\n  theme_minimal()\n\nWarning in scale_x_log10(labels = scales::percent_format(accuracy = 0.01)):\nlog-10 transformation introduced infinite values.\n\n\nWarning in scale_y_log10(labels = scales::percent_format(accuracy = 0.01)):\nlog-10 transformation introduced infinite values.\n\n\n\n\n\n\n\n\n\nSource:\nhttps://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv#L4\nData from: FIFA"
-  },
-  {
-    "objectID": "FastFoodCals.html",
-    "href": "FastFoodCals.html",
-    "title": "Fast Food",
-    "section": "",
-    "text": "library(tidyverse)\n\nfastfood &lt;- read_csv(\"data/fastfood_calories.csv\", show_col_types = FALSE)\n\navg_cal &lt;- fastfood %&gt;%\n  group_by(restaurant) %&gt;%\n  summarise(mean_calories = mean(calories, na.rm = TRUE),\n            n_items = n()) %&gt;%\n  arrange(desc(mean_calories))\n\navg_cal %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(restaurant, mean_calories),\n             y = mean_calories)) +\n  geom_col(fill = \"tomato\") +\n  coord_flip() +\n  labs(\n    title = \"Top 10 Fast Food Chains by Average Calories per Menu Item\",\n    x = \"Restaurant\",\n    y = \"Average Calories\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nSource: https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv#L4\nData From: fastfoodnutrition.com"
-  },
-  {
-    "objectID": "analysis.html#overview",
-    "href": "analysis.html#overview",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "",
-    "text": "This project explores text patterns in Netflix show descriptions. Using regular expressions and other techniques, we look for recurring themes, specific keywords, and stylistic choices in how Netflix shows are titled.\nWe use the Netflix Titles Dataset from TidyTuesday (Shivam Bansal on Kaggle), which includes thousands of shows and their descriptions.\n\n\nCode\nnetflix_titles &lt;- readr::read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv\"\n)"
-  },
-  {
-    "objectID": "analysis.html#detecting-numbers-in-titles",
-    "href": "analysis.html#detecting-numbers-in-titles",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "1. Detecting Numbers in Titles",
-    "text": "1. Detecting Numbers in Titles\n\n\nCode\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\n\n\n\nFALSE  TRUE \n 7361   426 \n\n\nHere, we use the str_detect() function with the regular expression \\\\d+ to check whether each title contains a number (like 13 Reasons Why or 3%).\nThis tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.\nThe table above shows how many Netflix titles contain numbers compared to those that do not."
-  },
-  {
-    "objectID": "analysis.html#counting-thematic-keywords-in-descriptions",
-    "href": "analysis.html#counting-thematic-keywords-in-descriptions",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "2. Counting Thematic Keywords in Descriptions",
-    "text": "2. Counting Thematic Keywords in Descriptions\n\n\nCode\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(\n    love_mentions    = str_count(description, regex(\"\\\\blove\\\\b\", ignore_case = TRUE)),\n    death_mentions   = str_count(description, regex(\"\\\\bdeath\\\\b\", ignore_case = TRUE)),\n    mystery_mentions = str_count(description, regex(\"\\\\bmystery\\\\b\", ignore_case = TRUE))\n  )\n\ntheme_counts &lt;- netflix_titles |&gt;\n  summarise(\n    love = sum(love_mentions, na.rm = TRUE),\n    death = sum(death_mentions, na.rm = TRUE),\n    mystery = sum(mystery_mentions, na.rm = TRUE)\n  ) |&gt;\n  pivot_longer(cols = everything(), names_to = \"theme\", values_to = \"count\")\n\nggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +\n  geom_col() +\n  labs(\n    title = \"Common Themes in Netflix Descriptions\",\n    x = \"Theme\",\n    y = \"Count of Mentions\",\n    fill = \"Theme\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nThis plot compares the frequency of the words “love,” “death,” and “mystery” across all Netflix descriptions.\nWe can see that “love” dominates — revealing that romantic themes are heavily used.\n“Death” and “mystery” occur less often, but still signal important narrative categories.\nThis visualization illustrates how simple word counting can reveal broad narrative trends."
-  },
-  {
-    "objectID": "analysis.html#finding-adjectives-that-appear-before-story-lookaround-example",
-    "href": "analysis.html#finding-adjectives-that-appear-before-story-lookaround-example",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "3. Finding Adjectives That Appear Before “Story” (Lookaround Example)",
-    "text": "3. Finding Adjectives That Appear Before “Story” (Lookaround Example)\n\n\nCode\nstory_words &lt;- netflix_titles |&gt;\n  mutate(adj_before_story = str_extract(description, \"\\\\b\\\\w+(?= story)\")) |&gt;\n  filter(!is.na(adj_before_story)) |&gt;\n  mutate(adj_before_story = tolower(adj_before_story)) |&gt;\n  anti_join(stop_words, by = c(\"adj_before_story\" = \"word\")) |&gt;\n  count(adj_before_story, sort = TRUE)\n\nhead(story_words, 10)\n\n\n# A tibble: 10 × 2\n   adj_before_story     n\n   &lt;chr&gt;            &lt;int&gt;\n 1 true                48\n 2 love                 8\n 3 life                 5\n 4 origin               3\n 5 biblical             2\n 6 crime                2\n 7 dark                 2\n 8 fictional            2\n 9 age                  1\n10 american             1\n\n\nHere we use a regular expression with a lookahead — (?= story) — to extract the word immediately before “story” in each description.\nFor example, in a phrase like “an incredible story”, the pattern will capture “incredible.”\nInterpretation: Looking at the top 10 words preceding story, it is clear that “true” is a clear winner. After a sharp fall off, love, life and origin take places 2-4. This trend reveals that almost all of the words before ‘story’ are adjectives describing the story."
-  },
-  {
-    "objectID": "analysis.html#most-frequent-words-in-descriptions-excluding-stopwords",
-    "href": "analysis.html#most-frequent-words-in-descriptions-excluding-stopwords",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "4. Most Frequent Words in Descriptions (Excluding Stopwords)",
-    "text": "4. Most Frequent Words in Descriptions (Excluding Stopwords)\n\n\nCode\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\nInterpretation\nThis bar chart shows the 15 most common non-stop words found in Netflix descriptions.\nWords like “life,” “family,” “world,” and “love” appear prominently — reinforcing the emotional and human-centered tone of Netflix’s catalog.\nThis kind of frequency analysis helps identify how streaming services position their content around universal, relatable ideas."
-  },
-  {
-    "objectID": "analysis.html#summary-of-insights",
-    "href": "analysis.html#summary-of-insights",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "5. Summary of Insights",
-    "text": "5. Summary of Insights\nFrom these visual and textual analyses, we can draw several conclusions:\n\nTitles with numbers are relatively common, often used to signal episodic or list-based storytelling (13 Reasons Why, 3%, 365 Days).\n\nThe word “love” overwhelmingly dominates thematic keywords, suggesting that romantic and emotional themes are heavily emphasized.\n\nDescriptions frequently include adjectives like “true” or “untold” before “story,” reflecting Netflix’s use of authenticity and intrigue in marketing language.\n\nThe most common descriptive words — life, family, world — reveal that Netflix’s storytelling appeals to broad, shared human experiences.\n\nTogether, these findings show how Netflix’s metadata and marketing descriptions align to create a consistent emotional and thematic identity across genres."
-  },
-  {
-    "objectID": "analysis.html#data-sources",
-    "href": "analysis.html#data-sources",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "Data Sources",
-    "text": "Data Sources\n\nAccessed via TidyTuesday (R4DS project): TidyTuesday Netflix Dataset – 2021-04-20\n\nOriginal source: Kaggle – Netflix Movies and TV Shows Dataset by Shivam Bansal (CC-BY-SA 4.0 License)\nShivam Bansal last updated this source 4 years ago"
-  },
-  {
     "objectID": "PermutationTest.html",
     "href": "PermutationTest.html",
     "title": "Project 3: Are Gold and Silver Equally Volatile?",
@@ -102,6 +18,55 @@
     "href": "PermutationTest.html#load-packages-and-import-data",
     "title": "Project 3: Are Gold and Silver Equally Volatile?",
     "section": "Load packages and import data",
-    "text": "Load packages and import data\n\n\nCode\nlibrary(quantmod)\nlibrary(tidyverse)\nlibrary(infer)\nlibrary(purrr)\n\n# Download daily gold and silver futures prices\ngetSymbols(\"GC=F\", src = \"yahoo\", from = \"2020-01-01\", to = Sys.Date())\n\n\n[1] \"GC=F\"\n\n\nCode\ngetSymbols(\"SI=F\", src = \"yahoo\", from = \"2020-01-01\", to = Sys.Date())\n\n\n[1] \"SI=F\"\n\n\nCode\n# Compute log returns (first!)\ngold_ret &lt;- dailyReturn(Cl(`GC=F`), type = \"log\")\nsilver_ret &lt;- dailyReturn(Cl(`SI=F`), type = \"log\")\n\n# Create a tibble with matching dates\nreturns &lt;- tibble(\n  date = index(gold_ret),\n  Gold = as.numeric(gold_ret),\n  Silver = as.numeric(silver_ret)\n) |&gt; drop_na()\n\n# Pivot to long format\nreturns_long &lt;- returns |&gt;\n  pivot_longer(cols = c(Gold, Silver),\n               names_to = \"Metal\",\n               values_to = \"Return\")\n\n\n\n\nCode\nggplot(returns_long, aes(x = date, y = Return, color = Metal)) +\ngeom_line(alpha = 0.6) +\nlabs(\ntitle = \"Daily Log Returns for Gold and Silver (2020–Present)\",\nx = \"Date\", y = \"Daily Log Return\",\ncolor = \"Metal\"\n) +\ntheme_minimal()\n\n\n\n\n\n\n\n\n\n\n\nCode\nsimulate_diff_sd &lt;- function(df) {\ndf |&gt;\nmutate(Metal = sample(Metal)) |&gt;\ngroup_by(Metal) |&gt;\nsummarise(sd = sd(Return)) |&gt;\nsummarise(diff_sd = diff(sd)) |&gt;\npull(diff_sd)\n}\n\n\n\n\nCode\nobs_diff &lt;- returns_long |&gt;\ngroup_by(Metal) |&gt;\nsummarise(sd = sd(Return)) |&gt;\nsummarise(diff_sd = diff(sd)) |&gt;\npull(diff_sd)\n\nobs_diff\n\n\n[1] 0.0104208\n\n\n\n\nCode\nset.seed(123)\n\n# Simulate 1000 permutations\n\nsim_diffs &lt;- map_dbl(1:1000, ~simulate_diff_sd(returns_long))\n\n# Store in a tibble for plotting\n\nsim_df &lt;- tibble(diff_sd = sim_diffs)\n\n\n#Visualize permutation distribution\n\n\nCode\nggplot(sim_df, aes(x = diff_sd)) +\ngeom_histogram(bins = 30, fill = \"skyblue\", color = \"white\") +\ngeom_vline(xintercept = obs_diff, color = \"red\", linetype = \"dashed\", size = 1) +\nlabs(\ntitle = \"Permutation Distribution of Difference in Volatility (Silver − Gold)\",\nx = \"Difference in SD under Null (permuted)\",\ny = \"Count\"\n) +\ntheme_minimal()\n\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\n\n\n\n\n\n\n\n\n#calculating p value\n\n\nCode\np_val &lt;- mean(sim_diffs &gt;= obs_diff)\ncat(\"Observed difference in SD:\", round(obs_diff, 5), \"\\n\")\n\n\nObserved difference in SD: 0.01042 \n\n\nCode\ncat(\"Approximate permutation p-value:\", round(p_val, 4), \"\\n\")\n\n\nApproximate permutation p-value: 0"
+    "text": "Load packages and import data\n\n\nCode\nlibrary(quantmod)\nlibrary(tidyverse)\nlibrary(infer)\nlibrary(purrr)\n\n# Download daily gold and silver futures prices\ngetSymbols(\"GC=F\", src = \"yahoo\", from = \"2020-01-01\", to = Sys.Date())\n\n\n[1] \"GC=F\"\n\n\nCode\ngetSymbols(\"SI=F\", src = \"yahoo\", from = \"2020-01-01\", to = Sys.Date())\n\n\n[1] \"SI=F\"\n\n\nCode\n# Compute log returns (first!)\ngold_ret &lt;- dailyReturn(Cl(`GC=F`), type = \"log\")\nsilver_ret &lt;- dailyReturn(Cl(`SI=F`), type = \"log\")\n\n# Create a tibble with matching dates\nreturns &lt;- tibble(\n  date = index(gold_ret),\n  Gold = as.numeric(gold_ret),\n  Silver = as.numeric(silver_ret)\n) |&gt; drop_na()\n\n# Pivot to long format\nreturns_long &lt;- returns |&gt;\n  pivot_longer(cols = c(Gold, Silver),\n               names_to = \"Metal\",\n               values_to = \"Return\")\n\n\n\n\nCode\nggplot(returns_long, aes(x = date, y = Return, color = Metal)) +\ngeom_line(alpha = 0.6) +\nlabs(\ntitle = \"Daily Log Returns for Gold and Silver (2020–Present)\",\nx = \"Date\", y = \"Daily Log Return\",\ncolor = \"Metal\"\n) +\ntheme_minimal()\n\n\n\n\n\n\n\n\n\n\n\nCode\nsimulate_diff_sd &lt;- function(df) {\ndf |&gt;\nmutate(Metal = sample(Metal)) |&gt;\ngroup_by(Metal) |&gt;\nsummarise(sd = sd(Return)) |&gt;\nsummarise(diff_sd = diff(sd)) |&gt;\npull(diff_sd)\n}\n\n\n\n\nCode\nobs_diff &lt;- returns_long |&gt;\ngroup_by(Metal) |&gt;\nsummarise(sd = sd(Return)) |&gt;\nsummarise(diff_sd = diff(sd)) |&gt;\npull(diff_sd)\n\nobs_diff\n\n\n[1] 0.0104208\n\n\n\n\nCode\nset.seed(123)\n\n# Simulate 1000 permutations\n\nsim_diffs &lt;- map_dbl(1:1000, ~simulate_diff_sd(returns_long))\n\n# Store in a tibble for plotting\n\nsim_df &lt;- tibble(diff_sd = sim_diffs)"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This site is a project for my super cool Data Science Class."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Josh Goldhaber",
+    "section": "",
+    "text": "I am Josh Goldhaber, a sophomore at Pitzer College majoring in Data Science at Claremont McKenna College"
+  },
+  {
+    "objectID": "analysis.html",
+    "href": "analysis.html",
+    "title": "Project 2: Netflix Text Analysis",
+    "section": "",
+    "text": "Code\nnetflix_titles &lt;- readr::read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv\"\n)\n\n\n\n\nCode\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\n\n\n\nFALSE  TRUE \n 7361   426 \n\n\nCode\n#Here, we use the `str_detect()` function with the regular expression `\\\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  \n#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.\n\n#The table above shows how many Netflix titles contain numbers compared to those that do not.')\n\n\n\n#2. Counting Thematic Keywords in Descriptions\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(\n    love_mentions = str_count(description, regex(\"\\\\blove\\\\b\", ignore_case = TRUE)),\n    death_mentions = str_count(description, regex(\"\\\\bdeath\\\\b\", ignore_case = TRUE)),\n    mystery_mentions = str_count(description, regex(\"\\\\bmystery\\\\b\", ignore_case = TRUE))\n  )\n\ntheme_counts &lt;- netflix_titles |&gt;\n  summarise(\n    love = sum(love_mentions, na.rm = TRUE),\n    death = sum(death_mentions, na.rm = TRUE),\n    mystery = sum(mystery_mentions, na.rm = TRUE)\n  ) |&gt;\n  pivot_longer(cols = everything(), names_to = \"theme\", values_to = \"count\")\n\nggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +\n  geom_col() +\n  labs(\n    title = \"Common Themes in Netflix Descriptions\",\n    x = \"Theme\",\n    y = \"Count of Mentions\",\n    fill = \"Theme\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nInterpretation:\nThis plot compares the frequency of the words “love,” “death,” and “mystery” across all Netflix descriptions.\nWe can see that “love” dominates, revealing that romantic themes are heavily used.\n“Death” and “mystery” occur less often, but still signal important narrative categories.\nThis visualization illustrates how simple word counting can reveal broad narrative trends.\nFinding Adjectives That Appear Before “Story” (Lookaround Example)\n\n\nCode\nstory_words &lt;- netflix_titles |&gt;\n  mutate(adj_before_story = str_extract(description, \"\\\\b\\\\w+(?= story)\")) |&gt;\n  filter(!is.na(adj_before_story)) |&gt;\n  mutate(adj_before_story = tolower(adj_before_story)) |&gt;\n  anti_join(stop_words, by = c(\"adj_before_story\" = \"word\")) |&gt;\n  count(adj_before_story, sort = TRUE)\n\nhead(story_words, 10)\n\n\n# A tibble: 10 × 2\n   adj_before_story     n\n   &lt;chr&gt;            &lt;int&gt;\n 1 true                48\n 2 love                 8\n 3 life                 5\n 4 origin               3\n 5 biblical             2\n 6 crime                2\n 7 dark                 2\n 8 fictional            2\n 9 age                  1\n10 american             1\n\n\nHere we use a regular expression with a lookahead — (?= story) — to extract the word immediately before “story” in each description.\nFor example, in a phrase like “an incredible story”, the pattern will capture “incredible.”\nInterpretation: Looking at the top 10 words preceding story, it is clear that “true” is a clear winner. After a sharp fall off, love, life and origin take places 2-4. This trend reveals that almost all of the words before ‘story’ are adjectives describing the story.\nMost Frequent Words in Descriptions (Excluding filler)\n\n\nCode\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nInterpretation:\nThis bar chart shows the 15 most common non-stop words found in Netflix descriptions.\nWords like “life,” “family,” “world,” and “love” appear prominently — reinforcing the emotional and human-centered tone of Netflix’s catalog.\nThis kind of frequency analysis helps identify how streaming services position their content around universal, relatable ideas.\nSummary of Insights\nFrom these visual and textual analyses, we can draw several conclusions:\n\nTitles with numbers are relatively common.\nThe word “love” overwhelmingly dominates thematic keywords, suggesting that romantic and emotional themes are heavily emphasized.\n\nDescriptions frequently include adjectives like “true” or “untold” before “story,” reflecting Netflix’s use of authenticity and intrigue in marketing language.\n\nThe most common descriptive words — life, family, world — reveal that Netflix’s storytelling appeals to broad, shared human experiences.\n\nData Sources\n\nAccessed via TidyTuesday (R4DS project): TidyTuesday Netflix Dataset – 2021-04-20\n\nOriginal source: Kaggle – Netflix Movies and TV Shows Dataset by Shivam Bansal (CC-BY-SA 4.0 License)\nShivam Bansal last updated this source 4 years ago"
+  },
+  {
+    "objectID": "FifaData.html",
+    "href": "FifaData.html",
+    "title": "Fifa Data",
+    "section": "",
+    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.3.0\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.1.0     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nfifa &lt;- read_csv(\"data/week11_fifa_audience.csv\", show_col_types = FALSE)\n\nNew names:\n• `` -&gt; `...1`\n\nggplot(fifa, aes(x = population_share, y = tv_audience_share, color = confederation)) +\n  geom_point(alpha = 0.7, size = 3) +\n  geom_abline(slope = 1, intercept = 0, linetype = \"dashed\", color = \"red\") +\n  scale_x_log10(labels = scales::percent_format(accuracy = 0.01)) +\n  scale_y_log10(labels = scales::percent_format(accuracy = 0.01)) +\n  labs(\n    title = \"FIFA World Cup: Population Share vs. TV Audience Share (log10 scale)\",\n    x = \"Share of World Population (log scale)\",\n    y = \"Share of World Cup TV Audience (log scale)\",\n    color = \"Confederation\"\n  ) +\n  theme_minimal()\n\nWarning in scale_x_log10(labels = scales::percent_format(accuracy = 0.01)):\nlog-10 transformation introduced infinite values.\n\n\nWarning in scale_y_log10(labels = scales::percent_format(accuracy = 0.01)):\nlog-10 transformation introduced infinite values.\n\n\n\n\n\n\n\n\n\nSource:\nhttps://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv#L4\nData from: FIFA"
+  },
+  {
+    "objectID": "FastFoodCals.html",
+    "href": "FastFoodCals.html",
+    "title": "Fast Food",
+    "section": "",
+    "text": "library(tidyverse)\n\nfastfood &lt;- read_csv(\"data/fastfood_calories.csv\", show_col_types = FALSE)\n\navg_cal &lt;- fastfood %&gt;%\n  group_by(restaurant) %&gt;%\n  summarise(mean_calories = mean(calories, na.rm = TRUE),\n            n_items = n()) %&gt;%\n  arrange(desc(mean_calories))\n\navg_cal %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(restaurant, mean_calories),\n             y = mean_calories)) +\n  geom_col(fill = \"tomato\") +\n  coord_flip() +\n  labs(\n    title = \"Top 10 Fast Food Chains by Average Calories per Menu Item\",\n    x = \"Restaurant\",\n    y = \"Average Calories\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nSource: https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv#L4\nData From: fastfoodnutrition.com"
+  },
+  {
+    "objectID": "PermutationTest.html#visualize-permutation-distribution",
+    "href": "PermutationTest.html#visualize-permutation-distribution",
+    "title": "Project 3: Are Gold and Silver Equally Volatile?",
+    "section": "Visualize permutation distribution",
+    "text": "Visualize permutation distribution\n\n\nCode\nggplot(sim_df, aes(x = diff_sd)) +\ngeom_histogram(bins = 30, fill = \"skyblue\", color = \"white\") +\ngeom_vline(xintercept = obs_diff, color = \"red\", linetype = \"dashed\", size = 1) +\nlabs(\ntitle = \"Permutation Distribution of Difference in Volatility (Silver − Gold)\",\nx = \"Difference in SD under Null (permuted)\",\ny = \"Count\"\n) +\ntheme_minimal()\n\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead."
+  },
+  {
+    "objectID": "PermutationTest.html#calculating-p-value",
+    "href": "PermutationTest.html#calculating-p-value",
+    "title": "Project 3: Are Gold and Silver Equally Volatile?",
+    "section": "Calculating p-value",
+    "text": "Calculating p-value\n\n\nCode\np_val &lt;- mean(sim_diffs &gt;= obs_diff)\ncat(\"Observed difference in SD:\", round(obs_diff, 5), \"\\n\")\n\n\nObserved difference in SD: 0.01042 \n\n\nCode\ncat(\"Approximate permutation p-value:\", round(p_val, 20), \"\\n\")\n\n\nApproximate permutation p-value: 0"
   }
 ]

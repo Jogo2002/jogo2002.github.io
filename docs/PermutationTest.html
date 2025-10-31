@@ -154,6 +154,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
     </ul>
   </li>
+  <li class="nav-item compact">
+    <a class="nav-link" href="./Hypothesis"> 
+<span class="menu-text"></span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -172,6 +176,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#load-packages-and-import-data" id="toc-load-packages-and-import-data" class="nav-link" data-scroll-target="#load-packages-and-import-data">Load packages and import data</a></li>
+  <li><a href="#visualize-permutation-distribution" id="toc-visualize-permutation-distribution" class="nav-link" data-scroll-target="#visualize-permutation-distribution">Visualize permutation distribution</a></li>
+  <li><a href="#calculating-p-value" id="toc-calculating-p-value" class="nav-link" data-scroll-target="#calculating-p-value">Calculating p-value</a></li>
   </ul>
 </nav>
     </div>
@@ -316,7 +322,9 @@ Gold and silver are both precious metals often used as investment hedges against
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>sim_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">diff_sd =</span> sim_diffs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>#Visualize permutation distribution</p>
+</section>
+<section id="visualize-permutation-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-permutation-distribution">Visualize permutation distribution</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -342,7 +350,9 @@ Gold and silver are both precious metals often used as investment hedges against
 </div>
 </div>
 </div>
-<p>#calculating p value</p>
+</section>
+<section id="calculating-p-value" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-p-value">Calculating p-value</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -354,7 +364,7 @@ Gold and silver are both precious metals often used as investment hedges against
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Approximate permutation p-value:"</span>, <span class="fu">round</span>(p_val, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Approximate permutation p-value:"</span>, <span class="fu">round</span>(p_val, <span class="dv">20</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Approximate permutation p-value: 0 </code></pre>
