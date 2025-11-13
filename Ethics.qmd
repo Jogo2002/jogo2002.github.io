@@ -7,7 +7,7 @@ date: September 24, 2025
 format: html
 ---
 
-##Introduction 
+## Introduction 
 
 Northpointe’s COMPAS algorithm, implemented across courts of the United States with the intent of more accurately predicting recidivism rates, scores defendants with a “risk rating”. These scores range from one to ten, with one being unlikely to reoffend, and ten being highly likely to reoffend. The scores are based on 137 questions either answered by defendants or pulled from records. Notably, race is not one of those questions. However, there are concerns about the algorithm’s fairness, particularly surrounding race. ProPublica, a nonprofit investigative journalism organization, conducted a study, finding that the algorithm incorrectly flagged black defendants as future criminals at nearly twice the rate of white defendants, while white defendants were more frequently mislabeled as low risk compared to black defendants. Its fairness among women and men is also questioned: women at a risk rating of six are just as likely to reoffend as a man at a risk rating of 4.
 
@@ -17,9 +17,9 @@ This scenario illustrates a major ethical dilemma at the intersection of data sc
 
 
 
-##Question Response 
+### Question Response 
 
-#What is the permission structure for using the data? Was it followed?
+## What is the permission structure for using the data? Was it followed?
 
 In the COMPAS example, there are two layers of permission and consent to consider. Courts in places like Broward County adopted COMPAS as part of their routine decision making for bail and sentencing, so defendants did not choose to have a proprietary risk score used to influence their punishment (ProPublica). The risk score simply became part of the standard judicial process. Defendants also did not meaningfully consent to having their data used in later fairness audits. ProPublica obtained records through public-records requests, which is legally permitted but does not reflect informed consent from the people whose information was analyzed (ProPublica). There is also a broader question raised by scholars: can people meaningfully consent to predictive uses of their data that do not even exist yet? As Andrew Lee Park notes, predictive systems in sentencing often rely on information that defendants never agreed to provide for this purpose, creating “a fundamental mismatch between the collection of data and its downstream uses” (UCLA Law).\n
 
@@ -27,7 +27,7 @@ Defendants also did not give specific consent for their data to be used in subse
   
 \n
   
-##How were the variables collected? Were they accurately recorded? Is there any missing data?
+## How were the variables collected? Were they accurately recorded? Is there any missing data?
 \n
 
 The variables used in the COMPAS dataset were collected through a combination of defendant questionnaires and information pulled from criminal justice records. The COMPAS tool uses 137 items that include factors such as prior arrests, family history with incarceration, school disciplinary issues, employment status, and peer associations, and these responses are combined with demographic information like age and gender (ProPublica). Because defendants provide some of this information during the stressful and coercive environment of pretrial processing, there is a possibility that certain responses may be incomplete or inaccurate. ProPublica’s reporting also notes that Northpointe would not disclose exactly how all variables were weighted or whether the company performed internal validation of the completeness of the data it collected (ProPublica). Scholars have raised concerns that variables taken from justice system records can embed existing racial and socioeconomic inequalities, and that many questionnaires rely on self-reported information that may be inconsistently recorded (UCLA Law). While ProPublica used two years of follow-up data to identify whether individuals were charged with new crimes, any cases with unclear or unavailable outcomes would be treated as missing, which introduces further uncertainty regarding data accuracy and completeness.
@@ -35,11 +35,11 @@ The variables used in the COMPAS dataset were collected through a combination of
 \n
 
 
-##Who was measured? Are those individuals representative of the people to whom we’d like to generalize / apply the algorithm? Should we analyze data if we do not know how the data were collected?
+## Who was measured? Are those individuals representative of the people to whom we’d like to generalize / apply the algorithm? Should we analyze data if we do not know how the data were collected?
 
 The individuals measured, for their effective benchmark, in the COMPAS analysis were more than 7,000 people who were arrested in Broward County, Florida, in 2013 and 2014, and whose cases were processed through that county’s criminal justice system (ProPublica). This is a narrow and highly specific population that reflects the policing patterns, demographics, and local practices of one county rather than the broader population of defendants across the United States who are scored with COMPAS. Because predictive sentencing tools are used in many jurisdictions with very different crime patterns and social conditions, scholars have cautioned that a dataset limited to one county is not representative of the national population to which COMPAS is applied (UCLA Law). Park notes that algorithms trained on “local and historically contingent datasets” may perform unpredictably when generalized to new communities or contexts (UCLA Law). This raises the question of whether we should rely on or analyze such data when the process by which it was collected is not fully transparent. If we do not understand the conditions under which the observations were produced, including policing behavior, arrest practices, and the circumstances under which defendants answered survey questions, then any fairness claims or generalizations made from the data become much less reliable (ProPublica).
 \n
-##Should race be used as a variable? Is it a proxy for something else (e.g., amount of melanin in the skin, stress of navigating microaggressions, zip-code, etc.)? What about gender?
+## Should race be used as a variable? Is it a proxy for something else (e.g., amount of melanin in the skin, stress of navigating microaggressions, zip-code, etc.)? What about gender?
 \n
 
 Race is not explicitly used as a variable in the COMPAS questionnaire, but ProPublica’s investigation shows that the algorithm still produces outcomes that differ sharply by race, which strongly suggests that other inputs act as proxies (ProPublica). Variables such as prior arrests, neighborhood stability, family incarceration, and school discipline history are all deeply shaped by structural racism and patterns of policing, so including them can indirectly encode racial disparities even without asking about race directly. Scholars at UCLA Law argue that many of the inputs used in predictive risk tools function as “functional proxies for race” because they reflect unequal social conditions rather than individual behavior (UCLA Law). This means that excluding race does not prevent racial bias, and including race would raise its own ethical problems because it would allow courts to make decisions partly on the basis of a protected characteristic. Gender also plays an important role as touched on in my introduction to the algorithm. ProPublica found that women and men with the same risk score do not have the same likelihood of reoffending, which suggests inconsistent calibration across gender groups (ProPublica). The core concern is that both race and gender can become encoded in the model through the correlations present in the data, so even when they are not included explicitly, the algorithm may still learn patterns that reflect social inequities rather than genuine risk.
@@ -57,7 +57,8 @@ Not only does this render the judge a ‘rubber stamp’, it undermines the lega
 \n
 Aside from the ethics of the use of an algorithm in the first place, the incorporation of race or gender into the algorithm should not be allowed, for many reasons. The most prominent reason of them all is the confounding effect. Because the results of the algorithm are determined by questions related to ancestral or familial jail time and previous sentences, the algorithm can have a snowball effect, where historical patterns of over-policing and structural discrimination become encoded as indicators of individual risk. This means that people from communities that have faced disproportionate surveillance or harsher charging practices may receive higher risk scores simply because the model treats the consequences of past injustice as predictive signals. As scholars note, many variables in risk assessments function as indirect stand-ins for race, which allows the model to reproduce racial disparities even when race is not explicitly included (UCLA Law). ProPublica shows that this dynamic leads to Black defendants being falsely labeled as high risk at nearly twice the rate of white defendants, which demonstrates how quickly seemingly neutral inputs can magnify unequal outcomes (ProPublica). By allowing attributes tied to race or gender to influence predictions, the algorithm reinforces existing inequalities and turns social disadvantage into justification for harsher legal decisions.
 
-##Were the data made publicly available? Why? How? On what platform?
+
+## Were the data made publicly available? Why? How? On what platform?
 
 A central issue highlighted in the COMPAS investigation is that Northpointe never disclosed how the algorithm actually generates its risk scores. ProPublica found that the company would not reveal the formula or the weight placed on any of the 137 variables, calling the model proprietary and declining to share the scoring method with the public or with the courts that rely on it (ProPublica). Because of this secrecy, neither defendants nor judges can evaluate how the algorithm reaches its conclusions or whether the inputs are combined in a fair or statistically sound way. UCLA Law notes that this lack of transparency turns COMPAS into a “black box” that shapes sentencing and bail decisions while hiding its internal logic from the very people it affects (UCLA Law). With no access to the method, it becomes impossible to determine whether the racial disparities observed in the outcomes stem from biased data, flawed modeling choices, or assumptions built into the algorithm. This closed design limits accountability and makes it difficult to challenge or correct errors in a system that directly influences a person’s freedom.
 
@@ -66,7 +67,7 @@ A central issue highlighted in the COMPAS investigation is that Northpointe neve
 In terms of ProPublica's research, they made the COMPAS dataset publicly available so that outside researchers, journalists, and policymakers could independently examine whether the algorithm was producing racially unequal outcomes. ProPublica obtained the original records through public records requests to Broward County and then released a cleaned and documented version of the dataset on its website, along with a detailed methodology explaining how the analysis was conducted. The choice to share the data publicly reflects a belief that systems influencing sentencing and bail decisions should be open to public scrutiny, especially when they are known to affect vulnerable groups.
 
 
-###Citations
+### Citations
 
 Angwin, J., Larson, J., Mattu, S., & Kirchner, L. (2016, May 23). Machine bias: There’s software used across the country to predict future criminals. And it’s biased against blacks. ProPublica. https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing
 
