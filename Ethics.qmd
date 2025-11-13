@@ -1,0 +1,36 @@
+---
+title: "Project 4: Ethics"
+description: |
+  Examining The Ethicality of Data in the COMPAS Algorithm
+author: Josh Goldhaber
+date: September 24, 2025
+format: html
+---
+
+##Introduction 
+
+Northpointe’s COMPAS algorithm, implemented across courts of the United States with the intent of more accurately predicting recidivism rates, scores defendants with a “risk rating”. These scores range from one to ten, with one being unlikely to reoffend, and ten being highly likely to reoffend. The scores are based on 137 questions either answered by defendants or pulled from records. Notably, race is not one of those questions. However, there are concerns about the algorithm’s fairness, particularly surrounding race. ProPublica, a nonprofit investigative journalism organization, conducted a study, finding that the algorithm incorrectly flagged black defendants as future criminals at nearly twice the rate of white defendants, while white defendants were more frequently mislabeled as low risk compared to black defendants. Its fairness among women and men is also questioned: women at a risk rating of six are just as likely to reoffend as a man at a risk rating of 4.
+
+\n
+
+This scenario illustrates a major ethical dilemma at the intersection of data science and the criminal justice system. COMPAS is intended to bring statistical rigor and reduce human bias in judicial decisions, but the ProPublica findings suggest that the model may unintentionally reproduce inequalities that are present in the data used to train it. Since the algorithm is proprietary and not fully transparent, neither defendants nor judges can clearly understand how risk scores are produced or whether they treat different groups equitably. The central ethical issue is whether it is appropriate or fair to use a predictive model with limited transparency to influence high stakes decisions such as bail, sentencing, and parole, especially when errors appear to fall disproportionately on certain racial and demographic groups.
+
+
+
+##Question Response 
+
+#What is the permission structure for using the data? Was it followed?
+
+In the COMPAS example, there are  two layers of permission and consent to consider: the criminal justice system that uses COMPAS and the ProPublica team that later studied it. Courts in places like Broward County, Florida, adopted COMPAS as part of their routine decision making for bail and sentencing, so defendants did not opt in to having a proprietary risk score used to influence their punishment (ProPublica). Although, there could be an argument made that by paying state taxes and living in the state, they therefore abide by the state laws, thus the prosecution process that the state court decides. Either way, there was no option for the defendant to choose wether their risk score could be used to determine their sentencing or not. The risk rating simply became part of the standard process, even though scores could lead to harsher sentences, as in the case of Paul Zilly in Wisconsin, whose judge cited a high risk score when rejecting a more lenient plea deal. (ProPublica)
+\n
+  Defendants also did not give specific consent for their data to be used in subsequent research audits of the algorithm. ProPublica obtained the data via public records, which is legally permissible, but nonetheless different from participants being clearly informed in advance that their information would be used to probe racial bias in a risk tool and then shared publicly as a dataset. In that sense, informed consent, especially for unforeseen downstream uses of the data, was very limited. 
+  
+  
+  
+  
+###Citations
+
+Angwin, J., Larson, J., Mattu, S., & Kirchner, L. (2016, May 23). Machine bias: There’s software used across the country to predict future criminals. And it’s biased against blacks. ProPublica. https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing
+
+Park, A. L. (2019, February 19). Injustice Ex Machina: Predictive algorithms in criminal sentencing. UCLA Law Review (Law Meets World). https://www.uclalawreview.org/injustice-ex-machina-predictive-algorithms-in-criminal-sentencing/
+
