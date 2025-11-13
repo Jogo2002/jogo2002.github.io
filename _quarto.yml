@@ -17,7 +17,7 @@ website:
       - href: PermutationTest.qmd
         text: "Project 3"
       - href: Ethics.qmd
-        text: "COMPAS: Ethics"
+        text: Ethics of COMPAS
       - text: "Data Visualization"
         menu:
           - text: "Fifa Data"
