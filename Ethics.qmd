@@ -15,8 +15,6 @@ Northpointe’s COMPAS algorithm, implemented across courts of the United States
 
 This scenario illustrates a major ethical dilemma at the intersection of data science and the criminal justice system. COMPAS is intended to bring statistical rigor and reduce human bias in judicial decisions, but the ProPublica findings suggest that the model may unintentionally reproduce inequalities that are present in the data used to train it. Since the algorithm is proprietary and not fully transparent, neither defendants nor judges can clearly understand how risk scores are produced or whether they treat different groups equitably. The central ethical issue is whether it is appropriate or fair to use a predictive model with limited transparency to influence high stakes decisions such as bail, sentencing, and parole, especially when errors appear to fall disproportionately on certain racial and demographic groups.
 
-
-
 ### Question Response 
 
 ## What is the permission structure for using the data? Was it followed?
@@ -65,7 +63,6 @@ A central issue highlighted in the COMPAS investigation is that Northpointe neve
 \n 
 
 In terms of ProPublica's research, they made the COMPAS dataset publicly available so that outside researchers, journalists, and policymakers could independently examine whether the algorithm was producing racially unequal outcomes. ProPublica obtained the original records through public records requests to Broward County and then released a cleaned and documented version of the dataset on its website, along with a detailed methodology explaining how the analysis was conducted. The choice to share the data publicly reflects a belief that systems influencing sentencing and bail decisions should be open to public scrutiny, especially when they are known to affect vulnerable groups.
-
 
 ### Citations
 
