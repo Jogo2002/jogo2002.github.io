@@ -64,6 +64,9 @@ The judge’s choice to rule almost exclusively based on the algorithm removed t
 Not only does this render the judge a ‘rubber stamp’, it undermines the legal system in its essence: redirecting its function from a system that aims to rehabilitate defendants into a machine that determines sentencing based on their likelihood of committing a future crime.
 \n
 
+// END EXCERPT
+
+
 Aside from the ethics of the use of an algorithm in the first place, the incorporation of race or gender into the algorithm should not be allowed, for many reasons. The most prominent reason of them all is the confounding effect. Because the results of the algorithm are determined by questions related to ancestral or familial jail time and previous sentences, the algorithm can have a snowball effect, where historical patterns of over-policing and structural discrimination become encoded as indicators of individual risk. This means that people from communities that have faced disproportionate surveillance or harsher charging practices may receive higher risk scores simply because the model treats the consequences of past injustice as predictive signals. As scholars note, many variables in risk assessments function as indirect stand-ins for race, which allows the model to reproduce racial disparities even when race is not explicitly included (UCLA Law). ProPublica shows that this dynamic leads to Black defendants being falsely labeled as high risk at nearly twice the rate of white defendants, which demonstrates how quickly seemingly neutral inputs can magnify unequal outcomes (ProPublica). By allowing attributes tied to race or gender to influence predictions, the algorithm reinforces existing inequalities and turns social disadvantage into justification for harsher legal decisions.
 
 \n
@@ -86,8 +89,6 @@ The issues described above matter because they shape who benefits from the use o
 
 
 Angwin, J., Larson, J., Mattu, S., & Kirchner, L. (2016, May 23). Machine bias: There’s software used across the country to predict future criminals. And it’s biased against blacks. ProPublica. https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing
-
-\n
 
 Park, A. L. (2019, February 19). Injustice Ex Machina: Predictive algorithms in criminal sentencing. UCLA Law Review (Law Meets World). https://www.uclalawreview.org/injustice-ex-machina-predictive-algorithms-in-criminal-sentencing/
 
