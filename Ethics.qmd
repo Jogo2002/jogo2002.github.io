@@ -1,10 +1,16 @@
 ---
 title: "Project 4: Ethics"
-description: |
-  Examining The Ethicality of Data in the COMPAS Algorithm
-author: Josh Goldhaber
-date: September 24, 2025
-format: html
+description: Examining The Ethicality of Data in the COMPAS Algorithm
+author: "Josh Goldhaber"
+format:
+  html:
+    code-fold: true
+    echo: true
+    warning: false
+    message: false
+    fig-cap-location: bottom
+editor: visual
+
 ---
 
 ## Introduction 
