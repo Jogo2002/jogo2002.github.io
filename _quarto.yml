@@ -16,6 +16,8 @@ website:
         text: "Text Analysis"
       - href: PermutationTest.qmd
         text: "Project 3"
+      - href: Ethics.qmd
+        text: "COMPAS: Ethics"
       - text: "Data Visualization"
         menu:
           - text: "Fifa Data"
