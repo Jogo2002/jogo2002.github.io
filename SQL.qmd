@@ -1,0 +1,193 @@
+---
+title: "SQL Wrangling"
+author: "Josh Goldhaber"
+format:
+  html:
+    code-fold: true
+    echo: true
+    warning: false
+    message: false
+    fig-cap-location: bottom
+editor: visual
+---
+
+
+# In this project I use three Midwestern policing datasets from the Stanford Open Policing Project (Pierson et al. 2020): Illinois State Patrol, Madison Police Department (WI), and Fort Wayne Police Department (IN). All data wrangling is conducted entirely in SQL. I focus on two central questions: (1) how search rates vary across race and gender, and (2) whether “hit rates” (the percent of searches that find contraband) differ across agencies. The goal is to compare policing practices across these jurisdictions and identify meaningful differences in how traffic stops escalate into searches.
+```{r}
+
+library(tidyverse)
+library(DBI)
+library(ggplot2)
+
+
+con_traffic <- DBI::dbConnect(
+
+  RMariaDB::MariaDB(),
+
+  dbname = "traffic",
+
+  host = Sys.getenv("TRAFFIC_HOST"),
+
+  user = Sys.getenv("TRAFFIC_USER"),
+
+  password = Sys.getenv("TRAFFIC_PWD")
+
+)
+
+```
+
+```{sql connection=con_traffic}
+SHOW TABLES;
+
+```
+
+```{sql connection=con_traffic}
+DESCRIBE il_chicago_2023_01_26;
+
+
+```
+
+```{sql connection=con_traffic}
+DESCRIBE wi_madison_2023_01_26;
+```
+
+```{sql connection=con_traffic}
+DESCRIBE in_fort_wayne_2020_04_01;
+```
+
+```{sql connection=con_traffic}
+DESCRIBE ky_louisville_2023_01_26;
+```
+
+
+
+```{sql connection=con_traffic}
+
+# I tried to use a regex to retrieve the state from each table, but the server does not allow SQL regex expressions, so I reserached an interesting workaround: SUBSTRING_INDEX
+SELECT 
+  table_name,
+  SUBSTRING_INDEX(table_name, '_', 1) AS state
+FROM information_schema.tables
+WHERE table_schema = DATABASE();
+```
+
+-----------
+
+-----
+
+```{sql connection=con_traffic, output.var="three_city"}
+SELECT *
+FROM (
+    -- Chicago
+    SELECT
+        'Chicago' AS city,
+        subject_race,
+        subject_sex,
+        date,
+        time,
+        citation_issued,
+        NULL AS warning_issued
+    FROM il_chicago_2023_01_26
+    WHERE subject_race IS NOT NULL
+
+    UNION ALL
+
+    -- Madison
+    SELECT
+        'Madison' AS city,
+        subject_race,
+        subject_sex,
+        date,
+        time,
+        citation_issued,
+        warning_issued
+    FROM wi_madison_2023_01_26
+    WHERE subject_race IS NOT NULL
+
+    UNION ALL
+
+    -- Louisville
+    SELECT
+        'Louisville' AS city,
+        subject_race,
+        subject_sex,
+        date,
+        time,
+        citation_issued,
+        warning_issued
+    FROM ky_louisville_2023_01_26
+    WHERE subject_race IS NOT NULL
+) AS t;
+
+```
+
+---
+```{sql connection=con_traffic}
+CREATE TEMPORARY TABLE three_city AS
+SELECT
+    'Chicago' AS city,
+    subject_race,
+    subject_sex,
+    date,
+    time,
+    -- Chicago fix: derive citation indicator
+    CASE 
+        WHEN outcome = 'Citation Issued' THEN 1
+        ELSE 0
+    END AS citation_issued,
+    NULL AS warning_issued
+FROM il_chicago_2023_01_26
+WHERE subject_race IS NOT NULL
+
+UNION ALL
+
+SELECT
+    'Madison' AS city,
+    subject_race,
+    subject_sex,
+    date,
+    time,
+    citation_issued,
+    warning_issued
+FROM wi_madison_2023_01_26
+WHERE subject_race IS NOT NULL
+
+UNION ALL
+
+SELECT
+    'Louisville' AS city,
+    subject_race,
+    subject_sex,
+    date,
+    time,
+    citation_issued,
+    warning_issued
+FROM ky_louisville_2023_01_26
+WHERE subject_race IS NOT NULL;
+
+```
+
+
+```{r}
+race_city_summary
+```
+
+
+
+```{r}
+
+ggplot(race_city_summary,
+       aes(x = subject_race,
+           y = citation_rate,
+           fill = city)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Citation rate by driver race across three cities",
+    x = "Driver race",
+    y = "Share of stops with a citation",
+    fill = "City"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_minimal()
+```
+

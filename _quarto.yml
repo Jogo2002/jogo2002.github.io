@@ -18,6 +18,8 @@ website:
         text: "Project 3"
       - href: Ethics.qmd
         text: Ethics of COMPAS
+      - href: SQL.qmd
+        text: "Traffic Stops with SQL"
       - text: "Data Visualization"
         menu:
           - text: "Fifa Data"
