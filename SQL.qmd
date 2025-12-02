@@ -1,5 +1,5 @@
 ---
-title: "SQL Wrangling"
+title: "Traffic Stops with SQL"
 author: "Josh Goldhaber"
 format:
   html:
@@ -11,59 +11,30 @@ format:
 editor: visual
 ---
 
+# Introduction
 
-# In this project I use three Midwestern policing datasets from the Stanford Open Policing Project (Pierson et al. 2020): Illinois State Patrol, Madison Police Department (WI), and Fort Wayne Police Department (IN). All data wrangling is conducted entirely in SQL. I focus on two central questions: (1) how search rates vary across race and gender, and (2) whether “hit rates” (the percent of searches that find contraband) differ across agencies. The goal is to compare policing practices across these jurisdictions and identify meaningful differences in how traffic stops escalate into searches.
+In this project I use three policing datasets from the Stanford Open Policing Project (Pierson et al. 2020): New Orleans Police Department (LA), Madison Police Department (WI), and Louisville Metro Police Department (KY). All data wrangling is conducted entirely in SQL. I focus on two central questions: (1) how search rates vary across race and gender, and (2) whether hit rates (the percent of searches that find contraband) differ across agencies. The goal is to compare policing practices across these jurisdictions and identify meaningful differences in how traffic stops escalate into searches and how often searches actually find contraband.
+
+I first explore the structure of the database to understand what tables are available and how they are named. I then build a combined dataset that stacks three agencies into a single table and adds consistent indicators for searches and contraband. Finally, I summarize search and hit rates by race and gender and visualize patterns across cities.
+
 ```{r}
-
 library(tidyverse)
 library(DBI)
 library(ggplot2)
-
+library(dplyr)
 
 con_traffic <- DBI::dbConnect(
-
   RMariaDB::MariaDB(),
-
   dbname = "traffic",
-
   host = Sys.getenv("TRAFFIC_HOST"),
-
   user = Sys.getenv("TRAFFIC_USER"),
-
   password = Sys.getenv("TRAFFIC_PWD")
-
 )
-
 ```
 
-```{sql connection=con_traffic}
-SHOW TABLES;
-
-```
+## Inspecting the Database Structure
 
 ```{sql connection=con_traffic}
-DESCRIBE il_chicago_2023_01_26;
-
-
-```
-
-```{sql connection=con_traffic}
-DESCRIBE wi_madison_2023_01_26;
-```
-
-```{sql connection=con_traffic}
-DESCRIBE in_fort_wayne_2020_04_01;
-```
-
-```{sql connection=con_traffic}
-DESCRIBE ky_louisville_2023_01_26;
-```
-
-
-
-```{sql connection=con_traffic}
-
-# I tried to use a regex to retrieve the state from each table, but the server does not allow SQL regex expressions, so I reserached an interesting workaround: SUBSTRING_INDEX
 SELECT 
   table_name,
   SUBSTRING_INDEX(table_name, '_', 1) AS state
@@ -71,23 +42,22 @@ FROM information_schema.tables
 WHERE table_schema = DATABASE();
 ```
 
------------
+# Build Three-City Dataset (SQL written once)
 
------
-
-```{sql connection=con_traffic, output.var="three_city"}
+```{r}
+query_three_city <- "
 SELECT *
 FROM (
-    -- Chicago
+    -- New Orleans (recode outcome)
     SELECT
-        'Chicago' AS city,
+        'New Orleans' AS city,
         subject_race,
         subject_sex,
         date,
         time,
-        citation_issued,
-        NULL AS warning_issued
-    FROM il_chicago_2023_01_26
+        CASE WHEN outcome = 'citation' THEN 1 ELSE 0 END AS citation_issued,
+        CASE WHEN outcome = 'warning' THEN 1 ELSE 0 END AS warning_issued
+    FROM la_new_orleans_2020_04_01
     WHERE subject_race IS NOT NULL
 
     UNION ALL
@@ -117,77 +87,41 @@ FROM (
         warning_issued
     FROM ky_louisville_2023_01_26
     WHERE subject_race IS NOT NULL
-) AS t;
-
+) AS t
+"
 ```
 
----
-```{sql connection=con_traffic}
-CREATE TEMPORARY TABLE three_city AS
-SELECT
-    'Chicago' AS city,
-    subject_race,
-    subject_sex,
-    date,
-    time,
-    -- Chicago fix: derive citation indicator
-    CASE 
-        WHEN outcome = 'Citation Issued' THEN 1
-        ELSE 0
-    END AS citation_issued,
-    NULL AS warning_issued
-FROM il_chicago_2023_01_26
-WHERE subject_race IS NOT NULL
-
-UNION ALL
-
-SELECT
-    'Madison' AS city,
-    subject_race,
-    subject_sex,
-    date,
-    time,
-    citation_issued,
-    warning_issued
-FROM wi_madison_2023_01_26
-WHERE subject_race IS NOT NULL
-
-UNION ALL
-
-SELECT
-    'Louisville' AS city,
-    subject_race,
-    subject_sex,
-    date,
-    time,
-    citation_issued,
-    warning_issued
-FROM ky_louisville_2023_01_26
-WHERE subject_race IS NOT NULL;
-
-```
-
+### Load the cleaned data into R
 
 ```{r}
+three_city <- dbGetQuery(con_traffic, query_three_city)
+```
+
+### Summaries
+
+```{r}
+race_city_summary <- three_city |>
+  group_by(city, subject_race) |>
+  summarise(
+    stops = n(),
+    citation_rate = mean(citation_issued),
+    warning_rate = mean(warning_issued),
+    .groups = "drop"
+  )
 race_city_summary
 ```
 
-
+### Visualization
 
 ```{r}
-
-ggplot(race_city_summary,
-       aes(x = subject_race,
-           y = citation_rate,
-           fill = city)) +
+ggplot(race_city_summary, aes(x = subject_race, y = citation_rate, fill = city)) +
   geom_col(position = "dodge") +
   labs(
-    title = "Citation rate by driver race across three cities",
-    x = "Driver race",
-    y = "Share of stops with a citation",
+    title = "Citation Rates by Race Across Three Cities",
+    x = "Race",
+    y = "Citation Rate (Proportion of Stops)",
     fill = "City"
   ) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-
