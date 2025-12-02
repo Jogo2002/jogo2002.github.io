@@ -147,6 +147,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./Ethics.html"> 
 <span class="menu-text">Ethics of COMPAS</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./SQL.html"> 
+<span class="menu-text">Traffic Stops with SQL</span></a>
+  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data-visualization" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Data Visualization</span>
@@ -346,7 +350,7 @@ A positive value means silver is more volatile than gold.</p>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>obs_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.00765778</code></pre>
+<pre><code>[1] 0.008232936</code></pre>
 </div>
 </div>
 <p><strong>Interpretation:</strong><br>
@@ -419,7 +423,7 @@ This gives a <strong>right-tailed p-value</strong> for the hypothesis that silve
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Observed difference in SD (Silver − Gold):"</span>, <span class="fu">round</span>(obs_diff, <span class="dv">5</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Observed difference in SD (Silver − Gold): 0.00766 </code></pre>
+<pre><code>Observed difference in SD (Silver − Gold): 0.00823 </code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -427,7 +431,7 @@ This gives a <strong>right-tailed p-value</strong> for the hypothesis that silve
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">format</span>(p_val, <span class="at">scientific =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">10</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Approximate one-tailed permutation p-value: 2.1e-02 </code></pre>
+<pre><code>Approximate one-tailed permutation p-value: 8e-03 </code></pre>
 </div>
 </div>
 <p><strong>Interpretation:</strong><br>
