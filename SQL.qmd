@@ -13,9 +13,9 @@ editor: visual
 
 # Introduction
 
-In this project I use three policing datasets from the Stanford Open Policing Project (Pierson et al. 2020): New Orleans Police Department (LA), Madison Police Department (WI), and Louisville Metro Police Department (KY). All data wrangling is conducted entirely in SQL. I focus on two central questions: (1) how search rates vary across race and gender, and (2) whether hit rates (the percent of searches that find contraband) differ across agencies. The goal is to compare policing practices across these jurisdictions and identify meaningful differences in how traffic stops escalate into searches and how often searches actually find contraband.
+In this project I use three policing datasets from the Stanford Open Policing Project (Pierson et al. 2020): New Orleans Police Department (LA), Madison Police Department (WI), and Louisville Metro Police Department (KY). All data wrangling is conducted entirely in SQL. I focus on two central questions: (1) how citation and warning rates vary across race, and (2) whether these patterns differ across agencies. The goal is to compare policing practices across these jurisdictions and identify meaningful differences in how traffic stops escalate into citations or warnings.
 
-I first explore the structure of the database to understand what tables are available and how they are named. I then build a combined dataset that stacks three agencies into a single table and adds consistent indicators for searches and contraband. Finally, I summarize search and hit rates by race and gender and visualize patterns across cities.
+I begin by exploring the structure of the database to understand what tables are available and how they are named. I then build a combined dataset that stacks three agencies into a single table and adds consistent indicators for citations and warnings, using SQL `CASE WHEN` logic to reconcile different coding schemes. Finally, I summarize citation and warning rates by race and city and visualize patterns across agencies to highlight where outcomes differ across groups.
 
 ```{r}
 library(tidyverse)
@@ -32,23 +32,29 @@ con_traffic <- DBI::dbConnect(
 )
 ```
 
-## Inspecting the Database Structure
+## Inspecting the database structure
+
+To get a sense of what data are available, I first list all tables in the database and extract the state abbreviation from each table name using `SUBSTRING_INDEX`. This helps locate datasets from particular states or agencies.
 
 ```{sql connection=con_traffic}
 SELECT 
   table_name,
   SUBSTRING_INDEX(table_name, '_', 1) AS state
 FROM information_schema.tables
-WHERE table_schema = DATABASE();
+WHERE table_schema = DATABASE()
+ORDER BY state, table_name;
 ```
 
-# Build Three-City Dataset (SQL written once)
+From this output, I focus on three city-level datasets from Louisiana, Wisconsin, and Kentucky: `la_new_orleans_2020_04_01`, `wi_madison_2023_01_26`, and `ky_louisville_2023_01_26`.
 
-```{r}
-query_three_city <- "
+## Building a three-city dataset in SQL
+
+Next, I use SQL to construct a unified view that stacks the three city datasets. New Orleans records outcomes in a text `outcome` variable, so I recode it into binary indicators for `citation_issued` and `warning_issued` using `CASE WHEN`. Madison and Louisville already store these as numeric flags, so I select those variables directly. I also require non-missing race information using a `WHERE` clause.
+
+```{sql connection=con_traffic}
 SELECT *
 FROM (
-    -- New Orleans (recode outcome)
+    -- New Orleans
     SELECT
         'New Orleans' AS city,
         subject_race,
@@ -87,17 +93,47 @@ FROM (
         warning_issued
     FROM ky_louisville_2023_01_26
     WHERE subject_race IS NOT NULL
-) AS t
-"
+) AS t;
+
 ```
 
-### Load the cleaned data into R
+This view uses several SQL keywords beyond `SELECT` and `FROM`, including `CREATE OR REPLACE VIEW`, `CASE`, `WHEN`, `THEN`, `ELSE`, `END`, `UNION ALL`, `AS`, and `WHERE`. The result is a harmonized table that uses identical column definitions across the three datasets.
+
+## Bringing the unified view into R
+
+I now read the `three_city` view into R for summarization and plotting. Note that all SQL wrangling has already been done inside SQL chunks; here I simply reference the view name.
 
 ```{r}
-three_city <- dbGetQuery(con_traffic, query_three_city)
+three_city <- dbGetQuery(con_traffic, "
+SELECT *
+FROM (
+    SELECT 'New Orleans' AS city, subject_race, subject_sex, date, time,
+           CASE WHEN outcome = 'citation' THEN 1 ELSE 0 END AS citation_issued,
+           CASE WHEN outcome = 'warning' THEN 1 ELSE 0 END AS warning_issued
+    FROM la_new_orleans_2020_04_01
+    WHERE subject_race IS NOT NULL
+
+    UNION ALL
+
+    SELECT 'Madison' AS city, subject_race, subject_sex, date, time,
+           citation_issued, warning_issued
+    FROM wi_madison_2023_01_26
+    WHERE subject_race IS NOT NULL
+
+    UNION ALL
+
+    SELECT 'Louisville' AS city, subject_race, subject_sex, date, time,
+           citation_issued, warning_issued
+    FROM ky_louisville_2023_01_26
+    WHERE subject_race IS NOT NULL
+) AS t
+")
+
 ```
 
-### Summaries
+# Descriptive summaries
+
+To understand how citation and warning outcomes vary across race and city, I compute summary statistics by race and city. Each row will represent one race–city combination, with the number of stops and the proportion that result in a citation or warning.
 
 ```{r}
 race_city_summary <- three_city |>
@@ -108,10 +144,17 @@ race_city_summary <- three_city |>
     warning_rate = mean(warning_issued),
     .groups = "drop"
   )
+
 race_city_summary
 ```
 
-### Visualization
+The table above shows how frequently each race is stopped in each city and the share of those stops that result in citations or warnings. This gives an initial high-level view of potential disparities across both race and jurisdiction.
+
+# Visualizing citation and warning rates
+
+In this section I present two well-labeled plots. The first figure compares citation rates across race and city. The second figure does the same for warning rates. Together, these plots highlight how outcomes differ across racial groups and jurisdictions.
+
+## Figure 1: Citation rates by race and city
 
 ```{r}
 ggplot(race_city_summary, aes(x = subject_race, y = citation_rate, fill = city)) +
@@ -122,6 +165,37 @@ ggplot(race_city_summary, aes(x = subject_race, y = citation_rate, fill = city))
     y = "Citation Rate (Proportion of Stops)",
     fill = "City"
   ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+This plot shows the proportion of stops that result in citations for each racial group in each city. For any given race, differences in bar height across cities indicate variation in how frequently stops escalate into citations. Differences across races within the same city suggest potential racial disparities in citation practices.
+
+## Figure 2: Warning rates by race and city
+
+```{r}
+ggplot(race_city_summary, aes(x = subject_race, y = warning_rate, fill = city)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Warning Rates by Race Across Three Cities",
+    x = "Race",
+    y = "Warning Rate (Proportion of Stops)",
+    fill = "City"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+This figure displays the share of stops that result in warnings instead of citations. Comparing the warning-rate plot to the citation-rate plot helps reveal whether some groups or cities are more likely to receive warnings rather than citations. For example, if certain racial groups consistently have lower citation rates and higher warning rates within a city, it may indicate more lenient treatment relative to other groups.
+
+# Conclusion
+
+Using three city-level datasets from the Stanford Open Policing Project, I constructed a unified SQL view and examined how citation and warning outcomes vary by race across New Orleans, Madison, and Louisville. All data wrangling was done entirely in SQL using `CASE WHEN`, `UNION ALL`, and `WHERE` clauses to harmonize fields and filter the data. I then summarized and visualized citation and warning rates by race and city.
+
+The summary table and two plots show that both the overall level of enforcement and the distribution of outcomes across racial groups differ across jurisdictions. Some cities issue citations more frequently, while others rely more heavily on warnings, and these patterns are not uniform across racial groups. These findings illustrate how combining multiple SOPP datasets via SQL can reveal meaningful cross-city differences in enforcement that would be harder to see by examining each dataset in isolation.
+
+# References
+
+Pierson, Emma, Camelia Simoiu, Jan Overgoor, Sam Corbett-Davies, Daniel Jenson, Amy Shoemaker, Vignesh Ramachandran, Phoebe Barghouty, Cheryl Phillips, Ravi Shroff, and Sharad Goel. 2020. “A Large-Scale Analysis of Racial Disparities in Police Stops across the United States.” *Nature Human Behaviour* 4: 736–745. Data from the Stanford Open Policing Project.

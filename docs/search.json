@@ -152,5 +152,19 @@
     "title": "Fast Food",
     "section": "",
     "text": "library(tidyverse)\n\nfastfood &lt;- read_csv(\"data/fastfood_calories.csv\", show_col_types = FALSE)\n\navg_cal &lt;- fastfood %&gt;%\n  group_by(restaurant) %&gt;%\n  summarise(mean_calories = mean(calories, na.rm = TRUE),\n            n_items = n()) %&gt;%\n  arrange(desc(mean_calories))\n\navg_cal %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(restaurant, mean_calories),\n             y = mean_calories)) +\n  geom_col(fill = \"tomato\") +\n  coord_flip() +\n  labs(\n    title = \"Top 10 Fast Food Chains by Average Calories per Menu Item\",\n    x = \"Restaurant\",\n    y = \"Average Calories\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nSource: https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv#L4\nData From: fastfoodnutrition.com"
+  },
+  {
+    "objectID": "SQL.html",
+    "href": "SQL.html",
+    "title": "Traffic Stops with SQL",
+    "section": "",
+    "text": "In this project I use three policing datasets from the Stanford Open Policing Project (Pierson et al. 2020): New Orleans Police Department (LA), Madison Police Department (WI), and Louisville Metro Police Department (KY). All data wrangling is conducted entirely in SQL. I focus on two central questions: (1) how search rates vary across race and gender, and (2) whether hit rates (the percent of searches that find contraband) differ across agencies. The goal is to compare policing practices across these jurisdictions and identify meaningful differences in how traffic stops escalate into searches and how often searches actually find contraband.\nI first explore the structure of the database to understand what tables are available and how they are named. I then build a combined dataset that stacks three agencies into a single table and adds consistent indicators for searches and contraband. Finally, I summarize search and hit rates by race and gender and visualize patterns across cities.\n\n\nCode\nlibrary(tidyverse)\nlibrary(DBI)\nlibrary(ggplot2)\nlibrary(dplyr)\n\ncon_traffic &lt;- DBI::dbConnect(\n  RMariaDB::MariaDB(),\n  dbname = \"traffic\",\n  host = Sys.getenv(\"TRAFFIC_HOST\"),\n  user = Sys.getenv(\"TRAFFIC_USER\"),\n  password = Sys.getenv(\"TRAFFIC_PWD\")\n)\n\n\n\n\n\n\nCode\nSELECT \n  table_name,\n  SUBSTRING_INDEX(table_name, '_', 1) AS state\nFROM information_schema.tables\nWHERE table_schema = DATABASE();\n\n\n\nDisplaying records 1 - 10\n\n\ntable_name\nstate\n\n\n\n\nar_little_rock_2020_04_01\nar\n\n\naz_gilbert_2020_04_01\naz\n\n\naz_mesa_2023_01_26\naz\n\n\naz_statewide_2020_04_01\naz\n\n\nca_anaheim_2020_04_01\nca\n\n\nca_bakersfield_2020_04_01\nca\n\n\nca_long_beach_2020_04_01\nca\n\n\nca_los_angeles_2020_04_01\nca\n\n\nca_oakland_2020_04_01\nca\n\n\nca_san_bernardino_2020_04_01\nca"
+  },
+  {
+    "objectID": "SQL.html#inspecting-the-database-structure",
+    "href": "SQL.html#inspecting-the-database-structure",
+    "title": "Traffic Stops with SQL",
+    "section": "",
+    "text": "Code\nSELECT \n  table_name,\n  SUBSTRING_INDEX(table_name, '_', 1) AS state\nFROM information_schema.tables\nWHERE table_schema = DATABASE();\n\n\n\nDisplaying records 1 - 10\n\n\ntable_name\nstate\n\n\n\n\nar_little_rock_2020_04_01\nar\n\n\naz_gilbert_2020_04_01\naz\n\n\naz_mesa_2023_01_26\naz\n\n\naz_statewide_2020_04_01\naz\n\n\nca_anaheim_2020_04_01\nca\n\n\nca_bakersfield_2020_04_01\nca\n\n\nca_long_beach_2020_04_01\nca\n\n\nca_los_angeles_2020_04_01\nca\n\n\nca_oakland_2020_04_01\nca\n\n\nca_san_bernardino_2020_04_01\nca"
   }
 ]
