@@ -184,14 +184,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
-  <li><a href="#inspecting-the-database-structure" id="toc-inspecting-the-database-structure" class="nav-link" data-scroll-target="#inspecting-the-database-structure">Inspecting the Database Structure</a></li>
+  <li><a href="#inspecting-the-database-structure" id="toc-inspecting-the-database-structure" class="nav-link" data-scroll-target="#inspecting-the-database-structure">Inspecting the database structure</a></li>
+  <li><a href="#building-a-three-city-dataset-in-sql" id="toc-building-a-three-city-dataset-in-sql" class="nav-link" data-scroll-target="#building-a-three-city-dataset-in-sql">Building a three-city dataset in SQL</a></li>
+  <li><a href="#bringing-the-unified-view-into-r" id="toc-bringing-the-unified-view-into-r" class="nav-link" data-scroll-target="#bringing-the-unified-view-into-r">Bringing the unified view into R</a></li>
   </ul></li>
-  <li><a href="#build-three-city-dataset-sql-written-once" id="toc-build-three-city-dataset-sql-written-once" class="nav-link" data-scroll-target="#build-three-city-dataset-sql-written-once">Build Three-City Dataset (SQL written once)</a>
+  <li><a href="#descriptive-summaries" id="toc-descriptive-summaries" class="nav-link" data-scroll-target="#descriptive-summaries">Descriptive summaries</a></li>
+  <li><a href="#visualizing-citation-and-warning-rates" id="toc-visualizing-citation-and-warning-rates" class="nav-link" data-scroll-target="#visualizing-citation-and-warning-rates">Visualizing citation and warning rates</a>
   <ul class="collapse">
-  <li><a href="#load-the-cleaned-data-into-r" id="toc-load-the-cleaned-data-into-r" class="nav-link" data-scroll-target="#load-the-cleaned-data-into-r">Load the cleaned data into R</a></li>
-  <li><a href="#summaries" id="toc-summaries" class="nav-link" data-scroll-target="#summaries">Summaries</a></li>
-  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a></li>
+  <li><a href="#figure-1-citation-rates-by-race-and-city" id="toc-figure-1-citation-rates-by-race-and-city" class="nav-link" data-scroll-target="#figure-1-citation-rates-by-race-and-city">Figure 1: Citation rates by race and city</a></li>
+  <li><a href="#figure-2-warning-rates-by-race-and-city" id="toc-figure-2-warning-rates-by-race-and-city" class="nav-link" data-scroll-target="#figure-2-warning-rates-by-race-and-city">Figure 2: Warning rates by race and city</a></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -225,8 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>In this project I use three policing datasets from the Stanford Open Policing Project (Pierson et al.&nbsp;2020): New Orleans Police Department (LA), Madison Police Department (WI), and Louisville Metro Police Department (KY). All data wrangling is conducted entirely in SQL. I focus on two central questions: (1) how search rates vary across race and gender, and (2) whether hit rates (the percent of searches that find contraband) differ across agencies. The goal is to compare policing practices across these jurisdictions and identify meaningful differences in how traffic stops escalate into searches and how often searches actually find contraband.</p>
-<p>I first explore the structure of the database to understand what tables are available and how they are named. I then build a combined dataset that stacks three agencies into a single table and adds consistent indicators for searches and contraband. Finally, I summarize search and hit rates by race and gender and visualize patterns across cities.</p>
+<p>In this project I use three policing datasets from the Stanford Open Policing Project (Pierson et al.&nbsp;2020): New Orleans Police Department (LA), Madison Police Department (WI), and Louisville Metro Police Department (KY). All data wrangling is conducted entirely in SQL. I focus on two central questions: (1) how citation and warning rates vary across race, and (2) whether these patterns differ across agencies. The goal is to compare policing practices across these jurisdictions and identify meaningful differences in how traffic stops escalate into citations or warnings.</p>
+<p>I begin by exploring the structure of the database to understand what tables are available and how they are named. I then build a combined dataset that stacks three agencies into a single table and adds consistent indicators for citations and warnings, using SQL <code>CASE WHEN</code> logic to reconcile different coding schemes. Finally, I summarize citation and warning rates by race and city and visualize patterns across agencies to highlight where outcomes differ across groups.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -245,7 +249,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 <section id="inspecting-the-database-structure" class="level2">
-<h2 class="anchored" data-anchor-id="inspecting-the-database-structure">Inspecting the Database Structure</h2>
+<h2 class="anchored" data-anchor-id="inspecting-the-database-structure">Inspecting the database structure</h2>
+<p>To get a sense of what data are available, I first list all tables in the database and extract the state abbreviation from each table name using <code>SUBSTRING_INDEX</code>. This helps locate datasets from particular states or agencies.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -253,7 +258,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  table_name,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  SUBSTRING_INDEX(table_name, <span class="st">'_'</span>, <span class="dv">1</span>) <span class="kw">AS</span> state</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> information_schema.<span class="kw">tables</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="kw">DATABASE</span>();</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> table_schema <span class="op">=</span> <span class="kw">DATABASE</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> state, table_name;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -302,77 +308,221 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;">ca</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">ca_san_bernardino_2020_04_01</td>
+<td style="text-align: left;">ca_santa_ana_2020_04_01</td>
 <td style="text-align: left;">ca</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+<p>From this output, I focus on three city-level datasets from Louisiana, Wisconsin, and Kentucky: <code>la_new_orleans_2020_04_01</code>, <code>wi_madison_2023_01_26</code>, and <code>ky_louisville_2023_01_26</code>.</p>
 </section>
-</section>
-<section id="build-three-city-dataset-sql-written-once" class="level1">
-<h1>Build Three-City Dataset (SQL written once)</h1>
+<section id="building-a-three-city-dataset-in-sql" class="level2">
+<h2 class="anchored" data-anchor-id="building-a-three-city-dataset-in-sql">Building a three-city dataset in SQL</h2>
+<p>Next, I use SQL to construct a unified view that stacks the three city datasets. New Orleans records outcomes in a text <code>outcome</code> variable, so I recode it into binary indicators for <code>citation_issued</code> and <code>warning_issued</code> using <code>CASE WHEN</code>. Madison and Louisville already store these as numeric flags, so I select those variables directly. I also require non-missing race information using a <code>WHERE</code> clause.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>query_three_city <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT *</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">FROM (</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">    -- New Orleans (recode outcome)</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">        'New Orleans' AS city,</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">        subject_race,</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">        subject_sex,</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">        date,</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">        time,</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">        CASE WHEN outcome = 'citation' THEN 1 ELSE 0 END AS citation_issued,</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="st">        CASE WHEN outcome = 'warning' THEN 1 ELSE 0 END AS warning_issued</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM la_new_orleans_2020_04_01</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE subject_race IS NOT NULL</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="st">    UNION ALL</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="st">    -- Madison</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="st">        'Madison' AS city,</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="st">        subject_race,</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="st">        subject_sex,</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="st">        date,</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="st">        time,</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="st">        citation_issued,</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="st">        warning_issued</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM wi_madison_2023_01_26</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE subject_race IS NOT NULL</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="st">    UNION ALL</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="st">    -- Louisville</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="st">        'Louisville' AS city,</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="st">        subject_race,</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="st">        subject_sex,</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="st">        date,</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="st">        time,</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="st">        citation_issued,</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="st">        warning_issued</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM ky_louisville_2023_01_26</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE subject_race IS NOT NULL</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="st">) AS t</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> (</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- New Orleans</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'New Orleans'</span> <span class="kw">AS</span> city,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        subject_race,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        subject_sex,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">date</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">time</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">CASE</span> <span class="cf">WHEN</span> outcome <span class="op">=</span> <span class="st">'citation'</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span> <span class="kw">AS</span> citation_issued,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">CASE</span> <span class="cf">WHEN</span> outcome <span class="op">=</span> <span class="st">'warning'</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span> <span class="kw">AS</span> warning_issued</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> la_new_orleans_2020_04_01</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> subject_race <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Madison</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Madison'</span> <span class="kw">AS</span> city,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        subject_race,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        subject_sex,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">date</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">time</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        citation_issued,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        warning_issued</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> wi_madison_2023_01_26</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> subject_race <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNION</span> <span class="kw">ALL</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Louisville</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Louisville'</span> <span class="kw">AS</span> city,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        subject_race,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        subject_sex,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        <span class="dt">date</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        <span class="dt">time</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        citation_issued,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>        warning_issued</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> ky_louisville_2023_01_26</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> subject_race <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>) <span class="kw">AS</span> t;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Displaying records 1 - 10</caption>
+<colgroup>
+<col style="width: 13%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">city</th>
+<th style="text-align: left;">subject_race</th>
+<th style="text-align: left;">subject_sex</th>
+<th style="text-align: left;">date</th>
+<th style="text-align: left;">time</th>
+<th style="text-align: right;">citation_issued</th>
+<th style="text-align: right;">warning_issued</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">01:11:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">01:29:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">01:29:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">14:00:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">02:06:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">02:06:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">02:06:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">02:06:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">02:06:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New Orleans</td>
+<td style="text-align: left;">black</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: left;">2010-01-01</td>
+<td style="text-align: left;">02:06:00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
 </div>
-<section id="load-the-cleaned-data-into-r" class="level3">
-<h3 class="anchored" data-anchor-id="load-the-cleaned-data-into-r">Load the cleaned data into R</h3>
+</div>
+<p>This view uses several SQL keywords beyond <code>SELECT</code> and <code>FROM</code>, including <code>CREATE OR REPLACE VIEW</code>, <code>CASE</code>, <code>WHEN</code>, <code>THEN</code>, <code>ELSE</code>, <code>END</code>, <code>UNION ALL</code>, <code>AS</code>, and <code>WHERE</code>. The result is a harmonized table that uses identical column definitions across the three datasets.</p>
+</section>
+<section id="bringing-the-unified-view-into-r" class="level2">
+<h2 class="anchored" data-anchor-id="bringing-the-unified-view-into-r">Bringing the unified view into R</h2>
+<p>I now read the <code>three_city</code> view into R for summarization and plotting. Note that all SQL wrangling has already been done inside SQL chunks; here I simply reference the view name.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>three_city <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con_traffic, query_three_city)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>three_city <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con_traffic, <span class="st">"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT *</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">FROM (</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT 'New Orleans' AS city, subject_race, subject_sex, date, time,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">           CASE WHEN outcome = 'citation' THEN 1 ELSE 0 END AS citation_issued,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">           CASE WHEN outcome = 'warning' THEN 1 ELSE 0 END AS warning_issued</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM la_new_orleans_2020_04_01</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE subject_race IS NOT NULL</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">    UNION ALL</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT 'Madison' AS city, subject_race, subject_sex, date, time,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="st">           citation_issued, warning_issued</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM wi_madison_2023_01_26</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE subject_race IS NOT NULL</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="st">    UNION ALL</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT 'Louisville' AS city, subject_race, subject_sex, date, time,</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="st">           citation_issued, warning_issued</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM ky_louisville_2023_01_26</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE subject_race IS NOT NULL</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="st">) AS t</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
-<section id="summaries" class="level3">
-<h3 class="anchored" data-anchor-id="summaries">Summaries</h3>
+</section>
+<section id="descriptive-summaries" class="level1">
+<h1>Descriptive summaries</h1>
+<p>To understand how citation and warning outcomes vary across race and city, I compute summary statistics by race and city. Each row will represent one race–city combination, with the number of stops and the proportion that result in a citation or warning.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -384,7 +534,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">warning_rate =</span> <span class="fu">mean</span>(warning_issued),</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>race_city_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>race_city_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 17 × 5
@@ -409,9 +560,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 17 New Orleans white                  129703         0.266        0.261</code></pre>
 </div>
 </div>
+<p>The table above shows how frequently each race is stopped in each city and the share of those stops that result in citations or warnings. This gives an initial high-level view of potential disparities across both race and jurisdiction.</p>
 </section>
-<section id="visualization" class="level3">
-<h3 class="anchored" data-anchor-id="visualization">Visualization</h3>
+<section id="visualizing-citation-and-warning-rates" class="level1">
+<h1>Visualizing citation and warning rates</h1>
+<p>In this section I present two well-labeled plots. The first figure compares citation rates across race and city. The second figure does the same for warning rates. Together, these plots highlight how outcomes differ across racial groups and jurisdictions.</p>
+<section id="figure-1-citation-rates-by-race-and-city" class="level2">
+<h2 class="anchored" data-anchor-id="figure-1-citation-rates-by-race-and-city">Figure 1: Citation rates by race and city</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -423,8 +578,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Citation Rate (Proportion of Stops)"</span>,</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"City"</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -434,9 +590,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-
-
+<p>This plot shows the proportion of stops that result in citations for each racial group in each city. For any given race, differences in bar height across cities indicate variation in how frequently stops escalate into citations. Differences across races within the same city suggest potential racial disparities in citation practices.</p>
 </section>
+<section id="figure-2-warning-rates-by-race-and-city" class="level2">
+<h2 class="anchored" data-anchor-id="figure-2-warning-rates-by-race-and-city">Figure 2: Warning rates by race and city</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(race_city_summary, <span class="fu">aes</span>(<span class="at">x =</span> subject_race, <span class="at">y =</span> warning_rate, <span class="at">fill =</span> city)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Warning Rates by Race Across Three Cities"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Race"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Warning Rate (Proportion of Stops)"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"City"</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">accuracy =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SQL_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This figure displays the share of stops that result in warnings instead of citations. Comparing the warning-rate plot to the citation-rate plot helps reveal whether some groups or cities are more likely to receive warnings rather than citations. For example, if certain racial groups consistently have lower citation rates and higher warning rates within a city, it may indicate more lenient treatment relative to other groups.</p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Using three city-level datasets from the Stanford Open Policing Project, I constructed a unified SQL view and examined how citation and warning outcomes vary by race across New Orleans, Madison, and Louisville. All data wrangling was done entirely in SQL using <code>CASE WHEN</code>, <code>UNION ALL</code>, and <code>WHERE</code> clauses to harmonize fields and filter the data. I then summarized and visualized citation and warning rates by race and city.</p>
+<p>The summary table and two plots show that both the overall level of enforcement and the distribution of outcomes across racial groups differ across jurisdictions. Some cities issue citations more frequently, while others rely more heavily on warnings, and these patterns are not uniform across racial groups. These findings illustrate how combining multiple SOPP datasets via SQL can reveal meaningful cross-city differences in enforcement that would be harder to see by examining each dataset in isolation.</p>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>Pierson, Emma, Camelia Simoiu, Jan Overgoor, Sam Corbett-Davies, Daniel Jenson, Amy Shoemaker, Vignesh Ramachandran, Phoebe Barghouty, Cheryl Phillips, Ravi Shroff, and Sharad Goel. 2020. “A Large-Scale Analysis of Racial Disparities in Police Stops across the United States.” <em>Nature Human Behaviour</em> 4: 736–745. Data from the Stanford Open Policing Project.</p>
+
+
 </section>
 
 </main> <!-- /main -->
