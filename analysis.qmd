@@ -58,7 +58,8 @@ theme_counts <- netflix_titles |>
     death = sum(death_mentions, na.rm = TRUE),
     mystery = sum(mystery_mentions, na.rm = TRUE)
   ) |>
-  pivot_longer(cols = everything(), names_to = "theme", values_to = "count")
+  pivot_longer(cols = everything(), names_to = "theme", values_to = "count") 
+
 
 ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   geom_col() +
