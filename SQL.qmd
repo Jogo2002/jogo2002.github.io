@@ -141,9 +141,9 @@ ggplot(race_city_summary, aes(x = subject_race, y = citation_rate, fill = city))
 ```
 
 
-Figure 1 shows substantial cross-city differences in how often traffic stops result in citations. Overall, **New Orleans has consistently lower citation rates** across race categories (roughly in the 20%–40% range), while **Madison and Louisville are much higher** for most groups (often around 70%–85%), suggesting different enforcement practices or recording conventions across jurisdictions.
+Figure 1 shows substantial cross-city differences in how often traffic stops result in citations. Overall,New Orleans has consistently lower citation rates across race categories (roughly in the 20%–40% range), while Madison and Louisville are much higher for most groups (often around 70%–85%), suggesting different enforcement practices or recording conventions across jurisdictions.
 
-Within-city racial patterns also vary. In **Madison**, citation rates are relatively similar across race categories (a fairly “flat” profile), whereas **Louisville shows more dispersion**, including notably low citation rates for the “other” category and extremely high rates for “unknown.” The **“unknown” race category should be interpreted cautiously**, since it can reflect missing/uncoded records and may involve smaller sample sizes; a useful follow-up is to compare the stop counts (`stops`) for each race–city group to see whether these extremes are driven by low-N categories.
+Within-city racial patterns also vary. In Madison, citation rates are relatively similar across race categories (a fairly “flat” profile), whereas Louisville shows more dispersion, including notably low citation rates for the “other” category and extremely high rates for “unknown.” The “unknown” race category should be interpreted cautiously, since it can reflect missing/uncoded records and may involve smaller sample sizes; a useful follow-up is to compare the stop counts (`stops`) for each race–city group to see whether these extremes are driven by low-N categories.
 
 ## Figure 2: Warning rates by race and city
 
