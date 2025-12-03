@@ -443,7 +443,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This plot compares the probability that a stop results in a citation. For each race category, differences across the three bars (cities) indicate cross-jurisdiction variation. Within each city, differences across race categories indicate that enforcement outcomes are not uniform across groups.</p>
+<p>Figure 1 shows substantial cross-city differences in how often traffic stops result in citations. Overall, <strong>New Orleans has consistently lower citation rates</strong> across race categories (roughly in the 20%–40% range), while <strong>Madison and Louisville are much higher</strong> for most groups (often around 70%–85%), suggesting different enforcement practices or recording conventions across jurisdictions.</p>
+<p>Within-city racial patterns also vary. In <strong>Madison</strong>, citation rates are relatively similar across race categories (a fairly “flat” profile), whereas <strong>Louisville shows more dispersion</strong>, including notably low citation rates for the “other” category and extremely high rates for “unknown.” The <strong>“unknown” race category should be interpreted cautiously</strong>, since it can reflect missing/uncoded records and may involve smaller sample sizes; a useful follow-up is to compare the stop counts (<code>stops</code>) for each race–city group to see whether these extremes are driven by low-N categories.</p>
 </section>
 <section id="figure-2-warning-rates-by-race-and-city" class="level2">
 <h2 class="anchored" data-anchor-id="figure-2-warning-rates-by-race-and-city">Figure 2: Warning rates by race and city</h2>
@@ -470,7 +471,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Warnings are often the alternative to citations, so interpreting this plot alongside the citation plot helps clarify how different jurisdictions resolve stops. If some groups have relatively higher citation rates and lower warning rates within a city, that suggests a tendency toward more punitive outcomes for those groups in that jurisdiction.</p>
+<p>Figure 2 shows that warning rates vary more across cities than across racial groups. Madison has the highest warning rates across most races, generally around the high-20% to low-30% range. New Orleans is typically slightly lower but still comparable, while Louisville tends to have the lowest warning rates for most categories. Within each city, differences by race are generally modest. The main exception is Louisville’s “other” category, which appears extremely high (around 80%). This kind of spike is often driven by small sample sizes or differences in how race categories are coded, so it should be interpreted cautiously without checking the number of stops in that group.</p>
+<p>Finally, the “unknown” category appears only for New Orleans in this figure, suggesting that missing or unknown race values are coded differently across agencies (or are not present after filtering) and therefore may not be directly comparable across cities.</p>
 </section>
 </section>
 <section id="conclusion" class="level1">
