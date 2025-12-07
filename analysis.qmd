@@ -11,10 +11,10 @@ format:
 editor: visual
 ---
 
-### Introduction
+# Introduction
 
 This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20)
-, includes thousands of titles from a variety of genres and regions, spanning many years. Our goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.
+, includes thousands of titles from a variety of genres and regions, spanning many years. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.
 
 
 ```{r setup, include=FALSE}
@@ -37,7 +37,7 @@ netflix_titles <- readr::read_csv(
 )
 ```
 
-## Do Netflix Titles Contain Numbers?
+## What proportion of Netflix Titles Contain Numbers?
 
 We begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.
 
@@ -46,20 +46,26 @@ netflix_titles <- netflix_titles |>
   mutate(has_number = str_detect(title, "\\d+"))
 
 table(netflix_titles$has_number)
+prop.table(table(netflix_titles$has_number))
+
 
 #Here, we use the `str_detect()` function with the regular expression `\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  
 #This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.
 
 #The table above shows how many Netflix titles contain numbers compared to those that do not.')
 
+```
+The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context.
 
 
-#2. Counting Thematic Keywords in Descriptions
+## Counting Thematic Keywords in Descriptions
+
+```{r}
 netflix_titles <- netflix_titles |>
   mutate(
-    love_mentions = str_count(description, regex("\\blove\\b", ignore_case = TRUE)),
-    death_mentions = str_count(description, regex("\\bdeath\\b", ignore_case = TRUE)),
-    mystery_mentions = str_count(description, regex("\\bmystery\\b", ignore_case = TRUE))
+    love_mentions    = str_count(description, "\\b(?i)love\\b"),
+    death_mentions   = str_count(description, "\\b(?i)death\\b"),
+    mystery_mentions = str_count(description, "\\b(?i)mystery\\b")
   )
 
 theme_counts <- netflix_titles |>
@@ -70,18 +76,20 @@ theme_counts <- netflix_titles |>
   ) |>
   pivot_longer(cols = everything(), names_to = "theme", values_to = "count") 
 
-
 ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   geom_col() +
   labs(
     title = "Common Themes in Netflix Descriptions",
     x = "Theme",
     y = "Count of Mentions",
-    fill = "Theme"
+    fill = "Theme",
+    alt = "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. 
+           Each bar represents the overall frequency of a theme, allowing comparison of how often these motifs appear 
+           in Netflix title summaries."
   ) +
   theme_minimal()
-```
 
+```
 Interpretation:
 
 The first table shows the count of titles that do or do not contain a number. TRUE indicates the title contains at least one digit.
@@ -135,13 +143,13 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
   theme_minimal()
 ```
 
-Interpretation:
+## Interpretation:
 
 This bar chart shows the 15 most common non-stop words found in Netflix descriptions.\
 Words like “life,” “family,” “world,” and “love” appear prominently — reinforcing the emotional and human-centered tone of Netflix’s catalog.\
 This kind of frequency analysis helps identify how streaming services position their content around universal, relatable ideas.
 
-Summary of Insights
+## Summary of Insights
 
 From these visual and textual analyses, we can draw several conclusions:
 

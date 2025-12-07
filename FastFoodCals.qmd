@@ -17,7 +17,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r}
+```{r, fig-alt="Bar chart showing the top 10 fast food chains by average calories per menu item."}
+
 library(tidyverse)
 
 fastfood <- read_csv("data/fastfood_calories.csv", show_col_types = FALSE)
