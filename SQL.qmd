@@ -176,4 +176,4 @@ Overall, the results show clear differences in outcome rates across cities and m
 
 # References
 
-Pierson, Emma, Camelia Simoiu, Jan Overgoor, Sam Corbett-Davies, Daniel Jenson, Amy Shoemaker, Vignesh Ramachandran, Phoebe Barghouty, Cheryl Phillips, Ravi Shroff, and Sharad Goel. 2020. “A Large-Scale Analysis of Racial Disparities in Police Stops across the United States.” *Nature Human Behaviour* 4: 736–745. Data from the Stanford Open Policing Project.
+Pierson, Emma, Camelia Simoiu, Jan Overgoor, Sam Corbett-Davies, Daniel Jenson, Amy Shoemaker, Vignesh Ramachandran, Phoebe Barghouty, Cheryl Phillips, Ravi Shroff, and Sharad Goel. 2020. “A Large-Scale Analysis of Racial Disparities in Police Stops across the United States.” Nature Human Behaviour 4: 736–745. Data from the Stanford Open Policing Project.

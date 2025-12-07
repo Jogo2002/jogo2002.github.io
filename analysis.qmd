@@ -11,6 +11,12 @@ format:
 editor: visual
 ---
 
+### Introduction
+
+This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20)
+, includes thousands of titles from a variety of genres and regions, spanning many years. Our goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -30,6 +36,10 @@ netflix_titles <- readr::read_csv(
   "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv"
 )
 ```
+
+## Do Netflix Titles Contain Numbers?
+
+We begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.
 
 ```{r}
 netflix_titles <- netflix_titles |>

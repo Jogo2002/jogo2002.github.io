@@ -4,10 +4,19 @@ description: |
   Analysis of FIFA attendance data from TidyTuesday
 author: Josh Goldhaber
 date: September 24, 2025
-format: html
+format: 
+  html: 
+    code-fold: true
+    echo: true
+    warning: false
+    message: false
 ---
 
+
 ```{r}
+
+#| fig-alt: "Scatterplot comparing countries' share of world population to their share of FIFA World Cup TV audience, on a log-log scale. Each point is colored by confederation. A red dashed 45-degree line represents equal population and audience shares. Most points fall above the line, indicating that many countries have a disproportionately high TV audience relative to their population share."
+
 library(tidyverse)
 
 fifa <- read_csv("data/week11_fifa_audience.csv", show_col_types = FALSE)
@@ -32,5 +41,5 @@ Source:
 
 https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv#L4
 
-Data from: FIFA 
+Data from: FIFA
 
