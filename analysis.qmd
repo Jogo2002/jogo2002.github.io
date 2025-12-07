@@ -84,7 +84,9 @@ ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
 
 Interpretation:
 
-This plot compares the frequency of the words “love,” “death,” and “mystery” across all Netflix descriptions.\
+The first table shows the count of titles that do or do not contain a number. TRUE indicates the title contains at least one digit.
+
+The plot compares the frequency of the words “love,” “death,” and “mystery” across all Netflix descriptions.\
 We can see that “love” dominates, revealing that romantic themes are heavily used.\
 “Death” and “mystery” occur less often, but still signal important narrative categories.
 
@@ -112,6 +114,8 @@ Interpretation: Looking at the top 10 words preceding story, it is clear that "t
 Most Frequent Words in Descriptions (Excluding filler)
 
 ```{r}
+#| fig-alt: "Bar chart showing how often the words 'love', 'death', and 'mystery' appear in Netflix descriptions. 'Love' occurs most frequently by a large margin."
+
 data("stop_words")
 
 top_words <- netflix_titles |>
