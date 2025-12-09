@@ -1,5 +1,26 @@
 [
   {
+    "objectID": "FinalPresentation.html#overview-of-my-projects",
+    "href": "FinalPresentation.html#overview-of-my-projects",
+    "title": "Recap: Final Presentation",
+    "section": "Overview of My Projects",
+    "text": "Overview of My Projects\nIn this presentation, I’ll briefly introduce the major analytical projects I’ve completed this semester. Each project applies data science tools to real-world questions, drawing on SQL, R, visualization, and statistical inference."
+  },
+  {
+    "objectID": "FinalPresentation.html#projects-included-in-this-course",
+    "href": "FinalPresentation.html#projects-included-in-this-course",
+    "title": "Recap: Final Presentation",
+    "section": "Projects Included in This Course",
+    "text": "Projects Included in This Course\n\nText Analysis:\nUnderstanding thematic patterns and linguistic structure in Netflix titles and descriptions.\nProject 3 – Silver vs. Gold Volatility:\nA permutation test examining whether silver is more volatile than gold from August–October.\nEthics of COMPAS:\nA critical evaluation of algorithmic fairness, bias, and the limits of risk assessments.\nTraffic Stops with SQL:\nCombining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities.\nData Visualization Project:\nCreating clear, interpretable graphics to explore patterns in complex datasets.\nFast Food Calories:\nVisualizing and comparing calorie distributions across major fast-food chains.\nFIFA Data:\nExploring player attributes, performance, and clustering patterns in FIFA datasets.\nPermutation Test Project (Project 5):\nUsing simulation-based inference to compare daily log returns of gold and silver."
+  },
+  {
+    "objectID": "FinalPresentation.html#his-course-portfolio-highlights-work-across-sql-statistical-inference-ethics-and-visualizationshowing-my-ability-to-tackle-diverse-data-problems-using-robust-analytical-methods.",
+    "href": "FinalPresentation.html#his-course-portfolio-highlights-work-across-sql-statistical-inference-ethics-and-visualizationshowing-my-ability-to-tackle-diverse-data-problems-using-robust-analytical-methods.",
+    "title": "Recap: Final Presentation",
+    "section": "his course portfolio highlights work across SQL, statistical inference, ethics, and visualization—showing my ability to tackle diverse data problems using robust analytical methods.",
+    "text": "his course portfolio highlights work across SQL, statistical inference, ethics, and visualization—showing my ability to tackle diverse data problems using robust analytical methods."
+  },
+  {
     "objectID": "FastFoodCals.html",
     "href": "FastFoodCals.html",
     "title": "Fast Food",

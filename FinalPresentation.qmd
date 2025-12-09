@@ -4,6 +4,7 @@ author: "Josh Goldhaber"
 subtitle: "December 10, 2025 "
 format:
   revealjs:
+    self-contained: true
     scrollable: true
     slide-number: true
     show-slide-number: all
