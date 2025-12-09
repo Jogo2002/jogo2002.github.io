@@ -15,14 +15,11 @@ knitr::opts_chunk$set(
   fig.width = 6,
   fig.height = 4
 )
+library(tidyverse)
 ```
 
 ```{r}
 #| fig-alt: "Bar chart displaying the top 10 fast food chains ranked by average calories per menu item. Each bar represents a restaurant, with the x-axis showing the restaurant names and the y-axis showing the average calories. The chart highlights calorie differences across chains."
-
-
-
-library(tidyverse)
 
 fastfood <- read_csv("data/fastfood_calories.csv", show_col_types = FALSE)
 

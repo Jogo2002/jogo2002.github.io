@@ -4,7 +4,6 @@ author: "Josh Goldhaber"
 subtitle: "December 10, 2025 "
 format:
   revealjs:
-    self-contained: true
     scrollable: true
     slide-number: true
     show-slide-number: all
@@ -15,7 +14,7 @@ execute:
   message: false
 ---   
 
-## Overview 
+# Overview 
 
 - **Text Analysis:**  
   Understanding thematic patterns and linguistic structure in Netflix titles and descriptions.
@@ -26,9 +25,108 @@ execute:
 - **Traffic Stops with SQL:**  
   Combining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities.
 
-## Text Analysis Recap
-- Used **tokenization** to break down text into words.
+# Text Analysis Recap
+- Used **regular expressions** to break down text into words.
 - Removed **stop words** to focus on meaningful terms.
 - Analyzed **word frequency** to identify common themes.
 
-## Example code 
+## Text Analysis Code
+
+### Package Installation
+```{r}
+# Install required packages
+install.packages(c("tidyverse", "stringr", "tidytext", "ggplot2"))
+```
+
+## Setup
+```{r}
+# Load libraries and set chunk options
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 6,
+  fig.height = 4
+)
+library(tidyverse)
+library(stringr)
+library(tidytext)
+library(ggplot2)
+```
+
+## Proportion of Netflix Titles Containing Numbers
+```{r}
+#| eval: true
+netflix_titles <- netflix_titles |>
+  mutate(has_number = str_detect(title, "\\d+"))
+
+table(netflix_titles$has_number)
+prop.table(table(netflix_titles$has_number))
+```
+
+## Counting Thematic Keywords in Descriptions
+```{r}
+#| fig-alt: "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries."
+#| eval: true
+netflix_titles <- netflix_titles |>
+  mutate(
+    love_mentions    = str_count(description, "\\b(?i)love\\b"),
+    death_mentions   = str_count(description, "\\b(?i)death\\b"),
+    mystery_mentions = str_count(description, "\\b(?i)mystery\\b")
+  )
+
+theme_counts <- netflix_titles |>
+  summarise(
+    love = sum(love_mentions, na.rm = TRUE),
+    death = sum(death_mentions, na.rm = TRUE),
+    mystery = sum(mystery_mentions, na.rm = TRUE)
+  ) |>
+  pivot_longer(cols = everything(), names_to = "theme", values_to = "count") 
+
+ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
+  geom_col() +
+  labs(
+    title = "Common Themes in Netflix Descriptions",
+    x = "Theme",
+    y = "Count of Mentions",
+    fill = "Theme"
+  ) +
+  theme_minimal()
+```
+
+### Finding Adjectives Before "Story"
+```{r}
+#| eval: true
+story_words <- netflix_titles |>
+  mutate(adj_before_story = str_extract(description, "\\b\\w+(?= story)")) |>
+  filter(!is.na(adj_before_story)) |>
+  mutate(adj_before_story = tolower(adj_before_story)) |>
+  anti_join(stop_words, by = c("adj_before_story" = "word")) |>
+  count(adj_before_story, sort = TRUE)
+
+head(story_words, 10)
+```
+
+### Most Frequent Words in Descriptions
+```{r}
+#| fig-alt: "Horizontal bar chart of the 15 most common non-stop words in Netflix descriptions, showing frequency for each word. Words like 'love', 'life', and 'family' appear prominently."
+#| eval: true
+data("stop_words")
+
+top_words <- netflix_titles |>
+  unnest_tokens(word, description) |>
+  anti_join(stop_words, by = "word") |>
+  count(word, sort = TRUE) |>
+  slice_head(n = 15)
+
+ggplot(top_words, aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Most Frequent Words in Netflix Descriptions",
+    x = "Word",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+

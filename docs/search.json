@@ -25,7 +25,7 @@
     "href": "FastFoodCals.html",
     "title": "Fast Food",
     "section": "",
-    "text": "knitr::opts_current$set(\n  fig.alt = \"Bar chart showing the top 10 fast food chains by average calories per menu item.\"\n)\n\nlibrary(tidyverse)\n\nfastfood &lt;- read_csv(\"data/fastfood_calories.csv\", show_col_types = FALSE)\n\navg_cal &lt;- fastfood %&gt;%\n  group_by(restaurant) %&gt;%\n  summarise(mean_calories = mean(calories, na.rm = TRUE),\n            n_items = n()) %&gt;%\n  arrange(desc(mean_calories))\n\navg_cal %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(restaurant, mean_calories),\n             y = mean_calories)) +\n  geom_col(fill = \"tomato\") +\n  coord_flip() +\n  labs(\n    title = \"Top 10 Fast Food Chains by Average Calories per Menu Item\",\n    x = \"Restaurant\",\n    y = \"Average Calories\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nSource: https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv#L4\nData From: fastfoodnutrition.com"
+    "text": "fastfood &lt;- read_csv(\"data/fastfood_calories.csv\", show_col_types = FALSE)\n\navg_cal &lt;- fastfood %&gt;%\n  group_by(restaurant) %&gt;%\n  summarise(mean_calories = mean(calories, na.rm = TRUE),\n            n_items = n()) %&gt;%\n  arrange(desc(mean_calories))\n\navg_cal %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(restaurant, mean_calories),\n             y = mean_calories)) +\n  geom_col(fill = \"tomato\") +\n  coord_flip() +\n  labs(\n    title = \"Top 10 Fast Food Chains by Average Calories per Menu Item\",\n    x = \"Restaurant\",\n    y = \"Average Calories\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nSource: https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv#L4\nData From: fastfoodnutrition.com"
   },
   {
     "objectID": "FifaData.html",
@@ -242,7 +242,7 @@
     "href": "FinalPresentation.html#text-analysis-recap",
     "title": "Recap: Final Presentation",
     "section": "Text Analysis Recap",
-    "text": "Text Analysis Recap\n\nUsed tokenization to break down text into words.\nRemoved stop words to focus on meaningful terms.\nAnalyzed word frequency to identify common themes."
+    "text": "Text Analysis Recap\n\nUsed regular expressions to break down text into words.\nRemoved stop words to focus on meaningful terms.\nAnalyzed word frequency to identify common themes."
   },
   {
     "objectID": "FinalPresentation.html#example-code",
@@ -250,5 +250,33 @@
     "title": "Recap: Final Presentation",
     "section": "Example code",
     "text": "Example code"
+  },
+  {
+    "objectID": "FinalPresentation.html#text-analysis-code",
+    "href": "FinalPresentation.html#text-analysis-code",
+    "title": "Recap: Final Presentation",
+    "section": "Text Analysis Code",
+    "text": "Text Analysis Code\nPackage Installation\n# Install required packages\ninstall.packages(c(\"tidyverse\", \"stringr\", \"tidytext\", \"ggplot2\"))"
+  },
+  {
+    "objectID": "FinalPresentation.html#setup",
+    "href": "FinalPresentation.html#setup",
+    "title": "Recap: Final Presentation",
+    "section": "Setup",
+    "text": "Setup\n# Load libraries and set chunk options\nknitr::opts_chunk$set(\n  echo = TRUE,\n  warning = FALSE,\n  message = FALSE,\n  fig.width = 6,\n  fig.height = 4\n)\nlibrary(tidyverse)\nlibrary(stringr)\nlibrary(tidytext)\nlibrary(ggplot2)"
+  },
+  {
+    "objectID": "FinalPresentation.html#proportion-of-netflix-titles-containing-numbers",
+    "href": "FinalPresentation.html#proportion-of-netflix-titles-containing-numbers",
+    "title": "Recap: Final Presentation",
+    "section": "Proportion of Netflix Titles Containing Numbers",
+    "text": "Proportion of Netflix Titles Containing Numbers\n#| eval: true\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\nprop.table(table(netflix_titles$has_number))"
+  },
+  {
+    "objectID": "FinalPresentation.html#counting-thematic-keywords-in-descriptions",
+    "href": "FinalPresentation.html#counting-thematic-keywords-in-descriptions",
+    "title": "Recap: Final Presentation",
+    "section": "Counting Thematic Keywords in Descriptions",
+    "text": "Counting Thematic Keywords in Descriptions\n#| fig-alt: \"Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries.\"\n#| eval: true\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(\n    love_mentions    = str_count(description, \"\\\\b(?i)love\\\\b\"),\n    death_mentions   = str_count(description, \"\\\\b(?i)death\\\\b\"),\n    mystery_mentions = str_count(description, \"\\\\b(?i)mystery\\\\b\")\n  )\n\ntheme_counts &lt;- netflix_titles |&gt;\n  summarise(\n    love = sum(love_mentions, na.rm = TRUE),\n    death = sum(death_mentions, na.rm = TRUE),\n    mystery = sum(mystery_mentions, na.rm = TRUE)\n  ) |&gt;\n  pivot_longer(cols = everything(), names_to = \"theme\", values_to = \"count\") \n\nggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +\n  geom_col() +\n  labs(\n    title = \"Common Themes in Netflix Descriptions\",\n    x = \"Theme\",\n    y = \"Count of Mentions\",\n    fill = \"Theme\"\n  ) +\n  theme_minimal()\nFinding Adjectives Before “Story”\n#| eval: true\nstory_words &lt;- netflix_titles |&gt;\n  mutate(adj_before_story = str_extract(description, \"\\\\b\\\\w+(?= story)\")) |&gt;\n  filter(!is.na(adj_before_story)) |&gt;\n  mutate(adj_before_story = tolower(adj_before_story)) |&gt;\n  anti_join(stop_words, by = c(\"adj_before_story\" = \"word\")) |&gt;\n  count(adj_before_story, sort = TRUE)\n\nhead(story_words, 10)\nMost Frequent Words in Descriptions\n#| fig-alt: \"Horizontal bar chart of the 15 most common non-stop words in Netflix descriptions, showing frequency for each word. Words like 'love', 'life', and 'family' appear prominently.\"\n#| eval: true\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()"
   }
 ]

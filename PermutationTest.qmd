@@ -69,6 +69,7 @@ This plot shows the raw time series of **daily log returns** for gold and silver
 It helps the reader visually compare **volatility over time** — wider fluctuations suggest higher variance.
 
 ```{r}
+#| fig-alt: "Line plot showing daily log returns for Gold and Silver from August to present. The x-axis represents dates, while the y-axis shows daily log returns. Gold returns are shown in gold color and Silver returns in blue, illustrating the volatility patterns of both metals over time." 
 
 ggplot(returns_long, aes(x = date, y = Return, color = Metal)) +
   geom_line(alpha = 0.6) +

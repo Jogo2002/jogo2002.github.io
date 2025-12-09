@@ -14,7 +14,6 @@ format:
 
 
 ```{r}
-
 #| fig-alt: "Scatterplot comparing countries' share of world population to their share of FIFA World Cup TV audience, on a log-log scale. Each point is colored by confederation. A red dashed 45-degree line represents equal population and audience shares. Most points fall above the line, indicating that many countries have a disproportionately high TV audience relative to their population share."
 
 library(tidyverse)
