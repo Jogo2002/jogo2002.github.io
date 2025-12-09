@@ -77,6 +77,7 @@ theme_counts <- netflix_titles |>
   ) |>
   pivot_longer(cols = everything(), names_to = "theme", values_to = "count") 
 
+#| fig-alt: "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries."
 ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   geom_col() +
   labs(
@@ -121,8 +122,8 @@ Interpretation: Looking at the top 10 words preceding story, it is clear that "t
 Most Frequent Words in Descriptions (Excluding filler)
 
 ```{r}
-#| fig-alt: "Bar chart showing how often the words 'love', 'death', and 'mystery' appear in Netflix descriptions. 'Love' occurs most frequently by a large margin."
 #| fig-alt: "Horizontal bar chart of the 15 most common non-stop words in Netflix descriptions, showing frequency for each word. Words like 'love', 'life', and 'family' appear prominently."
+
 data("stop_words")
 
 top_words <- netflix_titles |>
