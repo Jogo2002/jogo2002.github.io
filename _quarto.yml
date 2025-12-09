@@ -26,6 +26,9 @@ website:
             href: FifaData.qmd
           - text: "Fast Food Cals"
             href: FastFoodCals.qmd
+      - href: FinalPresentation.qmd
+        text: "Final Presentation"
+
 
 format:
   html:
