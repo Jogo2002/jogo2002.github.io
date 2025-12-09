@@ -83,10 +83,7 @@ ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
     title = "Common Themes in Netflix Descriptions",
     x = "Theme",
     y = "Count of Mentions",
-    fill = "Theme",
-    alt = "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. 
-           Each bar represents the overall frequency of a theme, allowing comparison of how often these motifs appear 
-           in Netflix title summaries."
+    fill = "Theme"
   ) +
   theme_minimal()
 
