@@ -56,8 +56,13 @@ From this list, I focus on three city-level datasets: `la_new_orleans_2020_04_01
 
 The block below creates one unified dataset by stacking the three city tables using `UNION ALL` and adding a `city` label. New Orleans stores `outcome` as text, so I use `CASE WHEN` to create comparable binary indicators for `citation_issued` and `warning_issued`. Madison and Louisville already contain numeric flags with those names, so I select them directly. I filter to rows with non-missing `subject_race` because race is essential for the comparisons that follow.
 
-```{sql, connection=con_traffic, output.var="three_city"}
-SELECT *
+```{sql, connection=con_traffic, output.var="race_city_summary"}
+SELECT
+  city,
+  subject_race,
+  COUNT(*) AS stops,
+  AVG(citation_issued) AS citation_rate,
+  AVG(warning_issued) AS warning_rate
 FROM (
     -- New Orleans: recode text outcome into harmonized binary indicators
     SELECT
@@ -98,25 +103,17 @@ FROM (
         warning_issued
     FROM ky_louisville_2023_01_26
     WHERE subject_race IS NOT NULL
-) AS t;
+) AS three_city
+GROUP BY city, subject_race
+ORDER BY city, subject_race;
+
 ```
 
 # Descriptive summaries
 
 To compare outcomes across race and city, I compute (1) the number of stops and (2) the fraction of stops resulting in citations and warnings. Since `citation_issued` and `warning_issued` are 0/1 indicators, their means are directly interpretable as rates.
 
-```{r}
-race_city_summary <- three_city |>
-  group_by(city, subject_race) |>
-  summarise(
-    stops = n(),
-    citation_rate = mean(citation_issued),
-    warning_rate = mean(warning_issued),
-    .groups = "drop"
-  )
 
-race_city_summary
-```
 
 This table provides the baseline comparisons. Differences across cities reflect jurisdiction-level enforcement patterns, while differences across race within a city suggest potential disparities in how stops are resolved.
 
@@ -127,7 +124,7 @@ I present two bar charts to compare rates across cities and racial groups. Visua
 ## Figure 1: Citation rates by race and city
 
 ```{r}
-ggplot(race_city_summary, aes(x = subject_race, y = citation_rate, fill = city)) +
+ggplot(race_city_summary, aes(x = city, y = citation_rate, fill = subject_race)) +
   geom_col(position = "dodge") +
   labs(
     title = "Citation Rates by Race Across Three Cities",
@@ -147,7 +144,7 @@ Within-city racial patterns also vary. In Madison, citation rates are relatively
 ## Figure 2: Warning rates by race and city
 
 ```{r}
-ggplot(race_city_summary, aes(x = subject_race, y = warning_rate, fill = city)) +
+ggplot(race_city_summary, aes(x = city, y = warning_rate, fill = subject_race)) +
   geom_col(position = "dodge") +
   labs(
     title = "Warning Rates by Race Across Three Cities",
