@@ -13,9 +13,7 @@ editor: visual
 
 # Introduction
 
-This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20)
-, includes thousands of titles from a variety of genres and regions, spanning many years. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.
-
+This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20) , includes thousands of titles from a variety of genres and regions, spanning many years. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -57,7 +55,6 @@ prop.table(table(netflix_titles$has_number))
 ```
 
 The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context.
-
 
 ## Counting Thematic Keywords in Descriptions
 
@@ -163,4 +160,5 @@ Data Sources
 -   Accessed via TidyTuesday (R4DS project): [TidyTuesday Netflix Dataset – 2021-04-20](https://github.com/rfordatascience/tidytuesday/tree/main/data/2021/2021-04-20)
 
 -   Original source: Kaggle – [Netflix Movies and TV Shows Dataset by Shivam Bansal](https://www.kaggle.com/shivamb/netflix-shows) (CC-BY-SA 4.0 License)
+
 -   Shivam Bansal last updated this source 4 years ago
