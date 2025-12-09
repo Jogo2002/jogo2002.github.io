@@ -113,8 +113,6 @@ ORDER BY city, subject_race;
 
 To compare outcomes across race and city, I compute (1) the number of stops and (2) the fraction of stops resulting in citations and warnings. Since `citation_issued` and `warning_issued` are 0/1 indicators, their means are directly interpretable as rates.
 
-
-
 This table provides the baseline comparisons. Differences across cities reflect jurisdiction-level enforcement patterns, while differences across race within a city suggest potential disparities in how stops are resolved.
 
 # Visualizing citation and warning rates

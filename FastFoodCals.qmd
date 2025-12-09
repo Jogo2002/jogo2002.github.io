@@ -17,7 +17,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, fig-alt="Bar chart showing the top 10 fast food chains by average calories per menu item."}
+```{r}
+knitr::opts_current$set(
+  fig.alt = "Bar chart showing the top 10 fast food chains by average calories per menu item."
+)
 
 library(tidyverse)
 
