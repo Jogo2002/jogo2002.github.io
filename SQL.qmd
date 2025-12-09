@@ -122,6 +122,8 @@ I present two bar charts to compare rates across cities and racial groups. Visua
 ## Figure 1: Citation rates by race and city
 
 ```{r}
+
+#| fig-alt: there  
 ggplot(race_city_summary, aes(x = city, y = citation_rate, fill = subject_race)) +
   geom_col(position = "dodge") +
   labs(
@@ -142,6 +144,8 @@ Within-city racial patterns also vary. In Madison, citation rates are relatively
 ## Figure 2: Warning rates by race and city
 
 ```{r}
+
+#| fig-alt: there  
 ggplot(race_city_summary, aes(x = city, y = warning_rate, fill = subject_race)) +
   geom_col(position = "dodge") +
   labs(
