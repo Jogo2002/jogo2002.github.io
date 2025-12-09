@@ -182,8 +182,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#do-netflix-titles-contain-numbers" id="toc-do-netflix-titles-contain-numbers" class="nav-link" data-scroll-target="#do-netflix-titles-contain-numbers">Do Netflix Titles Contain Numbers?</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#what-proportion-of-netflix-titles-contain-numbers" id="toc-what-proportion-of-netflix-titles-contain-numbers" class="nav-link" data-scroll-target="#what-proportion-of-netflix-titles-contain-numbers">What proportion of Netflix Titles Contain Numbers?</a></li>
+  <li><a href="#counting-thematic-keywords-in-descriptions" id="toc-counting-thematic-keywords-in-descriptions" class="nav-link" data-scroll-target="#counting-thematic-keywords-in-descriptions">Counting Thematic Keywords in Descriptions</a></li>
+  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation:</a></li>
+  <li><a href="#summary-of-insights" id="toc-summary-of-insights" class="nav-link" data-scroll-target="#summary-of-insights">Summary of Insights</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -215,9 +220,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction" class="level3">
-<h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
-<p>This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20) , includes thousands of titles from a variety of genres and regions, spanning many years. Our goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20) , includes thousands of titles from a variety of genres and regions, spanning many years. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -226,9 +231,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</section>
-<section id="do-netflix-titles-contain-numbers" class="level2">
-<h2 class="anchored" data-anchor-id="do-netflix-titles-contain-numbers">Do Netflix Titles Contain Numbers?</h2>
+<section id="what-proportion-of-netflix-titles-contain-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="what-proportion-of-netflix-titles-contain-numbers">What proportion of Netflix Titles Contain Numbers?</h2>
 <p>We begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.</p>
 <div class="cell">
 <details class="code-fold">
@@ -245,50 +249,67 @@ FALSE  TRUE
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Here, we use the `str_detect()` function with the regular expression `\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  </span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#The table above shows how many Netflix titles contain numbers compared to those that do not.')</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#2. Counting Thematic Keywords in Descriptions</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">love_mentions =</span> <span class="fu">str_count</span>(description, <span class="fu">regex</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">blove</span><span class="sc">\\</span><span class="st">b"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">death_mentions =</span> <span class="fu">str_count</span>(description, <span class="fu">regex</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">bdeath</span><span class="sc">\\</span><span class="st">b"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mystery_mentions =</span> <span class="fu">str_count</span>(description, <span class="fu">regex</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">bmystery</span><span class="sc">\\</span><span class="st">b"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>theme_counts <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">love =</span> <span class="fu">sum</span>(love_mentions, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">death =</span> <span class="fu">sum</span>(death_mentions, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">mystery =</span> <span class="fu">sum</span>(mystery_mentions, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"theme"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) </span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(theme_counts, <span class="fu">aes</span>(<span class="at">x =</span> theme, <span class="at">y =</span> count, <span class="at">fill =</span> theme)) <span class="sc">+</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Common Themes in Netflix Descriptions"</span>,</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Theme"</span>,</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count of Mentions"</span>,</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Theme"</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(netflix_titles<span class="sc">$</span>has_number))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     FALSE       TRUE 
+0.94529344 0.05470656 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Here, we use the `str_detect()` function with the regular expression `\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#The table above shows how many Netflix titles contain numbers compared to those that do not.')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context.</p>
+</section>
+<section id="counting-thematic-keywords-in-descriptions" class="level2">
+<h2 class="anchored" data-anchor-id="counting-thematic-keywords-in-descriptions">Counting Thematic Keywords in Descriptions</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">love_mentions    =</span> <span class="fu">str_count</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b(?i)love</span><span class="sc">\\</span><span class="st">b"</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">death_mentions   =</span> <span class="fu">str_count</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b(?i)death</span><span class="sc">\\</span><span class="st">b"</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mystery_mentions =</span> <span class="fu">str_count</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b(?i)mystery</span><span class="sc">\\</span><span class="st">b"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>theme_counts <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">love =</span> <span class="fu">sum</span>(love_mentions, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">death =</span> <span class="fu">sum</span>(death_mentions, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">mystery =</span> <span class="fu">sum</span>(mystery_mentions, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"theme"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(theme_counts, <span class="fu">aes</span>(<span class="at">x =</span> theme, <span class="at">y =</span> count, <span class="at">fill =</span> theme)) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Common Themes in Netflix Descriptions"</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Theme"</span>,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count of Mentions"</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Theme"</span>,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">alt =</span> <span class="st">"Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. </span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="st">           Each bar represents the overall frequency of a theme, allowing comparison of how often these motifs appear </span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="st">           in Netflix title summaries."</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Interpretation:</p>
-<p>This plot compares the frequency of the words “love,” “death,” and “mystery” across all Netflix descriptions.<br>
+<p>The first table shows the count of titles that do or do not contain a number. TRUE indicates the title contains at least one digit.</p>
+<p>The plot compares the frequency of the words “love,” “death,” and “mystery” across all Netflix descriptions.<br>
 We can see that “love” dominates, revealing that romantic themes are heavily used.<br>
 “Death” and “mystery” occur less often, but still signal important narrative categories.</p>
 <p>This visualization illustrates how simple word counting can reveal broad narrative trends.</p>
@@ -296,14 +317,14 @@ We can see that “love” dominates, revealing that romantic themes are heavily
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>story_words <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">adj_before_story =</span> <span class="fu">str_extract</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b</span><span class="sc">\\</span><span class="st">w+(?= story)"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(adj_before_story)) <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">adj_before_story =</span> <span class="fu">tolower</span>(adj_before_story)) <span class="sc">|&gt;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"adj_before_story"</span> <span class="ot">=</span> <span class="st">"word"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(adj_before_story, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(story_words, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>story_words <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">adj_before_story =</span> <span class="fu">str_extract</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b</span><span class="sc">\\</span><span class="st">w+(?= story)"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(adj_before_story)) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">adj_before_story =</span> <span class="fu">tolower</span>(adj_before_story)) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"adj_before_story"</span> <span class="ot">=</span> <span class="st">"word"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(adj_before_story, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(story_words, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
@@ -328,37 +349,41 @@ For example, in a phrase like “an incredible story”, the pattern will captur
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"stop_words"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>top_words <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, description) <span class="sc">|&gt;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">15</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(top_words, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Most Frequent Words in Netflix Descriptions"</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Word"</span>,</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Frequency"</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"stop_words"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>top_words <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, description) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">15</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(top_words, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Most Frequent Words in Netflix Descriptions"</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Word"</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Frequency"</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" alt="Bar chart showing how often the words 'love', 'death', and 'mystery' appear in Netflix descriptions. 'Love' occurs most frequently by a large margin." width="576"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Interpretation:</p>
+</section>
+<section id="interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation">Interpretation:</h2>
 <p>This bar chart shows the 15 most common non-stop words found in Netflix descriptions.<br>
 Words like “life,” “family,” “world,” and “love” appear prominently — reinforcing the emotional and human-centered tone of Netflix’s catalog.<br>
 This kind of frequency analysis helps identify how streaming services position their content around universal, relatable ideas.</p>
-<p>Summary of Insights</p>
+</section>
+<section id="summary-of-insights" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-insights">Summary of Insights</h2>
 <p>From these visual and textual analyses, we can draw several conclusions:</p>
 <ul>
 <li>Titles with numbers are relatively common.</li>
@@ -377,6 +402,7 @@ This kind of frequency analysis helps identify how streaming services position t
 </ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

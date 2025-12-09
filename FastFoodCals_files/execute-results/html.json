@@ -1,0 +1,17 @@
+{
+  "hash": "58b404d40248a495ccca89fa8def1bb4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Fast Food\"\ndescription: |\n  Analysis of Fast Food Calorie data from TidyTuesday\nauthor: Josh Goldhaber\ndate: September 24, 2025\nformat: html\n---\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tidyverse)\n\nfastfood <- read_csv(\"data/fastfood_calories.csv\", show_col_types = FALSE)\n\navg_cal <- fastfood %>%\n  group_by(restaurant) %>%\n  summarise(mean_calories = mean(calories, na.rm = TRUE),\n            n_items = n()) %>%\n  arrange(desc(mean_calories))\n\navg_cal %>%\n  slice_head(n = 10) %>%\n  ggplot(aes(x = reorder(restaurant, mean_calories),\n             y = mean_calories)) +\n  geom_col(fill = \"tomato\") +\n  coord_flip() +\n  labs(\n    title = \"Top 10 Fast Food Chains by Average Calories per Menu Item\",\n    x = \"Restaurant\",\n    y = \"Average Calories\"\n  ) +\n  theme_minimal()\n```\n\n::: {.cell-output-display}\n![](FastFoodCals_files/figure-html/unnamed-chunk-1-1.png){width=576}\n:::\n:::\n\n\n\nSource:\nhttps://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv#L4\n\nData From:\nfastfoodnutrition.com\n",
+    "supporting": [
+      "FastFoodCals_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

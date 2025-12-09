@@ -55,6 +55,7 @@ prop.table(table(netflix_titles$has_number))
 #The table above shows how many Netflix titles contain numbers compared to those that do not.')
 
 ```
+
 The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context.
 
 
@@ -90,6 +91,7 @@ ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   theme_minimal()
 
 ```
+
 Interpretation:
 
 The first table shows the count of titles that do or do not contain a number. TRUE indicates the title contains at least one digit.
@@ -160,6 +162,7 @@ From these visual and textual analyses, we can draw several conclusions:
 
 Data Sources
 
--   Accessed via TidyTuesday (R4DS project): [TidyTuesday Netflix Dataset – 2021-04-20](https://github.com/rfordatascience/tidytuesday/tree/main/data/2021/2021-04-20)\
+-   Accessed via TidyTuesday (R4DS project): [TidyTuesday Netflix Dataset – 2021-04-20](https://github.com/rfordatascience/tidytuesday/tree/main/data/2021/2021-04-20)
+
 -   Original source: Kaggle – [Netflix Movies and TV Shows Dataset by Shivam Bansal](https://www.kaggle.com/shivamb/netflix-shows) (CC-BY-SA 4.0 License)
 -   Shivam Bansal last updated this source 4 years ago
