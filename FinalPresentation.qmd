@@ -13,3 +13,35 @@ execute:
   warning: false
   message: false
 ---   
+
+## Overview of My Projects
+
+In this presentation, I’ll briefly introduce the major analytical projects I've completed this semester. Each project applies data science tools to real-world questions, drawing on SQL, R, visualization, and statistical inference.
+
+## Projects Included in This Course
+
+- **Text Analysis:**  
+  Understanding thematic patterns and linguistic structure in Netflix titles and descriptions.
+
+- **Project 3 – Silver vs. Gold Volatility:**  
+  A permutation test examining whether silver is more volatile than gold from August–October.
+
+- **Ethics of COMPAS:**  
+  A critical evaluation of algorithmic fairness, bias, and the limits of risk assessments.
+
+- **Traffic Stops with SQL:**  
+  Combining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities.
+
+- **Data Visualization Project:**  
+  Creating clear, interpretable graphics to explore patterns in complex datasets.
+
+- **Fast Food Calories:**  
+  Visualizing and comparing calorie distributions across major fast-food chains.
+
+- **FIFA Data:**  
+  Exploring player attributes, performance, and clustering patterns in FIFA datasets.
+
+- **Permutation Test Project (Project 5):**  
+  Using simulation-based inference to compare daily log returns of gold and silver.
+
+## his course portfolio highlights work across SQL, statistical inference, ethics, and visualization—showing my ability to tackle diverse data problems using robust analytical methods.
