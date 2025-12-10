@@ -439,5 +439,19 @@
     "title": "Recap: Final Presentation",
     "section": "Citation",
     "text": "Citation\n\nSource: Netflix dataset accessed via TidyTuesday (2021-04-20).\nURL: TidyTuesday GitHub Repository\nDescription: The data this week comes from Kaggle w/ credit to Shivam Bansal.\n\nThis dataset consists of tv shows and movies available on Netflix as of 2019. The dataset is collected from Flixable which is a third-party Netflix search engine."
+  },
+  {
+    "objectID": "FinalPresentation.html#plotting-1",
+    "href": "FinalPresentation.html#plotting-1",
+    "title": "Recap: Final Presentation",
+    "section": "Plotting",
+    "text": "Plotting\n\n\nLove dominates Netflix descriptions, highlighting the platform’s focus on romantic and emotional themes.\nHate appears far less frequently, suggesting a lesser emphasis on negative emotions."
+  },
+  {
+    "objectID": "FinalPresentation.html#sourcing",
+    "href": "FinalPresentation.html#sourcing",
+    "title": "Recap: Final Presentation",
+    "section": "Sourcing",
+    "text": "Sourcing\n\nSource: Netflix dataset accessed via TidyTuesday (2021-04-20).\nURL: TidyTuesday GitHub Repository\nDescription: The data this week comes from Kaggle w/ credit to Shivam Bansal.\n\nThis dataset consists of tv shows and movies available on Netflix as of 2019. The dataset is collected from Flixable which is a third-party Netflix search engine."
   }
 ]
