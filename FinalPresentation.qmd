@@ -1,7 +1,7 @@
 ---
 title: "Recap: Final Presentation"
 author: "Josh Goldhaber"
-subtitle: "December 10, 2025 "
+subtitle: "December 10, 2025"
 format:
   revealjs:
     scrollable: true
@@ -76,7 +76,6 @@ The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain 
 ## Counting Thematic Keywords in Descriptions
 
 ```{r}
-#| fig-alt: "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries."
 
 netflix_titles <- netflix_titles |>
   mutate(
@@ -96,6 +95,8 @@ theme_counts <- netflix_titles |>
 
 ## Plotting  
 ```{r}
+#| fig-alt: "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries."
+
 ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   geom_col() +
   labs(
@@ -119,12 +120,9 @@ story_words <- netflix_titles |>
   count(adj_before_story, sort = TRUE)
 
 head(story_words, 10)
-
 ```
 
 The use a regular expression with a lookahead — `(?= story)` — extracts the word immediately before “story” in each description.
-
-For example, in a phrase like “an incredible story”, the pattern will capture “incredible.”
 
 ## Most Frequent Words in Descriptions (Excluding filler)
 
