@@ -61,13 +61,7 @@ image_write(homepage_img, path = "Homepage.png", format = "png")
 netflix_titles <- readr::read_csv(
   "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv"
 )
-
-# Show a preview of the dataset
-netflix_titles |> head() |> as_tibble()
-
-
-## Introduction
-
+```
 ```{r echo=FALSE}
 # Visualize the distribution of Netflix titles by type
 netflix_titles |>
