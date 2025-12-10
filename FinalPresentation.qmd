@@ -82,7 +82,7 @@ netflix_titles |>
   theme_minimal()
 ```
 
-### Visualization the distribution of release years
+## Visualization the distribution of release years
 
 ```{r echo=FALSE}
 netflix_titles |>

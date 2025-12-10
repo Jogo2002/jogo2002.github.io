@@ -431,7 +431,7 @@
     "href": "FinalPresentation.html#introduction-to-dataset-1",
     "title": "Recap: Final Presentation",
     "section": "Introduction to Dataset",
-    "text": "Introduction to Dataset\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+    "text": "Introduction to Dataset"
   },
   {
     "objectID": "FinalPresentation.html#citation",
@@ -453,5 +453,12 @@
     "title": "Recap: Final Presentation",
     "section": "Sourcing",
     "text": "Sourcing\n\nSource: Netflix dataset accessed via TidyTuesday (2021-04-20).\nURL: TidyTuesday GitHub Repository\nDescription: The data this week comes from Kaggle w/ credit to Shivam Bansal.\n\nThis dataset consists of tv shows and movies available on Netflix as of 2019. The dataset is collected from Flixable which is a third-party Netflix search engine."
+  },
+  {
+    "objectID": "FinalPresentation.html#visualization-the-distribution-of-release-years",
+    "href": "FinalPresentation.html#visualization-the-distribution-of-release-years",
+    "title": "Recap: Final Presentation",
+    "section": "Visualization the distribution of release years",
+    "text": "Visualization the distribution of release years\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
   }
 ]
