@@ -396,7 +396,7 @@
     "href": "FinalPresentation.html#introduction-to-dataset",
     "title": "Recap: Final Presentation",
     "section": "Introduction to Dataset",
-    "text": "Introduction to Dataset\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+    "text": "Introduction to Dataset"
   },
   {
     "objectID": "FinalPresentation.html#extracting-years-from-descriptions-1",
@@ -418,5 +418,26 @@
     "title": "Recap: Final Presentation",
     "section": "",
     "text": "Website Overview Personal website layout and features\nNetflix Title Data Analysis:\nUnderstanding thematic patterns and linguistic structure in Netflix titles and descriptions with Regex"
+  },
+  {
+    "objectID": "FinalPresentation.html#netflix-dataset-fields",
+    "href": "FinalPresentation.html#netflix-dataset-fields",
+    "title": "Recap: Final Presentation",
+    "section": "Netflix Dataset Fields",
+    "text": "Netflix Dataset Fields\n\n# Display the first few rows of the dataset to introduce the fields\nnetflix_titles |&gt; head(5)\n\n# A tibble: 5 × 12\n  show_id type    title director    cast  country date_added release_year rating\n  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt; \n1 s1      TV Show 3%    &lt;NA&gt;        João… Brazil  August 14…         2020 TV-MA \n2 s2      Movie   7:19  Jorge Mich… Demi… Mexico  December …         2016 TV-MA \n3 s3      Movie   23:59 Gilbert Ch… Tedd… Singap… December …         2011 R     \n4 s4      Movie   9     Shane Acker Elij… United… November …         2009 PG-13 \n5 s5      Movie   21    Robert Luk… Jim … United… January 1…         2008 PG-13 \n# ℹ 3 more variables: duration &lt;chr&gt;, listed_in &lt;chr&gt;, description &lt;chr&gt;"
+  },
+  {
+    "objectID": "FinalPresentation.html#introduction-to-dataset-1",
+    "href": "FinalPresentation.html#introduction-to-dataset-1",
+    "title": "Recap: Final Presentation",
+    "section": "Introduction to Dataset",
+    "text": "Introduction to Dataset\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+  },
+  {
+    "objectID": "FinalPresentation.html#citation",
+    "href": "FinalPresentation.html#citation",
+    "title": "Recap: Final Presentation",
+    "section": "Citation",
+    "text": "Citation\n\nSource: Netflix dataset accessed via TidyTuesday (2021-04-20).\nURL: TidyTuesday GitHub Repository\nDescription: The data this week comes from Kaggle w/ credit to Shivam Bansal.\n\nThis dataset consists of tv shows and movies available on Netflix as of 2019. The dataset is collected from Flixable which is a third-party Netflix search engine."
   }
 ]
