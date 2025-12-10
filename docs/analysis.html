@@ -143,7 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./PermutationTest.html"> 
-<span class="menu-text">Project 3</span></a>
+<span class="menu-text">Permutation Test</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./Ethics.html"> 
@@ -193,6 +193,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#what-proportion-of-netflix-titles-contain-numbers" id="toc-what-proportion-of-netflix-titles-contain-numbers" class="nav-link" data-scroll-target="#what-proportion-of-netflix-titles-contain-numbers">What proportion of Netflix Titles Contain Numbers?</a></li>
   <li><a href="#counting-thematic-keywords-in-descriptions" id="toc-counting-thematic-keywords-in-descriptions" class="nav-link" data-scroll-target="#counting-thematic-keywords-in-descriptions">Counting Thematic Keywords in Descriptions</a></li>
   <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation:</a></li>
+  <li><a href="#additional-regex-explorations" id="toc-additional-regex-explorations" class="nav-link" data-scroll-target="#additional-regex-explorations">Additional Regex Explorations</a>
+  <ul class="collapse">
+  <li><a href="#extracting-years-from-descriptions" id="toc-extracting-years-from-descriptions" class="nav-link" data-scroll-target="#extracting-years-from-descriptions">Extracting Years from Descriptions</a></li>
+  <li><a href="#identifying-titles-with-repeated-words" id="toc-identifying-titles-with-repeated-words" class="nav-link" data-scroll-target="#identifying-titles-with-repeated-words">Identifying Titles with Repeated Words</a></li>
+  <li><a href="#extracting-sentences-with-love-or-hate" id="toc-extracting-sentences-with-love-or-hate" class="nav-link" data-scroll-target="#extracting-sentences-with-love-or-hate">Extracting Sentences with “Love” or “Hate”</a></li>
+  </ul></li>
   <li><a href="#summary-of-insights" id="toc-summary-of-insights" class="nav-link" data-scroll-target="#summary-of-insights">Summary of Insights</a></li>
   </ul></li>
   </ul>
@@ -384,6 +390,113 @@ For example, in a phrase like “an incredible story”, the pattern will captur
 <p>This bar chart shows the 15 most common non-stop words found in Netflix descriptions.</p>
 <p>Words like “life,” “family,” “world,” and “love” appear prominently — reinforcing the emotional and human-centered tone of Netflix’s catalog.<br>
 This kind of frequency analysis helps identify how streaming services position their content around universal, relatable ideas.</p>
+</section>
+<section id="additional-regex-explorations" class="level2">
+<h2 class="anchored" data-anchor-id="additional-regex-explorations">Additional Regex Explorations</h2>
+<section id="extracting-years-from-descriptions" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-years-from-descriptions">Extracting Years from Descriptions</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year_mentions =</span> <span class="fu">str_extract_all</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b(19|20)</span><span class="sc">\\</span><span class="st">d{2}</span><span class="sc">\\</span><span class="st">b"</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the frequency of years</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>year_counts <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(year_mentions) <span class="sc">|&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(year_mentions, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="co"># Select top 10 years</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the most frequently mentioned years</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(year_counts, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(year_mentions, <span class="sc">-</span>n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"darkgreen"</span>) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Top 10 Most Frequently Mentioned Years in Descriptions"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Frequency"</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" alt="Bar chart showing the frequency of the top 10 years mentioned in Netflix descriptions." width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="identifying-titles-with-repeated-words" class="level3">
+<h3 class="anchored" data-anchor-id="identifying-titles-with-repeated-words">Identifying Titles with Repeated Words</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">repeated_words =</span> <span class="fu">str_detect</span>(title, <span class="st">"</span><span class="sc">\\</span><span class="st">b(</span><span class="sc">\\</span><span class="st">w+)</span><span class="sc">\\</span><span class="st">b.*</span><span class="sc">\\</span><span class="st">b</span><span class="sc">\\</span><span class="st">1</span><span class="sc">\\</span><span class="st">b"</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Count titles with repeated words</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>repeated_word_counts <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(repeated_words)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the counts</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>repeated_word_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  repeated_words     n
+  &lt;lgl&gt;          &lt;int&gt;
+1 FALSE           7560
+2 TRUE             227</code></pre>
+</div>
+</div>
+</section>
+<section id="extracting-sentences-with-love-or-hate" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-sentences-with-love-or-hate">Extracting Sentences with “Love” or “Hate”</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">love_hate_sentences =</span> <span class="fu">str_extract_all</span>(description, <span class="st">"[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]"</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Count sentences mentioning 'love' or 'hate'</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>love_hate_counts <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(love_hate_sentences) <span class="sc">|&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">keyword =</span> <span class="fu">ifelse</span>(<span class="fu">str_detect</span>(love_hate_sentences, <span class="st">"love"</span>), <span class="st">"Love"</span>, <span class="st">"Hate"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(keyword, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the counts</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales) <span class="co"># For percentage formatting</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(love_hate_counts, <span class="fu">aes</span>(<span class="at">x =</span> keyword, <span class="at">y =</span> n, <span class="at">fill =</span> keyword)) <span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Love"</span> <span class="ot">=</span> <span class="st">"#FF69B4"</span>, <span class="st">"Hate"</span> <span class="ot">=</span> <span class="st">"#4682B4"</span>)) <span class="sc">+</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mentions of 'Love' vs 'Hate' in Descriptions"</span>,</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"A comparison of emotional keywords in Netflix descriptions"</span>,</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Keyword"</span>,</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Frequency"</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"#333333"</span>),</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"#DDDDDD"</span>),</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" alt="Bar chart comparing the frequency of sentences mentioning 'love' versus 'hate' in Netflix descriptions." width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="summary-of-insights" class="level2">
 <h2 class="anchored" data-anchor-id="summary-of-insights">Summary of Insights</h2>

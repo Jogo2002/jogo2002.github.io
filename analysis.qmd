@@ -147,6 +147,83 @@ This bar chart shows the 15 most common non-stop words found in Netflix descript
 Words like “life,” “family,” “world,” and “love” appear prominently — reinforcing the emotional and human-centered tone of Netflix’s catalog.\
 This kind of frequency analysis helps identify how streaming services position their content around universal, relatable ideas.
 
+## Additional Regex Explorations
+
+### Extracting Years from Descriptions
+```{r}
+#| fig-alt: "Bar chart showing the frequency of the top 10 years mentioned in Netflix descriptions."
+netflix_titles <- netflix_titles |>
+  mutate(year_mentions = str_extract_all(description, "\\b(19|20)\\d{2}\\b"))
+
+# Count the frequency of years
+year_counts <- netflix_titles |>
+  unnest(year_mentions) |>
+  count(year_mentions, sort = TRUE) |>
+  slice_head(n = 10) # Select top 10 years
+
+# Plot the most frequently mentioned years
+ggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +
+  geom_col(fill = "darkgreen") +
+  labs(
+    title = "Top 10 Most Frequently Mentioned Years in Descriptions",
+    x = "Year",
+    y = "Frequency"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Identifying Titles with Repeated Words
+```{r}
+#| fig-alt: "Bar chart showing the count of titles with repeated words."
+netflix_titles <- netflix_titles |>
+  mutate(repeated_words = str_detect(title, "\\b(\\w+)\\b.*\\b\\1\\b"))
+
+# Count titles with repeated words
+repeated_word_counts <- netflix_titles |>
+  count(repeated_words)
+
+# Display the counts
+repeated_word_counts
+```
+
+### Extracting Sentences with "Love" or "Hate"
+```{r}
+#| fig-alt: "Bar chart comparing the frequency of sentences mentioning 'love' versus 'hate' in Netflix descriptions."
+netflix_titles <- netflix_titles |>
+  mutate(love_hate_sentences = str_extract_all(description, "[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]"))
+
+# Count sentences mentioning 'love' or 'hate'
+love_hate_counts <- netflix_titles |>
+  unnest(love_hate_sentences) |>
+  mutate(keyword = ifelse(str_detect(love_hate_sentences, "love"), "Love", "Hate")) |>
+  count(keyword, sort = TRUE)
+
+# Plot the counts
+library(scales) # For percentage formatting
+
+ggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +
+  geom_col(width = 0.6, color = "black", show.legend = FALSE) +
+  scale_fill_manual(values = c("Love" = "#FF69B4", "Hate" = "#4682B4")) +
+  scale_y_continuous(labels = comma) +
+  labs(
+    title = "Mentions of 'Love' vs 'Hate' in Descriptions",
+    subtitle = "A comparison of emotional keywords in Netflix descriptions",
+    x = "Keyword",
+    y = "Frequency"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.text = element_text(color = "#333333"),
+    axis.title = element_text(face = "bold"),
+    panel.grid.major = element_line(color = "#DDDDDD"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+
 ## Summary of Insights
 
 From these visual and textual analyses, we can draw several conclusions:

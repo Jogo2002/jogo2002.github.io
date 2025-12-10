@@ -15,7 +15,7 @@ website:
       - href: analysis.qmd
         text: "Text Analysis"
       - href: PermutationTest.qmd
-        text: "Project 3"
+        text: "Permutation Test"
       - href: Ethics.qmd
         text: Ethics of COMPAS
       - href: SQL.qmd
