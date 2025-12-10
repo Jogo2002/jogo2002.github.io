@@ -56,6 +56,12 @@ image_write(homepage_img, path = "Homepage.png", format = "png")
 
 ## Introduction to Dataset
 
+## Netflix Dataset Fields
+```{r}
+# Display the first few rows of the dataset to introduce the fields
+netflix_titles |> head() |> as_tibble()
+```
+## Introduction to Dataset
 ```{r, include=FALSE}
 # Display the first few rows of the raw data
 netflix_titles <- readr::read_csv(
@@ -305,3 +311,11 @@ ggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +
 # Mentions of 'Love' vs 'Hate'
 -   **Love** dominates Netflix descriptions, highlighting the platform's focus on romantic and emotional themes.
 -   **Hate** appears far less frequently, suggesting a lesser emphasis on negative emotions.
+
+## Citation
+
+- **Source**: Netflix dataset accessed via TidyTuesday (2021-04-20).
+- **URL**: [TidyTuesday GitHub Repository](https://github.com/rfordatascience/tidytuesday/tree/master/data/2021/2021-04-20)
+- **Description**: The data this week comes from Kaggle w/ credit to Shivam Bansal.
+
+This dataset consists of tv shows and movies available on Netflix as of 2019. The dataset is collected from Flixable which is a third-party Netflix search engine.

@@ -361,7 +361,7 @@
     "href": "FinalPresentation.html#identifying-titles-with-repeated-words",
     "title": "Recap: Final Presentation",
     "section": "Identifying Titles with Repeated Words",
-    "text": "Identifying Titles with Repeated Words\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(repeated_words = str_detect(title, \"\\\\b(\\\\w+)\\\\b.*\\\\b\\\\1\\\\b\"))\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (\\\\w+): Captures a sequence of word characters (letters, digits, or underscores) as a group.\n# - \\\\b: Ensures the captured group is a whole word.\n# - .*: Matches any number of characters (except newlines) between the first and second occurrence of the word.\n# - \\\\b\\\\1\\\\b: Matches the same word captured in the first group, ensuring it's a whole word.\n\n\n# Count titles with repeated words\nrepeated_word_counts &lt;- netflix_titles |&gt;\n  count(repeated_words)\n\n# Display the counts\nrepeated_word_counts\n\n# A tibble: 2 × 2\n  repeated_words     n\n  &lt;lgl&gt;          &lt;int&gt;\n1 FALSE           7560\n2 TRUE             227"
+    "text": "Identifying Titles with Repeated Words\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(repeated_words = str_detect(title, \"\\\\b(\\\\w+)\\\\b.*\\\\b\\\\1\\\\b\"))\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (\\\\w+): Captures a sequence of word characters (letters, digits, or underscores) as a group.\n# - \\\\b: Ensures the captured group is a whole word.\n# - .*: Matches any number of characters (except newlines) between the first and second occurrence of the word.\n# - \\\\b\\\\1\\\\b: Matches the same word captured in the first group, ensuring it's a whole word.\n\n\n# Count titles with repeated words\nrepeated_word_counts &lt;- netflix_titles |&gt;\n  count(repeated_words)\n\n# Display the counts\nrepeated_word_counts\n\n# A tibble: 2 × 2\n  repeated_words     n\n  &lt;lgl&gt;          &lt;int&gt;\n1 FALSE           7560\n2 TRUE             227\n\nrepeated_word_props &lt;- prop.table(table(netflix_titles$repeated_words))\nrepeated_word_props\n\n\n     FALSE       TRUE \n0.97084885 0.02915115"
   },
   {
     "objectID": "FinalPresentation.html#extracting-sentences-with-love-or-hate",
@@ -396,7 +396,7 @@
     "href": "FinalPresentation.html#introduction-to-dataset",
     "title": "Recap: Final Presentation",
     "section": "Introduction to Dataset",
-    "text": "Introduction to Dataset\n\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+    "text": "Introduction to Dataset\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
   },
   {
     "objectID": "FinalPresentation.html#extracting-years-from-descriptions-1",
