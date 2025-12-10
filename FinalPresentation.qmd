@@ -32,7 +32,7 @@ execute:
 
 ## Home Page 
 
- ![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/Homepage.png)
+ ![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/Images/Homepage.png)
 
 
 
@@ -127,7 +127,7 @@ ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   ) +
   theme_minimal()
 ```
-![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/CommonNetflixThemes.png)
+![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/Images/CommonNetflixThemes.png)
 
 ## Finding Adjectives That Appear Before “Story” (Lookaround Example)
 
@@ -164,10 +164,11 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
     x = "Word",
     y = "Frequency"
   ) +
-  theme_minimal()
+  theme_minimal()+
+
 
 ```
-![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/DescriptionWords.png)
+![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/Images/DescriptionWords.png)
 
 # Additional Regex Explorations
 
@@ -247,7 +248,7 @@ ggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +
 
 ## Mentions of 'Love' vs 'Hate'
 
-![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/LoveVHate.png)
+![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/Images/LoveVHate.png)
 
 - **Love** dominates Netflix descriptions, highlighting the platform's focus on romantic and emotional themes.
 - **Hate** appears far less frequently, suggesting a lesser emphasis on negative emotions.

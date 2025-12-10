@@ -305,7 +305,7 @@
     "href": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
     "title": "Recap: Final Presentation",
     "section": "Most Frequent Words in Descriptions (Excluding filler)",
-    "text": "Most Frequent Words in Descriptions (Excluding filler)\n\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()"
+    "text": "Most Frequent Words in Descriptions (Excluding filler)\n\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()+\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))"
   },
   {
     "objectID": "FinalPresentation.html#plot",
