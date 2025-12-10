@@ -13,7 +13,8 @@ execute:
   echo: true
   warning: false
   message: false
----   
+---
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -31,15 +32,14 @@ library(magick)
 library(tibble)
 ```
 
+# Overview
 
-# Overview 
-- **Website Overview** 
-  Personal website layout and features
+-   **Website Overview** Personal website layout and features
 
-- **Netflix Title Data Analysis:**  
-  Understanding thematic patterns and linguistic structure in Netflix titles and descriptions with Regex
+-   **Netflix Title Data Analysis:**\
+    Understanding thematic patterns and linguistic structure in Netflix titles and descriptions with Regex
 
-# Website Overview 
+# Website Overview
 
 ## Home Page
 
@@ -52,9 +52,10 @@ image_write(homepage_img, path = "Homepage.png", format = "png")
 
 ![](Homepage.png){style="display: block; margin: auto;"}
 
-# Netflix Text Analysis 
+# Netflix Text Analysis
 
 ## Introduction to Dataset
+
 ```{r, include=FALSE}
 # Display the first few rows of the raw data
 netflix_titles <- readr::read_csv(
@@ -63,11 +64,10 @@ netflix_titles <- readr::read_csv(
 
 # Show a preview of the dataset
 netflix_titles |> head() |> as_tibble()
-```
-![](NetflixDataPreview.png)
 
 
 ## Introduction
+
 ```{r echo=FALSE}
 # Visualize the distribution of Netflix titles by type
 netflix_titles |>
@@ -81,8 +81,10 @@ netflix_titles |>
   ) +
   theme_minimal()
 ```
+
 ### Visualization the distribution of release years
-```{r echo=FALSEs}
+
+```{r echo=FALSE}
 netflix_titles |>
   count(release_year) |>
   ggplot(aes(x = release_year, y = n)) +
@@ -119,9 +121,7 @@ prop.table(table(netflix_titles$has_number))
 
 ```
 
-The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context.
-
-## Numeric Titles in Netflix
+# Numeric Titles in Netflix
 
 - Only **426 out of 7,787** Netflix titles (about **5.5%**) contain a number.
 - The remaining **94.5%** do not contain numbers, making numeric titles relatively rare.
@@ -165,6 +165,7 @@ ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   ) +
   theme_minimal()
 ```
+
 ![](CommonNetflixThemes.png)
 
 ## Finding Adjectives That Appear Before “Story” (Lookaround Example)
@@ -210,6 +211,7 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
 # Additional Regex Explorations
 
 ## Extracting Years from Descriptions
+
 ```{r echo=FALSE}
 #| fig-alt: "Bar chart showing the frequency of the top 10 years mentioned in Netflix descriptions."
 netflix_titles <- netflix_titles |>
@@ -234,6 +236,7 @@ ggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +
 ```
 
 ## Identifying Titles with Repeated Words
+
 ```{r}
 netflix_titles <- netflix_titles |>
   mutate(repeated_words = str_detect(title, "\\b(\\w+)\\b.*\\b\\1\\b"))
@@ -247,6 +250,7 @@ repeated_word_counts
 ```
 
 ## Extracting Sentences with "Love" or "Hate"
+
 ```{r echo=FALSE}
 #| fig-alt: "Bar chart comparing the frequency of sentences mentioning 'love' versus 'hate' in Netflix descriptions."
 netflix_titles <- netflix_titles |>
@@ -289,6 +293,5 @@ image_write(love_hate_img, path = "LoveVsHate.png", format = "png")
 
 ![](LoveVsHate.png)
 
-- **Love** dominates Netflix descriptions, highlighting the platform's focus on romantic and emotional themes.
-- **Hate** appears far less frequently, suggesting a lesser emphasis on negative emotions.
-
+-   **Love** dominates Netflix descriptions, highlighting the platform's focus on romantic and emotional themes.
+-   **Hate** appears far less frequently, suggesting a lesser emphasis on negative emotions.

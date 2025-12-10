@@ -284,7 +284,7 @@
     "href": "FinalPresentation.html#what-proportion-of-netflix-titles-contain-numbers",
     "title": "Recap: Final Presentation",
     "section": "What proportion of Netflix Titles Contain Numbers?",
-    "text": "What proportion of Netflix Titles Contain Numbers?\nWe begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\n\n\nFALSE  TRUE \n 7361   426 \n\nprop.table(table(netflix_titles$has_number))\n\n\n     FALSE       TRUE \n0.94529344 0.05470656 \n\n#Here, we use the `str_detect()` function with the regular expression `\\\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  \n#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.\n\n#The table above shows how many Netflix titles contain numbers compared to those that do not.')\n\nThe results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context."
+    "text": "What proportion of Netflix Titles Contain Numbers?\nWe begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\n\n\nFALSE  TRUE \n 7361   426 \n\nprop.table(table(netflix_titles$has_number))\n\n\n     FALSE       TRUE \n0.94529344 0.05470656 \n\n#Here, we use the `str_detect()` function with the regular expression `\\\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  \n#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.\n\n#The table above shows how many Netflix titles contain numbers compared to those that do not.')"
   },
   {
     "objectID": "FinalPresentation.html#plotting",
@@ -382,7 +382,7 @@
     "href": "FinalPresentation.html#introduction",
     "title": "Recap: Final Presentation",
     "section": "Introduction",
-    "text": "Introduction\n\n\n\n\n\n\n\n\n\n\n# Visualize the distribution of release years\nnetflix_titles |&gt;\n  count(release_year) |&gt;\n  ggplot(aes(x = release_year, y = n)) +\n  geom_line(color = \"steelblue\") +\n  labs(\n    title = \"Distribution of Netflix Titles by Release Year\",\n    x = \"Release Year\",\n    y = \"Count\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+    "text": "Introduction\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
   },
   {
     "objectID": "FinalPresentation.html#dataset-overview-expansion",
@@ -396,6 +396,6 @@
     "href": "FinalPresentation.html#introduction-to-dataset",
     "title": "Recap: Final Presentation",
     "section": "Introduction to Dataset",
-    "text": "Introduction to Dataset"
+    "text": "Introduction to Dataset\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
   }
 ]
