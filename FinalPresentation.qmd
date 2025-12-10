@@ -206,16 +206,24 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
 
 ## Extracting Years from Descriptions
 
-```{r echo=FALSE}
-#| fig-alt: "Bar chart showing the frequency of the top 10 years mentioned in Netflix descriptions."
+## Extracting Years from Descriptions
+ ```{r}
 netflix_titles <- netflix_titles |>
   mutate(year_mentions = str_extract_all(description, "\\b(19|20)\\d{2}\\b"))
-
+```
+## Extracting Years from Descriptions 
+```{r}
+netflix_titles <- netflix_titles |>
+  mutate(year_mentions = str_extract_all(description, "\\b(19|20)\\d{2}\\b"))
+```
 # Count the frequency of years
 year_counts <- netflix_titles |>
   unnest(year_mentions) |>
   count(year_mentions, sort = TRUE) |>
   slice_head(n = 10) # Select top 10 years
+```{r echo=FALSE}
+#| fig-alt: "Bar chart showing the frequency of the top 10 years mentioned in Netflix descriptions."
+#| 
 
 # Plot the most frequently mentioned years
 ggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +
