@@ -1,10 +1,13 @@
 ---
-title: "Project 3: Is Silver More Volatile Than Gold (August–October)?"
+title: "Permutation Testing: Are Silver's Factors the same as Gold (August–October)?"
 author: "Josh Goldhaber"
 format:
   html:
     code-fold: true
     theme: flatly
+    echo: true
+    warning: false
+    message: false
 ---
 
 # Introduction
