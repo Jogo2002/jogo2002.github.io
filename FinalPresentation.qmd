@@ -42,30 +42,26 @@ image_write(homepage_img, path = "Homepage.png", format = "png")
 ![](Homepage.png)
 
 # Netflix Text Analysis 
-- Used **regular expressions** to break down text into words.
-- Removed **stop words** to focus on meaningful terms.
-- Analyzed **word frequency** to identify common themes.
 
-## Text Analysis Code
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  warning = FALSE,
-  message = FALSE,
-  fig.width = 6,
-  fig.height = 4
-)
-library(tidyverse)
-library(stringr)
-library(tidytext)
-library(ggplot2)
-```
+## Introduction
+
+- **Dataset Overview**: The Netflix dataset contains thousands of movie and TV show titles, descriptions, and metadata.
+- **Source**: Accessed via TidyTuesday (2021-04-20).
+- **Objective**: Analyze text patterns to uncover thematic and linguistic trends.
 
 ```{r}
+# Display the first few rows of the raw data
+library(tibble)
+
 netflix_titles <- readr::read_csv(
   "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv"
 )
+
+# Show a preview of the dataset
+netflix_titles |> head() |> as_tibble()
 ```
+
+![](NetflixDataPreview.png)
 
 ## What proportion of Netflix Titles Contain Numbers?
 
@@ -169,8 +165,9 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
     x = "Word",
     y = "Frequency"
   ) +
-  theme_minimal()+
+  theme_minimal()
 ```
+
 ![](DescriptionWords.png)
 
 # Additional Regex Explorations
@@ -252,7 +249,7 @@ ggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +
 ## Mentions of 'Love' vs 'Hate'
 
 ```{r}
-love_hate_img <- image_read("/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/LoveVsHate.png")
+love_hate_img <- image_read("/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/images/LoveVHate.png")
 image_write(love_hate_img, path = "LoveVsHate.png", format = "png")
 ```
 

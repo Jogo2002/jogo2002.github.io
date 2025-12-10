@@ -305,7 +305,7 @@
     "href": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
     "title": "Recap: Final Presentation",
     "section": "Most Frequent Words in Descriptions (Excluding filler)",
-    "text": "Most Frequent Words in Descriptions (Excluding filler)\n\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()+\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))"
+    "text": "Most Frequent Words in Descriptions (Excluding filler)\n\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()"
   },
   {
     "objectID": "FinalPresentation.html#plot",
@@ -333,7 +333,7 @@
     "href": "FinalPresentation.html#home-page",
     "title": "Recap: Final Presentation",
     "section": "Home Page",
-    "text": "Home Page"
+    "text": "Home Page\n\nlibrary(magick)\n\nhomepage_img &lt;- image_read(\"/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/images/Homepage.png\")\nimage_write(homepage_img, path = \"Homepage.png\", format = \"png\")"
   },
   {
     "objectID": "FinalPresentation.html#numeric-titles-in-netflix",
@@ -375,6 +375,13 @@
     "href": "FinalPresentation.html#mentions-of-love-vs-hate",
     "title": "Recap: Final Presentation",
     "section": "Mentions of ‘Love’ vs ‘Hate’",
-    "text": "Mentions of ‘Love’ vs ‘Hate’\n\n\nLove dominates Netflix descriptions, highlighting the platform’s focus on romantic and emotional themes.\nHate appears far less frequently, suggesting a lesser emphasis on negative emotions."
+    "text": "Mentions of ‘Love’ vs ‘Hate’\n\nlove_hate_img &lt;- image_read(\"/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/images/LoveVHate.png\")\nimage_write(love_hate_img, path = \"LoveVsHate.png\", format = \"png\")\n\n\n\nLove dominates Netflix descriptions, highlighting the platform’s focus on romantic and emotional themes.\nHate appears far less frequently, suggesting a lesser emphasis on negative emotions."
+  },
+  {
+    "objectID": "FinalPresentation.html#introduction",
+    "href": "FinalPresentation.html#introduction",
+    "title": "Recap: Final Presentation",
+    "section": "Introduction",
+    "text": "Introduction\n\nDataset Overview: The Netflix dataset contains thousands of movie and TV show titles, descriptions, and metadata.\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends.\n\n\n# Display the first few rows of the raw data\nlibrary(tibble)\n\nnetflix_titles &lt;- readr::read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv\"\n)\n\n# Show a preview of the dataset\nnetflix_titles |&gt; head() |&gt; as_tibble()\n\n# A tibble: 6 × 12\n  show_id type    title director    cast  country date_added release_year rating\n  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt; \n1 s1      TV Show 3%    &lt;NA&gt;        João… Brazil  August 14…         2020 TV-MA \n2 s2      Movie   7:19  Jorge Mich… Demi… Mexico  December …         2016 TV-MA \n3 s3      Movie   23:59 Gilbert Ch… Tedd… Singap… December …         2011 R     \n4 s4      Movie   9     Shane Acker Elij… United… November …         2009 PG-13 \n5 s5      Movie   21    Robert Luk… Jim … United… January 1…         2008 PG-13 \n6 s6      TV Show 46    Serdar Akar Erda… Turkey  July 1, 2…         2016 TV-MA \n# ℹ 3 more variables: duration &lt;chr&gt;, listed_in &lt;chr&gt;, description &lt;chr&gt;\n\n\n\n\nUsed regular expressions to break down text into words.\nRemoved stop words to focus on meaningful terms.\nAnalyzed word frequency to identify common themes."
   }
 ]
