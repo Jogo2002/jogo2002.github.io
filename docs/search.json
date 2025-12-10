@@ -333,7 +333,7 @@
     "href": "FinalPresentation.html#home-page",
     "title": "Recap: Final Presentation",
     "section": "Home Page",
-    "text": "Home Page\n\nlibrary(magick)\n\nhomepage_img &lt;- image_read(\"/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/images/Homepage.png\")\nimage_write(homepage_img, path = \"Homepage.png\", format = \"png\")"
+    "text": "Home Page"
   },
   {
     "objectID": "FinalPresentation.html#numeric-titles-in-netflix",
@@ -382,6 +382,20 @@
     "href": "FinalPresentation.html#introduction",
     "title": "Recap: Final Presentation",
     "section": "Introduction",
-    "text": "Introduction\n\nDataset Overview: The Netflix dataset contains thousands of movie and TV show titles, descriptions, and metadata.\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+    "text": "Introduction\n\n\n\n\n\n\n\n\n\n\n# Visualize the distribution of release years\nnetflix_titles |&gt;\n  count(release_year) |&gt;\n  ggplot(aes(x = release_year, y = n)) +\n  geom_line(color = \"steelblue\") +\n  labs(\n    title = \"Distribution of Netflix Titles by Release Year\",\n    x = \"Release Year\",\n    y = \"Count\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+  },
+  {
+    "objectID": "FinalPresentation.html#dataset-overview-expansion",
+    "href": "FinalPresentation.html#dataset-overview-expansion",
+    "title": "Recap: Final Presentation",
+    "section": "Dataset Overview Expansion",
+    "text": "Dataset Overview Expansion\n\n# Display the first few rows of the dataset\nnetflix_titles |&gt; head() |&gt; as_tibble()\n\n# A tibble: 6 × 12\n  show_id type    title director    cast  country date_added release_year rating\n  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt; \n1 s1      TV Show 3%    &lt;NA&gt;        João… Brazil  August 14…         2020 TV-MA \n2 s2      Movie   7:19  Jorge Mich… Demi… Mexico  December …         2016 TV-MA \n3 s3      Movie   23:59 Gilbert Ch… Tedd… Singap… December …         2011 R     \n4 s4      Movie   9     Shane Acker Elij… United… November …         2009 PG-13 \n5 s5      Movie   21    Robert Luk… Jim … United… January 1…         2008 PG-13 \n6 s6      TV Show 46    Serdar Akar Erda… Turkey  July 1, 2…         2016 TV-MA \n# ℹ 3 more variables: duration &lt;chr&gt;, listed_in &lt;chr&gt;, description &lt;chr&gt;\n\n\n\n# Visualize the distribution of Netflix titles by type\nnetflix_titles |&gt;\n  count(type) |&gt;\n  ggplot(aes(x = type, y = n, fill = type)) +\n  geom_col(show.legend = FALSE) +\n  labs(\n    title = \"Distribution of Netflix Titles by Type\",\n    x = \"Type\",\n    y = \"Count\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n# Visualize the distribution of release years\nnetflix_titles |&gt;\n  count(release_year) |&gt;\n  ggplot(aes(x = release_year, y = n)) +\n  geom_line(color = \"steelblue\") +\n  labs(\n    title = \"Distribution of Netflix Titles by Release Year\",\n    x = \"Release Year\",\n    y = \"Count\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+  },
+  {
+    "objectID": "FinalPresentation.html#introduction-to-dataset",
+    "href": "FinalPresentation.html#introduction-to-dataset",
+    "title": "Recap: Final Presentation",
+    "section": "Introduction to Dataset",
+    "text": "Introduction to Dataset"
   }
 ]

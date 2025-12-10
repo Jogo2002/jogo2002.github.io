@@ -14,41 +14,6 @@ execute:
   warning: false
   message: false
 ---   
-
-# Overview 
-- **Website Overview** 
-  Personal website layout and features
-
-- **Netflix Title Data Analysis:**  
-  Understanding thematic patterns and linguistic structure in Netflix titles and descriptions with Regex
-
-- **Permutation Tests: Silver vs. Gold Volatility:**  
-  A permutation test examining the foundational 
-
-- **Traffic Stops with SQL:**  
-  Combining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities
-
-# Website Overview 
-
-## Home Page
-
-```{r}
-library(magick)
-
-homepage_img <- image_read("/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/images/Homepage.png")
-image_write(homepage_img, path = "Homepage.png", format = "png")
-```
-
-![](Homepage.png)
-
-# Netflix Text Analysis 
-
-## Introduction
-
-- **Dataset Overview**: The Netflix dataset contains thousands of movie and TV show titles, descriptions, and metadata.
-- **Source**: Accessed via TidyTuesday (2021-04-20).
-- **Objective**: Analyze text patterns to uncover thematic and linguistic trends.
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -66,6 +31,30 @@ library(magick)
 library(tibble)
 ```
 
+
+# Overview 
+- **Website Overview** 
+  Personal website layout and features
+
+- **Netflix Title Data Analysis:**  
+  Understanding thematic patterns and linguistic structure in Netflix titles and descriptions with Regex
+
+# Website Overview 
+
+## Home Page
+
+```{r include=FALSE}
+library(magick)
+
+homepage_img <- image_read("/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/images/Homepage.png")
+image_write(homepage_img, path = "Homepage.png", format = "png")
+```
+
+![](Homepage.png){style="display: block; margin: auto;"}
+
+# Netflix Text Analysis 
+
+## Introduction to Dataset
 ```{r, include=FALSE}
 # Display the first few rows of the raw data
 netflix_titles <- readr::read_csv(
@@ -75,8 +64,41 @@ netflix_titles <- readr::read_csv(
 # Show a preview of the dataset
 netflix_titles |> head() |> as_tibble()
 ```
-
 ![](NetflixDataPreview.png)
+
+
+## Introduction
+```{r echo=FALSE}
+# Visualize the distribution of Netflix titles by type
+netflix_titles |>
+  count(type) |>
+  ggplot(aes(x = type, y = n, fill = type)) +
+  geom_col(show.legend = FALSE) +
+  labs(
+    title = "Distribution of Netflix Titles by Type",
+    x = "Type",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+### Visualization the distribution of release years
+```{r echo=FALSEs}
+netflix_titles |>
+  count(release_year) |>
+  ggplot(aes(x = release_year, y = n)) +
+  geom_line(color = "steelblue") +
+  labs(
+    title = "Distribution of Netflix Titles by Release Year",
+    x = "Release Year",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+
+- **Source**: Accessed via TidyTuesday (2021-04-20).
+- **Objective**: Analyze text patterns to uncover thematic and linguistic trends.
+
 
 ## What proportion of Netflix Titles Contain Numbers?
 
@@ -112,7 +134,6 @@ The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain 
 ## Counting Thematic Keywords in Descriptions
 
 ```{r}
-
 netflix_titles <- netflix_titles |>
   mutate(
     love_mentions    = str_count(description, "\\b(?i)love\\b"),
@@ -129,7 +150,8 @@ theme_counts <- netflix_titles |>
   pivot_longer(cols = everything(), names_to = "theme", values_to = "count") 
 ```
 
-## Plotting  
+## Plotting
+
 ```{r echo=FALSE}
 #| fig-alt: "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries."
 
