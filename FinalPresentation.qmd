@@ -259,6 +259,9 @@ repeated_word_counts <- netflix_titles |>
 
 # Display the counts
 repeated_word_counts
+
+repeated_word_props <- prop.table(table(netflix_titles$repeated_words))
+repeated_word_props
 ```
 
 
