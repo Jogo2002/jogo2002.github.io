@@ -160,8 +160,6 @@ ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   theme_minimal()
 ```
 
-![](CommonNetflixThemes.png)
-
 ## Finding Adjectives That Appear Before “Story” (Lookaround Example)
 
 ```{r}
@@ -200,30 +198,36 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
   theme_minimal()
 ```
 
-<!-- ![](DescriptionWords.png) -->
-
-# Additional Regex Explorations
-
 ## Extracting Years from Descriptions
 
-## Extracting Years from Descriptions
- ```{r}
+```{r}
 netflix_titles <- netflix_titles |>
   mutate(year_mentions = str_extract_all(description, "\\b(19|20)\\d{2}\\b"))
+
+# - \\b: Matches a word boundary to ensure we're matching whole words.
+# - (19|20): Matches either "19" or "20", representing the start of a year in the 1900s or 2000s.
+# - \\d{2}: Matches exactly two digits, completing the year (e.g., 1999, 2020).
+# - \\b: Ensures the match is a whole word, avoiding partial matches within longer strings.
 ```
+
 ## Extracting Years from Descriptions 
 ```{r}
 netflix_titles <- netflix_titles |>
   mutate(year_mentions = str_extract_all(description, "\\b(19|20)\\d{2}\\b"))
-```
-# Count the frequency of years
+
+# - \\b: Matches a word boundary to ensure we're matching whole words.
+# - (19|20): Matches either "19" or "20", representing the start of a year in the 1900s or 2000s.
+# - \\d{2}: Matches exactly two digits, completing the year (e.g., 1999, 2020).
+# - \\b: Ensures the match is a whole word, avoiding partial matches within longer strings.
+
 year_counts <- netflix_titles |>
   unnest(year_mentions) |>
   count(year_mentions, sort = TRUE) |>
   slice_head(n = 10) # Select top 10 years
+```
+## 
 ```{r echo=FALSE}
 #| fig-alt: "Bar chart showing the frequency of the top 10 years mentioned in Netflix descriptions."
-#| 
 
 # Plot the most frequently mentioned years
 ggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +
@@ -242,6 +246,12 @@ ggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +
 ```{r}
 netflix_titles <- netflix_titles |>
   mutate(repeated_words = str_detect(title, "\\b(\\w+)\\b.*\\b\\1\\b"))
+# - \\b: Matches a word boundary to ensure we're matching whole words.
+# - (\\w+): Captures a sequence of word characters (letters, digits, or underscores) as a group.
+# - \\b: Ensures the captured group is a whole word.
+# - .*: Matches any number of characters (except newlines) between the first and second occurrence of the word.
+# - \\b\\1\\b: Matches the same word captured in the first group, ensuring it's a whole word.
+
 
 # Count titles with repeated words
 repeated_word_counts <- netflix_titles |>
@@ -251,10 +261,10 @@ repeated_word_counts <- netflix_titles |>
 repeated_word_counts
 ```
 
+
 ## Extracting Sentences with "Love" or "Hate"
 
-```{r echo=FALSE}
-#| fig-alt: "Bar chart comparing the frequency of sentences mentioning 'love' versus 'hate' in Netflix descriptions."
+```{r}
 netflix_titles <- netflix_titles |>
   mutate(love_hate_sentences = str_extract_all(description, "[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]"))
 
@@ -263,6 +273,10 @@ love_hate_counts <- netflix_titles |>
   unnest(love_hate_sentences) |>
   mutate(keyword = ifelse(str_detect(love_hate_sentences, "love"), "Love", "Hate")) |>
   count(keyword, sort = TRUE)
+```
+
+```{r echo=FALSE}
+#| fig-alt: "Bar chart comparing the frequency of sentences mentioning 'love' versus 'hate' in Netflix descriptions."
 
 # Plot the counts
 ggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +
@@ -285,15 +299,6 @@ ggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +
     panel.grid.minor = element_blank()
   )
 ```
-
-## Mentions of 'Love' vs 'Hate'
-
-```{r}
-love_hate_img <- image_read("/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/images/LoveVHate.png")
-image_write(love_hate_img, path = "LoveVsHate.png", format = "png")
-```
-
-![](LoveVsHate.png)
-
+# Mentions of 'Love' vs 'Hate'
 -   **Love** dominates Netflix descriptions, highlighting the platform's focus on romantic and emotional themes.
 -   **Hate** appears far less frequently, suggesting a lesser emphasis on negative emotions.

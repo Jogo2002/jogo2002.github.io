@@ -354,21 +354,21 @@
     "href": "FinalPresentation.html#extracting-years-from-descriptions",
     "title": "Recap: Final Presentation",
     "section": "Extracting Years from Descriptions",
-    "text": "Extracting Years from Descriptions"
+    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (19|20): Matches either \"19\" or \"20\", representing the start of a year in the 1900s or 2000s.\n# - \\\\d{2}: Matches exactly two digits, completing the year (e.g., 1999, 2020).\n# - \\\\b: Ensures the match is a whole word, avoiding partial matches within longer strings."
   },
   {
     "objectID": "FinalPresentation.html#identifying-titles-with-repeated-words",
     "href": "FinalPresentation.html#identifying-titles-with-repeated-words",
     "title": "Recap: Final Presentation",
     "section": "Identifying Titles with Repeated Words",
-    "text": "Identifying Titles with Repeated Words\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(repeated_words = str_detect(title, \"\\\\b(\\\\w+)\\\\b.*\\\\b\\\\1\\\\b\"))\n\n# Count titles with repeated words\nrepeated_word_counts &lt;- netflix_titles |&gt;\n  count(repeated_words)\n\n# Display the counts\nrepeated_word_counts\n\n# A tibble: 2 × 2\n  repeated_words     n\n  &lt;lgl&gt;          &lt;int&gt;\n1 FALSE           7560\n2 TRUE             227"
+    "text": "Identifying Titles with Repeated Words\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(repeated_words = str_detect(title, \"\\\\b(\\\\w+)\\\\b.*\\\\b\\\\1\\\\b\"))\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (\\\\w+): Captures a sequence of word characters (letters, digits, or underscores) as a group.\n# - \\\\b: Ensures the captured group is a whole word.\n# - .*: Matches any number of characters (except newlines) between the first and second occurrence of the word.\n# - \\\\b\\\\1\\\\b: Matches the same word captured in the first group, ensuring it's a whole word.\n\n\n# Count titles with repeated words\nrepeated_word_counts &lt;- netflix_titles |&gt;\n  count(repeated_words)\n\n# Display the counts\nrepeated_word_counts\n\n# A tibble: 2 × 2\n  repeated_words     n\n  &lt;lgl&gt;          &lt;int&gt;\n1 FALSE           7560\n2 TRUE             227"
   },
   {
     "objectID": "FinalPresentation.html#extracting-sentences-with-love-or-hate",
     "href": "FinalPresentation.html#extracting-sentences-with-love-or-hate",
     "title": "Recap: Final Presentation",
     "section": "Extracting Sentences with “Love” or “Hate”",
-    "text": "Extracting Sentences with “Love” or “Hate”"
+    "text": "Extracting Sentences with “Love” or “Hate”\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(love_hate_sentences = str_extract_all(description, \"[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]\"))\n\n# Count sentences mentioning 'love' or 'hate'\nlove_hate_counts &lt;- netflix_titles |&gt;\n  unnest(love_hate_sentences) |&gt;\n  mutate(keyword = ifelse(str_detect(love_hate_sentences, \"love\"), \"Love\", \"Hate\")) |&gt;\n  count(keyword, sort = TRUE)"
   },
   {
     "objectID": "FinalPresentation.html#mentions-of-love-vs-hate",
@@ -397,5 +397,19 @@
     "title": "Recap: Final Presentation",
     "section": "Introduction to Dataset",
     "text": "Introduction to Dataset\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+  },
+  {
+    "objectID": "FinalPresentation.html#extracting-years-from-descriptions-1",
+    "href": "FinalPresentation.html#extracting-years-from-descriptions-1",
+    "title": "Recap: Final Presentation",
+    "section": "Extracting Years from Descriptions",
+    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (19|20): Matches either \"19\" or \"20\", representing the start of a year in the 1900s or 2000s.\n# - \\\\d{2}: Matches exactly two digits, completing the year (e.g., 1999, 2020).\n# - \\\\b: Ensures the match is a whole word, avoiding partial matches within longer strings.\n\nyear_counts &lt;- netflix_titles |&gt;\n  unnest(year_mentions) |&gt;\n  count(year_mentions, sort = TRUE) |&gt;\n  slice_head(n = 10) # Select top 10 years"
+  },
+  {
+    "objectID": "FinalPresentation.html#extracting-years-from-descriptions-2",
+    "href": "FinalPresentation.html#extracting-years-from-descriptions-2",
+    "title": "Recap: Final Presentation",
+    "section": "Extracting Years from Descriptions",
+    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))"
   }
 ]
