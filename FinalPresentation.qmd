@@ -16,17 +16,27 @@ execute:
 ---   
 
 # Overview 
+- **Website Overview** 
+  Personal website layout and features
 
-- **Text Analysis:**  
-  Understanding thematic patterns and linguistic structure in Netflix titles and descriptions.
+- **Netflix Title Data Analysis:**  
+  Understanding thematic patterns and linguistic structure in Netflix titles and descriptions with Regex
 
 - **Permutation Tests: Silver vs. Gold Volatility:**  
-  A permutation test examining whether silver is more volatile than gold from August–October.
+  A permutation test examining the foundational 
 
 - **Traffic Stops with SQL:**  
-  Combining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities.
+  Combining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities
 
-# Text Analysis Recap
+# Website Overview 
+
+## Home Page 
+
+ ![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/Homepage.png)
+
+
+
+# Netflix Text Analysis 
 - Used **regular expressions** to break down text into words.
 - Removed **stop words** to focus on meaningful terms.
 - Analyzed **word frequency** to identify common themes.

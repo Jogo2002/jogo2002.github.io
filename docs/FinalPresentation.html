@@ -1068,18 +1068,28 @@ Josh Goldhaber
 <section id="overview" class="title-slide slide level1 center">
 <h1>Overview</h1>
 <ul>
-<li><p><strong>Text Analysis:</strong><br>
-Understanding thematic patterns and linguistic structure in Netflix titles and descriptions.</p></li>
+<li><p><strong>Website Overview</strong> Personal website layout and features</p></li>
+<li><p><strong>Netflix Title Data Analysis:</strong><br>
+Understanding thematic patterns and linguistic structure in Netflix titles and descriptions with Regex</p></li>
 <li><p><strong>Permutation Tests: Silver vs. Gold Volatility:</strong><br>
-A permutation test examining whether silver is more volatile than gold from August–October.</p></li>
+A permutation test examining the foundational</p></li>
 <li><p><strong>Traffic Stops with SQL:</strong><br>
-Combining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities.</p></li>
+Combining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities</p></li>
 </ul>
 </section>
 
 <section>
-<section id="text-analysis-recap" class="title-slide slide level1 center">
-<h1>Text Analysis Recap</h1>
+<section id="website-overview" class="title-slide slide level1 center">
+<h1>Website Overview</h1>
+
+</section>
+<section id="home-page" class="slide level2">
+<h2>Home Page</h2>
+
+<img role="img" data-src="./Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/Homepage.png" class="r-stretch"></section></section>
+<section>
+<section id="netflix-text-analysis" class="title-slide slide level1 center">
+<h1>Netflix Text Analysis</h1>
 <ul>
 <li>Used <strong>regular expressions</strong> to break down text into words.</li>
 <li>Removed <strong>stop words</strong> to focus on meaningful terms.</li>
@@ -1189,7 +1199,6 @@ FALSE  TRUE
 </div>
 </div>
 <p>The use a regular expression with a lookahead — <code>(?= story)</code> — extracts the word immediately before “story” in each description.</p>
-<p>For example, in a phrase like “an incredible story”, the pattern will capture “incredible.”</p>
 </section>
 <section id="most-frequent-words-in-descriptions-excluding-filler" class="slide level2">
 <h2>Most Frequent Words in Descriptions (Excluding filler)</h2>
