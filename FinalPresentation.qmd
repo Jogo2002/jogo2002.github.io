@@ -8,6 +8,7 @@ format:
     slide-number: true
     show-slide-number: all
     embed-resources: true
+    figures: true
 execute:
   echo: true
   warning: false
@@ -31,16 +32,7 @@ execute:
 - Analyzed **word frequency** to identify common themes.
 
 ## Text Analysis Code
-
-### Package Installation
-```{r}
-# Install required packages
-install.packages(c("tidyverse", "stringr", "tidytext", "ggplot2"))
-```
-
-## Setup
-```{r}
-# Load libraries and set chunk options
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
   warning = FALSE,
@@ -54,20 +46,38 @@ library(tidytext)
 library(ggplot2)
 ```
 
-## Proportion of Netflix Titles Containing Numbers
 ```{r}
-#| eval: true
+netflix_titles <- readr::read_csv(
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv"
+)
+```
+
+## What proportion of Netflix Titles Contain Numbers?
+
+We begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.
+
+```{r}
 netflix_titles <- netflix_titles |>
   mutate(has_number = str_detect(title, "\\d+"))
 
 table(netflix_titles$has_number)
 prop.table(table(netflix_titles$has_number))
+
+
+#Here, we use the `str_detect()` function with the regular expression `\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  
+#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.
+
+#The table above shows how many Netflix titles contain numbers compared to those that do not.')
+
 ```
 
+The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context.
+
 ## Counting Thematic Keywords in Descriptions
+
 ```{r}
 #| fig-alt: "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries."
-#| eval: true
+
 netflix_titles <- netflix_titles |>
   mutate(
     love_mentions    = str_count(description, "\\b(?i)love\\b"),
@@ -82,7 +92,10 @@ theme_counts <- netflix_titles |>
     mystery = sum(mystery_mentions, na.rm = TRUE)
   ) |>
   pivot_longer(cols = everything(), names_to = "theme", values_to = "count") 
+```
 
+## Plotting  
+```{r}
 ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   geom_col() +
   labs(
@@ -93,10 +106,11 @@ ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
   ) +
   theme_minimal()
 ```
+![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/CommonNetflixThemes.png)
 
-### Finding Adjectives Before "Story"
+## Finding Adjectives That Appear Before “Story” (Lookaround Example)
+
 ```{r}
-#| eval: true
 story_words <- netflix_titles |>
   mutate(adj_before_story = str_extract(description, "\\b\\w+(?= story)")) |>
   filter(!is.na(adj_before_story)) |>
@@ -105,12 +119,17 @@ story_words <- netflix_titles |>
   count(adj_before_story, sort = TRUE)
 
 head(story_words, 10)
+
 ```
 
-### Most Frequent Words in Descriptions
+The use a regular expression with a lookahead — `(?= story)` — extracts the word immediately before “story” in each description.
+
+For example, in a phrase like “an incredible story”, the pattern will capture “incredible.”
+
+## Most Frequent Words in Descriptions (Excluding filler)
+
 ```{r}
 #| fig-alt: "Horizontal bar chart of the 15 most common non-stop words in Netflix descriptions, showing frequency for each word. Words like 'love', 'life', and 'family' appear prominently."
-#| eval: true
 data("stop_words")
 
 top_words <- netflix_titles |>
@@ -128,5 +147,7 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
     y = "Frequency"
   ) +
   theme_minimal()
+
 ```
+![](/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/screenshots/DescriptionWords.png)
 

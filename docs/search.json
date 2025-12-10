@@ -256,7 +256,7 @@
     "href": "FinalPresentation.html#text-analysis-code",
     "title": "Recap: Final Presentation",
     "section": "Text Analysis Code",
-    "text": "Text Analysis Code\nPackage Installation\n# Install required packages\ninstall.packages(c(\"tidyverse\", \"stringr\", \"tidytext\", \"ggplot2\"))"
+    "text": "Text Analysis Code\n\nnetflix_titles &lt;- readr::read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv\"\n)"
   },
   {
     "objectID": "FinalPresentation.html#setup",
@@ -277,6 +277,55 @@
     "href": "FinalPresentation.html#counting-thematic-keywords-in-descriptions",
     "title": "Recap: Final Presentation",
     "section": "Counting Thematic Keywords in Descriptions",
-    "text": "Counting Thematic Keywords in Descriptions\n#| fig-alt: \"Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries.\"\n#| eval: true\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(\n    love_mentions    = str_count(description, \"\\\\b(?i)love\\\\b\"),\n    death_mentions   = str_count(description, \"\\\\b(?i)death\\\\b\"),\n    mystery_mentions = str_count(description, \"\\\\b(?i)mystery\\\\b\")\n  )\n\ntheme_counts &lt;- netflix_titles |&gt;\n  summarise(\n    love = sum(love_mentions, na.rm = TRUE),\n    death = sum(death_mentions, na.rm = TRUE),\n    mystery = sum(mystery_mentions, na.rm = TRUE)\n  ) |&gt;\n  pivot_longer(cols = everything(), names_to = \"theme\", values_to = \"count\") \n\nggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +\n  geom_col() +\n  labs(\n    title = \"Common Themes in Netflix Descriptions\",\n    x = \"Theme\",\n    y = \"Count of Mentions\",\n    fill = \"Theme\"\n  ) +\n  theme_minimal()\nFinding Adjectives Before “Story”\n#| eval: true\nstory_words &lt;- netflix_titles |&gt;\n  mutate(adj_before_story = str_extract(description, \"\\\\b\\\\w+(?= story)\")) |&gt;\n  filter(!is.na(adj_before_story)) |&gt;\n  mutate(adj_before_story = tolower(adj_before_story)) |&gt;\n  anti_join(stop_words, by = c(\"adj_before_story\" = \"word\")) |&gt;\n  count(adj_before_story, sort = TRUE)\n\nhead(story_words, 10)\nMost Frequent Words in Descriptions\n#| fig-alt: \"Horizontal bar chart of the 15 most common non-stop words in Netflix descriptions, showing frequency for each word. Words like 'love', 'life', and 'family' appear prominently.\"\n#| eval: true\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()"
+    "text": "Counting Thematic Keywords in Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(\n    love_mentions    = str_count(description, \"\\\\b(?i)love\\\\b\"),\n    death_mentions   = str_count(description, \"\\\\b(?i)death\\\\b\"),\n    mystery_mentions = str_count(description, \"\\\\b(?i)mystery\\\\b\")\n  )\n\ntheme_counts &lt;- netflix_titles |&gt;\n  summarise(\n    love = sum(love_mentions, na.rm = TRUE),\n    death = sum(death_mentions, na.rm = TRUE),\n    mystery = sum(mystery_mentions, na.rm = TRUE)\n  ) |&gt;\n  pivot_longer(cols = everything(), names_to = \"theme\", values_to = \"count\")"
+  },
+  {
+    "objectID": "FinalPresentation.html#what-proportion-of-netflix-titles-contain-numbers",
+    "href": "FinalPresentation.html#what-proportion-of-netflix-titles-contain-numbers",
+    "title": "Recap: Final Presentation",
+    "section": "What proportion of Netflix Titles Contain Numbers?",
+    "text": "What proportion of Netflix Titles Contain Numbers?\nWe begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\n\n\nFALSE  TRUE \n 7361   426 \n\nprop.table(table(netflix_titles$has_number))\n\n\n     FALSE       TRUE \n0.94529344 0.05470656 \n\n#Here, we use the `str_detect()` function with the regular expression `\\\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  \n#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.\n\n#The table above shows how many Netflix titles contain numbers compared to those that do not.')\n\nThe results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context."
+  },
+  {
+    "objectID": "FinalPresentation.html#plotting",
+    "href": "FinalPresentation.html#plotting",
+    "title": "Recap: Final Presentation",
+    "section": "Plotting",
+    "text": "Plotting\n\nggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +\n  geom_col() +\n  labs(\n    title = \"Common Themes in Netflix Descriptions\",\n    x = \"Theme\",\n    y = \"Count of Mentions\",\n    fill = \"Theme\"\n  ) +\n  theme_minimal()"
+  },
+  {
+    "objectID": "FinalPresentation.html#finding-adjectives-that-appear-before-story-lookaround-example",
+    "href": "FinalPresentation.html#finding-adjectives-that-appear-before-story-lookaround-example",
+    "title": "Recap: Final Presentation",
+    "section": "Finding Adjectives That Appear Before “Story” (Lookaround Example)",
+    "text": "Finding Adjectives That Appear Before “Story” (Lookaround Example)\n\nstory_words &lt;- netflix_titles |&gt;\n  mutate(adj_before_story = str_extract(description, \"\\\\b\\\\w+(?= story)\")) |&gt;\n  filter(!is.na(adj_before_story)) |&gt;\n  mutate(adj_before_story = tolower(adj_before_story)) |&gt;\n  anti_join(stop_words, by = c(\"adj_before_story\" = \"word\")) |&gt;\n  count(adj_before_story, sort = TRUE)\n\nhead(story_words, 10)\n\n# A tibble: 10 × 2\n   adj_before_story     n\n   &lt;chr&gt;            &lt;int&gt;\n 1 true                48\n 2 love                 8\n 3 life                 5\n 4 origin               3\n 5 biblical             2\n 6 crime                2\n 7 dark                 2\n 8 fictional            2\n 9 age                  1\n10 american             1\n\n\nThe use a regular expression with a lookahead — (?= story) — extracts the word immediately before “story” in each description.\nFor example, in a phrase like “an incredible story”, the pattern will capture “incredible.”"
+  },
+  {
+    "objectID": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
+    "href": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
+    "title": "Recap: Final Presentation",
+    "section": "Most Frequent Words in Descriptions (Excluding filler)",
+    "text": "Most Frequent Words in Descriptions (Excluding filler)\n\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()"
+  },
+  {
+    "objectID": "FinalPresentation.html#plot",
+    "href": "FinalPresentation.html#plot",
+    "title": "Recap: Final Presentation",
+    "section": "Plot",
+    "text": "Plot\n\n\n\nPlot"
+  },
+  {
+    "objectID": "FinalPresentation.html#section",
+    "href": "FinalPresentation.html#section",
+    "title": "Recap: Final Presentation",
+    "section": "",
+    "text": "Plot"
+  },
+  {
+    "objectID": "FinalPresentation.html#plot-1",
+    "href": "FinalPresentation.html#plot-1",
+    "title": "Recap: Final Presentation",
+    "section": "Plot",
+    "text": "Plot\n\n\n\nPlot"
   }
 ]

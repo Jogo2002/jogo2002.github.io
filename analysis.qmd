@@ -120,7 +120,7 @@ Interpretation: Looking at the top 10 words preceding story, it is clear that "t
 Most Frequent Words in Descriptions (Excluding filler)
 
 ```{r}
-#| fig-alt: "Horizontal bar chart of the 15 most common non-stop words in Netflix descriptions, showing frequency for each word. Words like 'love', 'life', and 'family' appear prominently."
+#| fig-alt: "Vertical bar chart of the 15 most common non-stop words in Netflix descriptions, showing frequency for each word. Words like 'love', 'life', and 'family' appear prominently."
 data("stop_words")
 
 top_words <- netflix_titles |>
@@ -129,17 +129,15 @@ top_words <- netflix_titles |>
   count(word, sort = TRUE) |>
   slice_head(n = 15)
 
-
-
-ggplot(top_words, aes(x = reorder(word, n), y = n)) +
+ggplot(top_words, aes(x = reorder(word, -n), y = n)) +
   geom_col(fill = "steelblue") +
-  coord_flip() +
   labs(
     title = "Most Frequent Words in Netflix Descriptions",
     x = "Word",
     y = "Frequency"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ## Interpretation:
