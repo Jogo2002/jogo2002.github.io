@@ -49,10 +49,25 @@ image_write(homepage_img, path = "Homepage.png", format = "png")
 - **Source**: Accessed via TidyTuesday (2021-04-20).
 - **Objective**: Analyze text patterns to uncover thematic and linguistic trends.
 
-```{r}
-# Display the first few rows of the raw data
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 6,
+  fig.height = 4
+)
+library(tidyverse)
+library(stringr)
+library(tidytext)
+library(ggplot2)
+library(scales)
+library(magick)
 library(tibble)
+```
 
+```{r, include=FALSE}
+# Display the first few rows of the raw data
 netflix_titles <- readr::read_csv(
   "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv"
 )
@@ -115,7 +130,7 @@ theme_counts <- netflix_titles |>
 ```
 
 ## Plotting  
-```{r}
+```{r echo=FALSE}
 #| fig-alt: "Bar chart showing total mentions of the words 'love', 'death', and 'mystery' across all Netflix descriptions. Each bar represents the overall frequency of each theme, allowing comparison of how often these motifs appear in Netflix title summaries."
 
 ggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +
@@ -147,7 +162,7 @@ The use a regular expression with a lookahead — `(?= story)` — extracts the 
 
 ## Most Frequent Words in Descriptions (Excluding filler)
 
-```{r}
+```{r echo=FALSE}
 #| fig-alt: "Horizontal bar chart of the 15 most common non-stop words in Netflix descriptions, showing frequency for each word. Words like 'love', 'life', and 'family' appear prominently."
 data("stop_words")
 
@@ -168,12 +183,12 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
   theme_minimal()
 ```
 
-![](DescriptionWords.png)
+<!-- ![](DescriptionWords.png) -->
 
 # Additional Regex Explorations
 
 ## Extracting Years from Descriptions
-```{r}
+```{r echo=FALSE}
 #| fig-alt: "Bar chart showing the frequency of the top 10 years mentioned in Netflix descriptions."
 netflix_titles <- netflix_titles |>
   mutate(year_mentions = str_extract_all(description, "\\b(19|20)\\d{2}\\b"))
@@ -198,7 +213,6 @@ ggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +
 
 ## Identifying Titles with Repeated Words
 ```{r}
-#| fig-alt: "Bar chart showing the count of titles with repeated words."
 netflix_titles <- netflix_titles |>
   mutate(repeated_words = str_detect(title, "\\b(\\w+)\\b.*\\b\\1\\b"))
 
@@ -211,7 +225,7 @@ repeated_word_counts
 ```
 
 ## Extracting Sentences with "Love" or "Hate"
-```{r}
+```{r echo=FALSE}
 #| fig-alt: "Bar chart comparing the frequency of sentences mentioning 'love' versus 'hate' in Netflix descriptions."
 netflix_titles <- netflix_titles |>
   mutate(love_hate_sentences = str_extract_all(description, "[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]"))
@@ -223,8 +237,6 @@ love_hate_counts <- netflix_titles |>
   count(keyword, sort = TRUE)
 
 # Plot the counts
-library(scales) # For percentage formatting
-
 ggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +
   geom_col(width = 0.6, color = "black", show.legend = FALSE) +
   scale_fill_manual(values = c("Love" = "#FF69B4", "Hate" = "#4682B4")) +

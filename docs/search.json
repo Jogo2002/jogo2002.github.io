@@ -291,7 +291,7 @@
     "href": "FinalPresentation.html#plotting",
     "title": "Recap: Final Presentation",
     "section": "Plotting",
-    "text": "Plotting\n\nggplot(theme_counts, aes(x = theme, y = count, fill = theme)) +\n  geom_col() +\n  labs(\n    title = \"Common Themes in Netflix Descriptions\",\n    x = \"Theme\",\n    y = \"Count of Mentions\",\n    fill = \"Theme\"\n  ) +\n  theme_minimal()"
+    "text": "Plotting"
   },
   {
     "objectID": "FinalPresentation.html#finding-adjectives-that-appear-before-story-lookaround-example",
@@ -305,7 +305,7 @@
     "href": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
     "title": "Recap: Final Presentation",
     "section": "Most Frequent Words in Descriptions (Excluding filler)",
-    "text": "Most Frequent Words in Descriptions (Excluding filler)\n\ndata(\"stop_words\")\n\ntop_words &lt;- netflix_titles |&gt;\n  unnest_tokens(word, description) |&gt;\n  anti_join(stop_words, by = \"word\") |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_head(n = 15)\n\nggplot(top_words, aes(x = reorder(word, n), y = n)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(\n    title = \"Most Frequent Words in Netflix Descriptions\",\n    x = \"Word\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal()"
+    "text": "Most Frequent Words in Descriptions (Excluding filler)"
   },
   {
     "objectID": "FinalPresentation.html#plot",
@@ -354,7 +354,7 @@
     "href": "FinalPresentation.html#extracting-years-from-descriptions",
     "title": "Recap: Final Presentation",
     "section": "Extracting Years from Descriptions",
-    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# Count the frequency of years\nyear_counts &lt;- netflix_titles |&gt;\n  unnest(year_mentions) |&gt;\n  count(year_mentions, sort = TRUE) |&gt;\n  slice_head(n = 10) # Select top 10 years\n\n# Plot the most frequently mentioned years\nggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +\n  geom_col(fill = \"darkgreen\") +\n  labs(\n    title = \"Top 10 Most Frequently Mentioned Years in Descriptions\",\n    x = \"Year\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))"
+    "text": "Extracting Years from Descriptions"
   },
   {
     "objectID": "FinalPresentation.html#identifying-titles-with-repeated-words",
@@ -368,7 +368,7 @@
     "href": "FinalPresentation.html#extracting-sentences-with-love-or-hate",
     "title": "Recap: Final Presentation",
     "section": "Extracting Sentences with “Love” or “Hate”",
-    "text": "Extracting Sentences with “Love” or “Hate”\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(love_hate_sentences = str_extract_all(description, \"[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]\"))\n\n# Count sentences mentioning 'love' or 'hate'\nlove_hate_counts &lt;- netflix_titles |&gt;\n  unnest(love_hate_sentences) |&gt;\n  mutate(keyword = ifelse(str_detect(love_hate_sentences, \"love\"), \"Love\", \"Hate\")) |&gt;\n  count(keyword, sort = TRUE)\n\n# Plot the counts\nlibrary(scales) # For percentage formatting\n\nggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +\n  geom_col(width = 0.6, color = \"black\", show.legend = FALSE) +\n  scale_fill_manual(values = c(\"Love\" = \"#FF69B4\", \"Hate\" = \"#4682B4\")) +\n  scale_y_continuous(labels = comma) +\n  labs(\n    title = \"Mentions of 'Love' vs 'Hate' in Descriptions\",\n    subtitle = \"A comparison of emotional keywords in Netflix descriptions\",\n    x = \"Keyword\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal(base_size = 14) +\n  theme(\n    plot.title = element_text(face = \"bold\", hjust = 0.5),\n    plot.subtitle = element_text(hjust = 0.5),\n    axis.text = element_text(color = \"#333333\"),\n    axis.title = element_text(face = \"bold\"),\n    panel.grid.major = element_line(color = \"#DDDDDD\"),\n    panel.grid.minor = element_blank()\n  )"
+    "text": "Extracting Sentences with “Love” or “Hate”"
   },
   {
     "objectID": "FinalPresentation.html#mentions-of-love-vs-hate",
@@ -382,6 +382,6 @@
     "href": "FinalPresentation.html#introduction",
     "title": "Recap: Final Presentation",
     "section": "Introduction",
-    "text": "Introduction\n\nDataset Overview: The Netflix dataset contains thousands of movie and TV show titles, descriptions, and metadata.\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends.\n\n\n# Display the first few rows of the raw data\nlibrary(tibble)\n\nnetflix_titles &lt;- readr::read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv\"\n)\n\n# Show a preview of the dataset\nnetflix_titles |&gt; head() |&gt; as_tibble()\n\n# A tibble: 6 × 12\n  show_id type    title director    cast  country date_added release_year rating\n  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt; \n1 s1      TV Show 3%    &lt;NA&gt;        João… Brazil  August 14…         2020 TV-MA \n2 s2      Movie   7:19  Jorge Mich… Demi… Mexico  December …         2016 TV-MA \n3 s3      Movie   23:59 Gilbert Ch… Tedd… Singap… December …         2011 R     \n4 s4      Movie   9     Shane Acker Elij… United… November …         2009 PG-13 \n5 s5      Movie   21    Robert Luk… Jim … United… January 1…         2008 PG-13 \n6 s6      TV Show 46    Serdar Akar Erda… Turkey  July 1, 2…         2016 TV-MA \n# ℹ 3 more variables: duration &lt;chr&gt;, listed_in &lt;chr&gt;, description &lt;chr&gt;\n\n\n\n\nUsed regular expressions to break down text into words.\nRemoved stop words to focus on meaningful terms.\nAnalyzed word frequency to identify common themes."
+    "text": "Introduction\n\nDataset Overview: The Netflix dataset contains thousands of movie and TV show titles, descriptions, and metadata.\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
   }
 ]
