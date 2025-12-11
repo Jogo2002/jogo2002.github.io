@@ -12,7 +12,7 @@ editor: visual
 
 # Introduction
 
-This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20) , includes thousands of titles from a variety of genres and regions, spanning many years. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.
+This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20), includes thousands of titles from a variety of genres and regions, from the start of Netflix to 2019. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(

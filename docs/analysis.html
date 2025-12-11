@@ -134,10 +134,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./resources.html"> 
-<span class="menu-text">All my fav resources!</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link active" href="./analysis.html" aria-current="page"> 
 <span class="menu-text">Text Analysis</span></a>
   </li>  
@@ -240,7 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20) , includes thousands of titles from a variety of genres and regions, spanning many years. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.</p>
+<p>This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20), includes thousands of titles from a variety of genres and regions, from the start of Netflix to 2019. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv"</span></span>
