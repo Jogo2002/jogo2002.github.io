@@ -1,38 +1,150 @@
 [
   {
-    "objectID": "FinalPresentation.html#overview-of-my-projects",
-    "href": "FinalPresentation.html#overview-of-my-projects",
+    "objectID": "FinalPresentation.html#home-page",
+    "href": "FinalPresentation.html#home-page",
     "title": "Recap: Final Presentation",
-    "section": "Overview of My Projects",
-    "text": "Overview of My Projects\nIn this presentation, I’ll briefly introduce the major analytical projects I’ve completed this semester. Each project applies data science tools to real-world questions, drawing on SQL, R, visualization, and statistical inference."
+    "section": "Home Page",
+    "text": "Home Page"
   },
   {
-    "objectID": "FinalPresentation.html#projects-included-in-this-course",
-    "href": "FinalPresentation.html#projects-included-in-this-course",
+    "objectID": "FinalPresentation.html#netflix-dataset-fields",
+    "href": "FinalPresentation.html#netflix-dataset-fields",
     "title": "Recap: Final Presentation",
-    "section": "Projects Included in This Course",
-    "text": "Projects Included in This Course\n\nText Analysis:\nUnderstanding thematic patterns and linguistic structure in Netflix titles and descriptions.\nProject 3 – Silver vs. Gold Volatility:\nA permutation test examining whether silver is more volatile than gold from August–October.\nEthics of COMPAS:\nA critical evaluation of algorithmic fairness, bias, and the limits of risk assessments.\nTraffic Stops with SQL:\nCombining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities.\nData Visualization Project:\nCreating clear, interpretable graphics to explore patterns in complex datasets.\nFast Food Calories:\nVisualizing and comparing calorie distributions across major fast-food chains.\nFIFA Data:\nExploring player attributes, performance, and clustering patterns in FIFA datasets.\nPermutation Test Project (Project 5):\nUsing simulation-based inference to compare daily log returns of gold and silver."
+    "section": "Netflix Dataset Fields",
+    "text": "Netflix Dataset Fields\n\n# Display the first few rows of the dataset to introduce the fields\nnetflix_titles |&gt; head(5)\n\n# A tibble: 5 × 12\n  show_id type    title director    cast  country date_added release_year rating\n  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt; \n1 s1      TV Show 3%    &lt;NA&gt;        João… Brazil  August 14…         2020 TV-MA \n2 s2      Movie   7:19  Jorge Mich… Demi… Mexico  December …         2016 TV-MA \n3 s3      Movie   23:59 Gilbert Ch… Tedd… Singap… December …         2011 R     \n4 s4      Movie   9     Shane Acker Elij… United… November …         2009 PG-13 \n5 s5      Movie   21    Robert Luk… Jim … United… January 1…         2008 PG-13 \n# ℹ 3 more variables: duration &lt;chr&gt;, listed_in &lt;chr&gt;, description &lt;chr&gt;"
   },
   {
-    "objectID": "FinalPresentation.html#his-course-portfolio-highlights-work-across-sql-statistical-inference-ethics-and-visualizationshowing-my-ability-to-tackle-diverse-data-problems-using-robust-analytical-methods.",
-    "href": "FinalPresentation.html#his-course-portfolio-highlights-work-across-sql-statistical-inference-ethics-and-visualizationshowing-my-ability-to-tackle-diverse-data-problems-using-robust-analytical-methods.",
+    "objectID": "FinalPresentation.html#introduction-to-dataset-1",
+    "href": "FinalPresentation.html#introduction-to-dataset-1",
     "title": "Recap: Final Presentation",
-    "section": "his course portfolio highlights work across SQL, statistical inference, ethics, and visualization—showing my ability to tackle diverse data problems using robust analytical methods.",
-    "text": "his course portfolio highlights work across SQL, statistical inference, ethics, and visualization—showing my ability to tackle diverse data problems using robust analytical methods."
+    "section": "Introduction to Dataset",
+    "text": "Introduction to Dataset"
+  },
+  {
+    "objectID": "FinalPresentation.html#visualization-the-distribution-of-release-years",
+    "href": "FinalPresentation.html#visualization-the-distribution-of-release-years",
+    "title": "Recap: Final Presentation",
+    "section": "Visualization the distribution of release years",
+    "text": "Visualization the distribution of release years\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
+  },
+  {
+    "objectID": "FinalPresentation.html#what-proportion-of-netflix-titles-contain-numbers",
+    "href": "FinalPresentation.html#what-proportion-of-netflix-titles-contain-numbers",
+    "title": "Recap: Final Presentation",
+    "section": "What proportion of Netflix Titles Contain Numbers?",
+    "text": "What proportion of Netflix Titles Contain Numbers?\nWe begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\n\n\nFALSE  TRUE \n 7361   426 \n\nprop.table(table(netflix_titles$has_number))\n\n\n     FALSE       TRUE \n0.94529344 0.05470656 \n\n#Here, we use the `str_detect()` function with the regular expression `\\\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  \n#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.\n\n#The table above shows how many Netflix titles contain numbers compared to those that do not.')"
+  },
+  {
+    "objectID": "FinalPresentation.html#counting-thematic-keywords-in-descriptions",
+    "href": "FinalPresentation.html#counting-thematic-keywords-in-descriptions",
+    "title": "Recap: Final Presentation",
+    "section": "Counting Thematic Keywords in Descriptions",
+    "text": "Counting Thematic Keywords in Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(\n    love_mentions    = str_count(description, \"\\\\b(?i)love\\\\b\"),\n    death_mentions   = str_count(description, \"\\\\b(?i)death\\\\b\"),\n    mystery_mentions = str_count(description, \"\\\\b(?i)mystery\\\\b\")\n  )\n\ntheme_counts &lt;- netflix_titles |&gt;\n  summarise(\n    love = sum(love_mentions, na.rm = TRUE),\n    death = sum(death_mentions, na.rm = TRUE),\n    mystery = sum(mystery_mentions, na.rm = TRUE)\n  ) |&gt;\n  pivot_longer(cols = everything(), names_to = \"theme\", values_to = \"count\")"
+  },
+  {
+    "objectID": "FinalPresentation.html#plotting",
+    "href": "FinalPresentation.html#plotting",
+    "title": "Recap: Final Presentation",
+    "section": "Plotting",
+    "text": "Plotting"
+  },
+  {
+    "objectID": "FinalPresentation.html#finding-adjectives-that-appear-before-story-lookaround-example",
+    "href": "FinalPresentation.html#finding-adjectives-that-appear-before-story-lookaround-example",
+    "title": "Recap: Final Presentation",
+    "section": "Finding Adjectives That Appear Before “Story” (Lookaround Example)",
+    "text": "Finding Adjectives That Appear Before “Story” (Lookaround Example)\n\nstory_words &lt;- netflix_titles |&gt;\n  mutate(adj_before_story = str_extract(description, \"\\\\b\\\\w+(?= story)\")) |&gt;\n  filter(!is.na(adj_before_story)) |&gt;\n  mutate(adj_before_story = tolower(adj_before_story)) |&gt;\n  anti_join(stop_words, by = c(\"adj_before_story\" = \"word\")) |&gt;\n  count(adj_before_story, sort = TRUE)\n\nhead(story_words, 10)\n\n# A tibble: 10 × 2\n   adj_before_story     n\n   &lt;chr&gt;            &lt;int&gt;\n 1 true                48\n 2 love                 8\n 3 life                 5\n 4 origin               3\n 5 biblical             2\n 6 crime                2\n 7 dark                 2\n 8 fictional            2\n 9 age                  1\n10 american             1\n\n\nThe use a regular expression with a lookahead — (?= story) — extracts the word immediately before “story” in each description."
+  },
+  {
+    "objectID": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
+    "href": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
+    "title": "Recap: Final Presentation",
+    "section": "Most Frequent Words in Descriptions (Excluding filler)",
+    "text": "Most Frequent Words in Descriptions (Excluding filler)"
+  },
+  {
+    "objectID": "FinalPresentation.html#extracting-years-from-descriptions",
+    "href": "FinalPresentation.html#extracting-years-from-descriptions",
+    "title": "Recap: Final Presentation",
+    "section": "Extracting Years from Descriptions",
+    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (19|20): Matches either \"19\" or \"20\", representing the start of a year in the 1900s or 2000s.\n# - \\\\d{2}: Matches exactly two digits, completing the year (e.g., 1999, 2020).\n# - \\\\b: Ensures the match is a whole word, avoiding partial matches within longer strings."
+  },
+  {
+    "objectID": "FinalPresentation.html#extracting-years-from-descriptions-1",
+    "href": "FinalPresentation.html#extracting-years-from-descriptions-1",
+    "title": "Recap: Final Presentation",
+    "section": "Extracting Years from Descriptions",
+    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (19|20): Matches either \"19\" or \"20\", representing the start of a year in the 1900s or 2000s.\n# - \\\\d{2}: Matches exactly two digits, completing the year (e.g., 1999, 2020).\n# - \\\\b: Ensures the match is a whole word, avoiding partial matches within longer strings.\n\nyear_counts &lt;- netflix_titles |&gt;\n  unnest(year_mentions) |&gt;\n  count(year_mentions, sort = TRUE) |&gt;\n  slice_head(n = 10) # Select top 10 years"
+  },
+  {
+    "objectID": "FinalPresentation.html#identifying-titles-with-repeated-words",
+    "href": "FinalPresentation.html#identifying-titles-with-repeated-words",
+    "title": "Recap: Final Presentation",
+    "section": "Identifying Titles with Repeated Words",
+    "text": "Identifying Titles with Repeated Words\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(repeated_words = str_detect(title, \"\\\\b(\\\\w+)\\\\b.*\\\\b\\\\1\\\\b\"))\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (\\\\w+): Captures a sequence of word characters (letters, digits, or underscores) as a group.\n# - \\\\b: Ensures the captured group is a whole word.\n# - .*: Matches any number of characters (except newlines) between the first and second occurrence of the word.\n# - \\\\b\\\\1\\\\b: Matches the same word captured in the first group, ensuring it's a whole word.\n\n\n# Count titles with repeated words\nrepeated_word_counts &lt;- netflix_titles |&gt;\n  count(repeated_words)\n\n# Display the counts\nrepeated_word_counts\n\n# A tibble: 2 × 2\n  repeated_words     n\n  &lt;lgl&gt;          &lt;int&gt;\n1 FALSE           7560\n2 TRUE             227\n\nrepeated_word_props &lt;- prop.table(table(netflix_titles$repeated_words))\nrepeated_word_props\n\n\n     FALSE       TRUE \n0.97084885 0.02915115"
+  },
+  {
+    "objectID": "FinalPresentation.html#extracting-sentences-with-love-or-hate",
+    "href": "FinalPresentation.html#extracting-sentences-with-love-or-hate",
+    "title": "Recap: Final Presentation",
+    "section": "Extracting Sentences with “Love” or “Hate”",
+    "text": "Extracting Sentences with “Love” or “Hate”\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(love_hate_sentences = str_extract_all(description, \"[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]\"))\n\n# Count sentences mentioning 'love' or 'hate'\nlove_hate_counts &lt;- netflix_titles |&gt;\n  unnest(love_hate_sentences) |&gt;\n  mutate(keyword = ifelse(str_detect(love_hate_sentences, \"love\"), \"Love\", \"Hate\")) |&gt;\n  count(keyword, sort = TRUE)"
+  },
+  {
+    "objectID": "FinalPresentation.html#plotting-1",
+    "href": "FinalPresentation.html#plotting-1",
+    "title": "Recap: Final Presentation",
+    "section": "Plotting",
+    "text": "Plotting\n\n\nLove dominates Netflix descriptions, highlighting the platform’s focus on romantic and emotional themes.\nHate appears far less frequently, suggesting a lesser emphasis on negative emotions."
+  },
+  {
+    "objectID": "FinalPresentation.html#sourcing",
+    "href": "FinalPresentation.html#sourcing",
+    "title": "Recap: Final Presentation",
+    "section": "Sourcing",
+    "text": "Sourcing\n\nSource: Netflix dataset accessed via TidyTuesday (2021-04-20).\nURL: TidyTuesday GitHub Repository\nDescription: The data this week comes from Kaggle w/ credit to Shivam Bansal.\n\nThis dataset consists of tv shows and movies available on Netflix as of 2019. The dataset is collected from Flixable which is a third-party Netflix search engine."
   },
   {
     "objectID": "FastFoodCals.html",
     "href": "FastFoodCals.html",
     "title": "Fast Food",
     "section": "",
-    "text": "fastfood &lt;- read_csv(\"data/fastfood_calories.csv\", show_col_types = FALSE)\n\navg_cal &lt;- fastfood %&gt;%\n  group_by(restaurant) %&gt;%\n  summarise(mean_calories = mean(calories, na.rm = TRUE),\n            n_items = n()) %&gt;%\n  arrange(desc(mean_calories))\n\navg_cal %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(restaurant, mean_calories),\n             y = mean_calories)) +\n  geom_col(fill = \"tomato\") +\n  coord_flip() +\n  labs(\n    title = \"Top 10 Fast Food Chains by Average Calories per Menu Item\",\n    x = \"Restaurant\",\n    y = \"Average Calories\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nSource: https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv#L4\nData From: fastfoodnutrition.com"
+    "text": "fastfood &lt;- read_csv(\"data/fastfood_calories.csv\", show_col_types = FALSE)\n\navg_cal &lt;- fastfood %&gt;%\n  group_by(restaurant) %&gt;%\n  summarise(mean_calories = mean(calories, na.rm = TRUE),\n            n_items = n()) %&gt;%\n  arrange(desc(mean_calories))\n\navg_cal %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(restaurant, mean_calories),\n             y = mean_calories)) +\n  geom_col(fill = \"tomato\") +\n  coord_flip() +\n  labs(\n    title = \"Top 10 Fast Food Chains by Average Calories per Menu Item\",\n    x = \"Restaurant\",\n    y = \"Average Calories\"\n  ) +\n  theme_minimal()"
+  },
+  {
+    "objectID": "FastFoodCals.html#analysis",
+    "href": "FastFoodCals.html#analysis",
+    "title": "Fast Food",
+    "section": "Analysis:",
+    "text": "Analysis:\nThis chart shows the fast-food chains with the highest average calories per menu item, highlighting meaningful differences across major brands. McDonald’s, Sonic, and Burger King top the list, each averaging over 600 calories per item—indicating that their menus tend to feature larger portions or more calorie-dense foods.\nRestaurants like Arby’s, Dairy Queen, and Subway fall in the mid-range (roughly 520–560 calories), suggesting a mix of lighter and heavier options. At the lower end of the top ten, Taco Bell and Chick-fil-A average under 450 calories, indicating comparatively lighter items on average.\nOverall, the data shows substantial variation across chains, with some offering consistently higher-calorie options. This may reflect differences in menu composition (e.g., fried foods, desserts, portion sizes), target customers, or brand positioning within the fast-food market."
+  },
+  {
+    "objectID": "FastFoodCals.html#source",
+    "href": "FastFoodCals.html#source",
+    "title": "Fast Food",
+    "section": "Source:",
+    "text": "Source:\nHughes, E. (2018). Fast food entrée data [Data set]. TidyTuesday, rfordatascience. Retrieved from https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv"
   },
   {
     "objectID": "FifaData.html",
     "href": "FifaData.html",
     "title": "Fifa Data",
     "section": "",
-    "text": "Code\nlibrary(tidyverse)\n\nfifa &lt;- read_csv(\"data/week11_fifa_audience.csv\", show_col_types = FALSE)\n\nggplot(fifa, aes(x = population_share, y = tv_audience_share, color = confederation)) +\n  geom_point(alpha = 0.7, size = 3) +\n  geom_abline(slope = 1, intercept = 0, linetype = \"dashed\", color = \"red\") +\n  scale_x_log10(labels = scales::percent_format(accuracy = 0.01)) +\n  scale_y_log10(labels = scales::percent_format(accuracy = 0.01)) +\n  labs(\n    title = \"FIFA World Cup: Population Share vs. TV Audience Share (log10 scale)\",\n    x = \"Share of World Population (log scale)\",\n    y = \"Share of World Cup TV Audience (log scale)\",\n    color = \"Confederation\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nSource:\nhttps://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv#L4\nData from: FIFA"
+    "text": "Code\nlibrary(tidyverse)\n\nfifa &lt;- read_csv(\"data/week11_fifa_audience.csv\", show_col_types = FALSE)\n\nggplot(fifa, aes(x = population_share, y = tv_audience_share, color = confederation)) +\n  geom_point(alpha = 0.7, size = 3) +\n  geom_abline(slope = 1, intercept = 0, linetype = \"dashed\", color = \"red\") +\n  scale_x_log10(labels = scales::percent_format(accuracy = 0.01)) +\n  scale_y_log10(labels = scales::percent_format(accuracy = 0.01)) +\n  labs(\n    title = \"FIFA World Cup: Population Share vs. TV Audience Share (log10 scale)\",\n    x = \"Share of World Population (log scale)\",\n    y = \"Share of World Cup TV Audience (log scale)\",\n    color = \"Confederation\"\n  ) +\n  theme_minimal()"
+  },
+  {
+    "objectID": "FifaData.html#analysis",
+    "href": "FifaData.html#analysis",
+    "title": "Fifa Data",
+    "section": "Analysis:",
+    "text": "Analysis:\nThe scatterplot reveals a strong positive relationship between a country’s share of the world population and its share of the FIFA World Cup TV audience. Most points lie above the red dashed 45-degree line, indicating that many countries have a disproportionately high TV audience relative to their population share. This suggests that smaller countries, in terms of population, often punch above their weight in terms of World Cup viewership. Confederations also show distinct patterns, with some regions consistently outperforming others in audience share relative to population."
+  },
+  {
+    "objectID": "FifaData.html#source",
+    "href": "FifaData.html#source",
+    "title": "Fifa Data",
+    "section": "Source:",
+    "text": "Source:\nFIFA. FIFA Audience Data. TidyTuesday, rfordatascience, 12 June 2018. https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv"
   },
   {
     "objectID": "analysis.html",
@@ -61,6 +173,13 @@
     "title": "Project 2: Netflix Text Analysis",
     "section": "",
     "text": "This bar chart shows the 15 most common non-stop words found in Netflix descriptions.\nWords like “life,” “family,” “world,” and “love” appear prominently — reinforcing the emotional and human-centered tone of Netflix’s catalog.\nThis kind of frequency analysis helps identify how streaming services position their content around universal, relatable ideas."
+  },
+  {
+    "objectID": "analysis.html#additional-regex-explorations",
+    "href": "analysis.html#additional-regex-explorations",
+    "title": "Project 2: Netflix Text Analysis",
+    "section": "",
+    "text": "netflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# Count the frequency of years\nyear_counts &lt;- netflix_titles |&gt;\n  unnest(year_mentions) |&gt;\n  count(year_mentions, sort = TRUE) |&gt;\n  slice_head(n = 10) # Select top 10 years\n\n# Plot the most frequently mentioned years\nggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +\n  geom_col(fill = \"darkgreen\") +\n  labs(\n    title = \"Top 10 Most Frequently Mentioned Years in Descriptions\",\n    x = \"Year\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\n\n\n\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(repeated_words = str_detect(title, \"\\\\b(\\\\w+)\\\\b.*\\\\b\\\\1\\\\b\"))\n\n# Count titles with repeated words\nrepeated_word_counts &lt;- netflix_titles |&gt;\n  count(repeated_words)\n\n# Display the counts\nrepeated_word_counts\n\n# A tibble: 2 × 2\n  repeated_words     n\n  &lt;lgl&gt;          &lt;int&gt;\n1 FALSE           7560\n2 TRUE             227"
   },
   {
     "objectID": "analysis.html#summary-of-insights",
@@ -102,14 +221,14 @@
     "href": "SQL.html#figure-1-citation-rates-by-race-and-city",
     "title": "Traffic Stops with SQL",
     "section": "Figure 1: Citation rates by race and city",
-    "text": "Figure 1: Citation rates by race and city\n\n\nCode\n#| fig-alt: there  \nggplot(race_city_summary, aes(x = city, y = citation_rate, fill = subject_race)) +\n  geom_col(position = \"dodge\") +\n  labs(\n    title = \"Citation Rates by Race Across Three Cities\",\n    x = \"Race\",\n    y = \"Citation Rate (Proportion of Stops)\",\n    fill = \"City\"\n  ) +\n  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\n\nFigure 1 shows substantial cross-city differences in how often traffic stops result in citations. Overall,New Orleans has consistently lower citation rates across race categories (roughly in the 20%–40% range), while Madison and Louisville are much higher for most groups (often around 70%–85%), suggesting different enforcement practices or recording conventions across jurisdictions.\nWithin-city racial patterns also vary. In Madison, citation rates are relatively similar across race categories (a fairly “flat” profile), whereas Louisville shows more dispersion, including notably low citation rates for the “other” category and extremely high rates for “unknown.” The “unknown” race category should be interpreted cautiously, since it can reflect missing/uncoded records and may involve smaller sample sizes; a useful follow-up is to compare the stop counts (stops) for each race–city group to see whether these extremes are driven by low-N categories."
+    "text": "Figure 1: Citation rates by race and city\n\n\nCode\nggplot(race_city_summary, aes(x = city, y = citation_rate, fill = subject_race)) +\n  geom_col(position = \"dodge\") +\n  labs(\n    title = \"Citation Rates by Race Across Three Cities\",\n    x = \"Race\",\n    y = \"Citation Rate (Proportion of Stops)\",\n    fill = \"City\"\n  ) +\n  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\n\nFigure 1 shows substantial cross-city differences in how often traffic stops result in citations. Overall,New Orleans has consistently lower citation rates across race categories (roughly in the 20%–40% range), while Madison and Louisville are much higher for most groups (often around 70%–85%), suggesting different enforcement practices or recording conventions across jurisdictions.\nWithin-city racial patterns also vary. In Madison, citation rates are relatively similar across race categories (a fairly “flat” profile), whereas Louisville shows more dispersion, including notably low citation rates for the “other” category and extremely high rates for “unknown.” The “unknown” race category should be interpreted cautiously, since it can reflect missing/uncoded records and may involve smaller sample sizes; a useful follow-up is to compare the stop counts (stops) for each race–city group to see whether these extremes are driven by low-N categories."
   },
   {
     "objectID": "SQL.html#figure-2-warning-rates-by-race-and-city",
     "href": "SQL.html#figure-2-warning-rates-by-race-and-city",
     "title": "Traffic Stops with SQL",
     "section": "Figure 2: Warning rates by race and city",
-    "text": "Figure 2: Warning rates by race and city\n\n\nCode\n#| fig-alt: there  \nggplot(race_city_summary, aes(x = city, y = warning_rate, fill = subject_race)) +\n  geom_col(position = \"dodge\") +\n  labs(\n    title = \"Warning Rates by Race Across Three Cities\",\n    x = \"Race\",\n    y = \"Warning Rate (Proportion of Stops)\",\n    fill = \"City\"\n  ) +\n  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\n\nFigure 2 shows that warning rates vary more across cities than across racial groups. Madison has the highest warning rates across most races, generally around the high-20% to low-30% range. New Orleans is typically slightly lower but still comparable, while Louisville tends to have the lowest warning rates for most categories. Within each city, differences by race are generally modest. The main exception is Louisville’s “other” category, which appears extremely high (around 80%). This kind of spike is often driven by small sample sizes or differences in how race categories are coded, so it should be interpreted cautiously without checking the number of stops in that group.\nFinally, the “unknown” category appears only for New Orleans in this figure, suggesting that missing or unknown race values are coded differently across agencies (or are not present after filtering) and therefore may not be directly comparable across cities."
+    "text": "Figure 2: Warning rates by race and city\n\n\nCode\nggplot(race_city_summary, aes(x = city, y = warning_rate, fill = subject_race)) +\n  geom_col(position = \"dodge\") +\n  labs(\n    title = \"Warning Rates by Race Across Three Cities\",\n    x = \"Race\",\n    y = \"Warning Rate (Proportion of Stops)\",\n    fill = \"City\"\n  ) +\n  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\n\nFigure 2 shows that warning rates vary more across cities than across racial groups. Madison has the highest warning rates across most races, generally around the high-20% to low-30% range. New Orleans is typically slightly lower but still comparable, while Louisville tends to have the lowest warning rates for most categories. Within each city, differences by race are generally modest. The main exception is Louisville’s “other” category, which appears extremely high (around 80%). This kind of spike is often driven by small sample sizes or differences in how race categories are coded, so it should be interpreted cautiously without checking the number of stops in that group.\nFinally, the “unknown” category appears only for New Orleans in this figure, suggesting that missing or unknown race values are coded differently across agencies (or are not present after filtering) and therefore may not be directly comparable across cities."
   },
   {
     "objectID": "Ethics.html",
@@ -224,244 +343,6 @@
     "text": "We now simulate a world where gold and silver have the same true volatility, and check how often our permutation test falsely rejects the null.\nThis helps us assess how well the test controls the Type I error rate.\n\n\nCode\nsimulate_type1_error &lt;- function(n = 30, reps = 20, perms = 100, seed = 47) {\n  set.seed(seed)  # ensures reproducibility\n\n  p_vals &lt;- numeric(reps)\n\n  for (i in 1:reps) {\n    group1 &lt;- rnorm(n)\n    group2 &lt;- rnorm(n)\n\n    df &lt;- tibble(\n      Return = c(group1, group2),\n      Metal = rep(c(\"Gold\", \"Silver\"), each = n)\n    )\n\n    obs_diff &lt;- df |&gt;\n      group_by(Metal) |&gt;\n      summarise(sd = sd(Return), .groups = \"drop\") |&gt;\n      summarise(diff_sd = diff(sd)) |&gt;\n      pull(diff_sd)\n\n    sim_diffs &lt;- replicate(perms, {\n      df |&gt;\n        mutate(Metal = sample(Metal)) |&gt;\n        group_by(Metal) |&gt;\n        summarise(sd = sd(Return), .groups = \"drop\") |&gt;\n        summarise(diff_sd = diff(sd)) |&gt;\n        pull(diff_sd)\n    })\n\n    p_vals[i] &lt;- mean(sim_diffs &gt;= obs_diff)\n  }\n\n  mean(p_vals &lt; 0.05)\n}\n\nsimulate_type1_error(n = 30, reps = 20, perms = 100)\n\n\n[1] 0.05\n\n\nInterpretation:\nThis number tells us how often the permutation test incorrectly rejects H₀ when there is no true difference.\nWhile it differs depending on the seed, 47 gives us .05. The test is behaving well, giving us a Type I Error only .05 of the time If much higher or lower, it may be too liberal or conservative under certain conditions."
   },
   {
-    "objectID": "PermutationTest.html#final-conclusion",
-    "href": "PermutationTest.html#final-conclusion",
-    "title": "Permutation Testing: Are Silver’s Factors the same as Gold (August–October)?",
-    "section": "",
-    "text": "This simulation-based test supports the claim that silver exhibits greater daily price variability than gold from August to October 2025.\nGiven the industrial use of silver and its smaller market size, this result is consistent with economic intuition: silver’s price tends to react more sharply to both macroeconomic shocks and commodity supply disruptions.\nThe one-tailed permutation test not only confirms this difference but does so without relying on normality assumptions, making it a robust method for comparing volatility in real-world financial data."
-  },
-  {
-    "objectID": "FinalPresentation.html#overview",
-    "href": "FinalPresentation.html#overview",
-    "title": "Recap: Final Presentation",
-    "section": "Overview",
-    "text": "Overview\n\nText Analysis:\nUnderstanding thematic patterns and linguistic structure in Netflix titles and descriptions.\nPermutation Tests: Silver vs. Gold Volatility:\nA permutation test examining whether silver is more volatile than gold from August–October.\nTraffic Stops with SQL:\nCombining multi-city policing datasets, harmonizing outcomes, and analyzing citation/warning disparities."
-  },
-  {
-    "objectID": "FinalPresentation.html#text-analysis-recap",
-    "href": "FinalPresentation.html#text-analysis-recap",
-    "title": "Recap: Final Presentation",
-    "section": "Text Analysis Recap",
-    "text": "Text Analysis Recap\n\nUsed regular expressions to break down text into words.\nRemoved stop words to focus on meaningful terms.\nAnalyzed word frequency to identify common themes."
-  },
-  {
-    "objectID": "FinalPresentation.html#example-code",
-    "href": "FinalPresentation.html#example-code",
-    "title": "Recap: Final Presentation",
-    "section": "Example code",
-    "text": "Example code"
-  },
-  {
-    "objectID": "FinalPresentation.html#text-analysis-code",
-    "href": "FinalPresentation.html#text-analysis-code",
-    "title": "Recap: Final Presentation",
-    "section": "Text Analysis Code",
-    "text": "Text Analysis Code\n\nnetflix_titles &lt;- readr::read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv\"\n)"
-  },
-  {
-    "objectID": "FinalPresentation.html#setup",
-    "href": "FinalPresentation.html#setup",
-    "title": "Recap: Final Presentation",
-    "section": "Setup",
-    "text": "Setup\n# Load libraries and set chunk options\nknitr::opts_chunk$set(\n  echo = TRUE,\n  warning = FALSE,\n  message = FALSE,\n  fig.width = 6,\n  fig.height = 4\n)\nlibrary(tidyverse)\nlibrary(stringr)\nlibrary(tidytext)\nlibrary(ggplot2)"
-  },
-  {
-    "objectID": "FinalPresentation.html#proportion-of-netflix-titles-containing-numbers",
-    "href": "FinalPresentation.html#proportion-of-netflix-titles-containing-numbers",
-    "title": "Recap: Final Presentation",
-    "section": "Proportion of Netflix Titles Containing Numbers",
-    "text": "Proportion of Netflix Titles Containing Numbers\n#| eval: true\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\nprop.table(table(netflix_titles$has_number))"
-  },
-  {
-    "objectID": "FinalPresentation.html#counting-thematic-keywords-in-descriptions",
-    "href": "FinalPresentation.html#counting-thematic-keywords-in-descriptions",
-    "title": "Recap: Final Presentation",
-    "section": "Counting Thematic Keywords in Descriptions",
-    "text": "Counting Thematic Keywords in Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(\n    love_mentions    = str_count(description, \"\\\\b(?i)love\\\\b\"),\n    death_mentions   = str_count(description, \"\\\\b(?i)death\\\\b\"),\n    mystery_mentions = str_count(description, \"\\\\b(?i)mystery\\\\b\")\n  )\n\ntheme_counts &lt;- netflix_titles |&gt;\n  summarise(\n    love = sum(love_mentions, na.rm = TRUE),\n    death = sum(death_mentions, na.rm = TRUE),\n    mystery = sum(mystery_mentions, na.rm = TRUE)\n  ) |&gt;\n  pivot_longer(cols = everything(), names_to = \"theme\", values_to = \"count\")"
-  },
-  {
-    "objectID": "FinalPresentation.html#what-proportion-of-netflix-titles-contain-numbers",
-    "href": "FinalPresentation.html#what-proportion-of-netflix-titles-contain-numbers",
-    "title": "Recap: Final Presentation",
-    "section": "What proportion of Netflix Titles Contain Numbers?",
-    "text": "What proportion of Netflix Titles Contain Numbers?\nWe begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(has_number = str_detect(title, \"\\\\d+\"))\n\ntable(netflix_titles$has_number)\n\n\nFALSE  TRUE \n 7361   426 \n\nprop.table(table(netflix_titles$has_number))\n\n\n     FALSE       TRUE \n0.94529344 0.05470656 \n\n#Here, we use the `str_detect()` function with the regular expression `\\\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  \n#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.\n\n#The table above shows how many Netflix titles contain numbers compared to those that do not.')"
-  },
-  {
-    "objectID": "FinalPresentation.html#plotting",
-    "href": "FinalPresentation.html#plotting",
-    "title": "Recap: Final Presentation",
-    "section": "Plotting",
-    "text": "Plotting"
-  },
-  {
-    "objectID": "FinalPresentation.html#finding-adjectives-that-appear-before-story-lookaround-example",
-    "href": "FinalPresentation.html#finding-adjectives-that-appear-before-story-lookaround-example",
-    "title": "Recap: Final Presentation",
-    "section": "Finding Adjectives That Appear Before “Story” (Lookaround Example)",
-    "text": "Finding Adjectives That Appear Before “Story” (Lookaround Example)\n\nstory_words &lt;- netflix_titles |&gt;\n  mutate(adj_before_story = str_extract(description, \"\\\\b\\\\w+(?= story)\")) |&gt;\n  filter(!is.na(adj_before_story)) |&gt;\n  mutate(adj_before_story = tolower(adj_before_story)) |&gt;\n  anti_join(stop_words, by = c(\"adj_before_story\" = \"word\")) |&gt;\n  count(adj_before_story, sort = TRUE)\n\nhead(story_words, 10)\n\n# A tibble: 10 × 2\n   adj_before_story     n\n   &lt;chr&gt;            &lt;int&gt;\n 1 true                48\n 2 love                 8\n 3 life                 5\n 4 origin               3\n 5 biblical             2\n 6 crime                2\n 7 dark                 2\n 8 fictional            2\n 9 age                  1\n10 american             1\n\n\nThe use a regular expression with a lookahead — (?= story) — extracts the word immediately before “story” in each description."
-  },
-  {
-    "objectID": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
-    "href": "FinalPresentation.html#most-frequent-words-in-descriptions-excluding-filler",
-    "title": "Recap: Final Presentation",
-    "section": "Most Frequent Words in Descriptions (Excluding filler)",
-    "text": "Most Frequent Words in Descriptions (Excluding filler)"
-  },
-  {
-    "objectID": "FinalPresentation.html#plot",
-    "href": "FinalPresentation.html#plot",
-    "title": "Recap: Final Presentation",
-    "section": "Plot",
-    "text": "Plot\n\n\n\nPlot"
-  },
-  {
-    "objectID": "FinalPresentation.html#section",
-    "href": "FinalPresentation.html#section",
-    "title": "Recap: Final Presentation",
-    "section": "",
-    "text": "Plot"
-  },
-  {
-    "objectID": "FinalPresentation.html#plot-1",
-    "href": "FinalPresentation.html#plot-1",
-    "title": "Recap: Final Presentation",
-    "section": "Plot",
-    "text": "Plot\n\n\n\nPlot"
-  },
-  {
-    "objectID": "FinalPresentation.html#home-page",
-    "href": "FinalPresentation.html#home-page",
-    "title": "Recap: Final Presentation",
-    "section": "Home Page",
-    "text": "Home Page"
-  },
-  {
-    "objectID": "FinalPresentation.html#numeric-titles-in-netflix",
-    "href": "FinalPresentation.html#numeric-titles-in-netflix",
-    "title": "Recap: Final Presentation",
-    "section": "Numeric Titles in Netflix",
-    "text": "Numeric Titles in Netflix\n\nOnly 426 out of 7,787 Netflix titles (about 5.5%) contain a number.\nThe remaining 94.5% do not contain numbers, making numeric titles relatively rare.\nNumeric titles are often used deliberately to:\n\nSignal a countdown (e.g., 3%).\nIndicate a sequence (e.g., Part 2).\nHighlight an age or milestone (e.g., 13 Reasons Why).\nProvide context or attract attention."
-  },
-  {
-    "objectID": "analysis.html#additional-regex-explorations",
-    "href": "analysis.html#additional-regex-explorations",
-    "title": "Project 2: Netflix Text Analysis",
-    "section": "",
-    "text": "netflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# Count the frequency of years\nyear_counts &lt;- netflix_titles |&gt;\n  unnest(year_mentions) |&gt;\n  count(year_mentions, sort = TRUE) |&gt;\n  slice_head(n = 10) # Select top 10 years\n\n# Plot the most frequently mentioned years\nggplot(year_counts, aes(x = reorder(year_mentions, -n), y = n)) +\n  geom_col(fill = \"darkgreen\") +\n  labs(\n    title = \"Top 10 Most Frequently Mentioned Years in Descriptions\",\n    x = \"Year\",\n    y = \"Frequency\"\n  ) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\n\n\n\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(repeated_words = str_detect(title, \"\\\\b(\\\\w+)\\\\b.*\\\\b\\\\1\\\\b\"))\n\n# Count titles with repeated words\nrepeated_word_counts &lt;- netflix_titles |&gt;\n  count(repeated_words)\n\n# Display the counts\nrepeated_word_counts\n\n# A tibble: 2 × 2\n  repeated_words     n\n  &lt;lgl&gt;          &lt;int&gt;\n1 FALSE           7560\n2 TRUE             227"
-  },
-  {
-    "objectID": "FinalPresentation.html#extracting-years-from-descriptions",
-    "href": "FinalPresentation.html#extracting-years-from-descriptions",
-    "title": "Recap: Final Presentation",
-    "section": "Extracting Years from Descriptions",
-    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (19|20): Matches either \"19\" or \"20\", representing the start of a year in the 1900s or 2000s.\n# - \\\\d{2}: Matches exactly two digits, completing the year (e.g., 1999, 2020).\n# - \\\\b: Ensures the match is a whole word, avoiding partial matches within longer strings."
-  },
-  {
-    "objectID": "FinalPresentation.html#identifying-titles-with-repeated-words",
-    "href": "FinalPresentation.html#identifying-titles-with-repeated-words",
-    "title": "Recap: Final Presentation",
-    "section": "Identifying Titles with Repeated Words",
-    "text": "Identifying Titles with Repeated Words\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(repeated_words = str_detect(title, \"\\\\b(\\\\w+)\\\\b.*\\\\b\\\\1\\\\b\"))\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (\\\\w+): Captures a sequence of word characters (letters, digits, or underscores) as a group.\n# - \\\\b: Ensures the captured group is a whole word.\n# - .*: Matches any number of characters (except newlines) between the first and second occurrence of the word.\n# - \\\\b\\\\1\\\\b: Matches the same word captured in the first group, ensuring it's a whole word.\n\n\n# Count titles with repeated words\nrepeated_word_counts &lt;- netflix_titles |&gt;\n  count(repeated_words)\n\n# Display the counts\nrepeated_word_counts\n\n# A tibble: 2 × 2\n  repeated_words     n\n  &lt;lgl&gt;          &lt;int&gt;\n1 FALSE           7560\n2 TRUE             227\n\nrepeated_word_props &lt;- prop.table(table(netflix_titles$repeated_words))\nrepeated_word_props\n\n\n     FALSE       TRUE \n0.97084885 0.02915115"
-  },
-  {
-    "objectID": "FinalPresentation.html#extracting-sentences-with-love-or-hate",
-    "href": "FinalPresentation.html#extracting-sentences-with-love-or-hate",
-    "title": "Recap: Final Presentation",
-    "section": "Extracting Sentences with “Love” or “Hate”",
-    "text": "Extracting Sentences with “Love” or “Hate”\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(love_hate_sentences = str_extract_all(description, \"[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]\"))\n\n# Count sentences mentioning 'love' or 'hate'\nlove_hate_counts &lt;- netflix_titles |&gt;\n  unnest(love_hate_sentences) |&gt;\n  mutate(keyword = ifelse(str_detect(love_hate_sentences, \"love\"), \"Love\", \"Hate\")) |&gt;\n  count(keyword, sort = TRUE)"
-  },
-  {
-    "objectID": "FinalPresentation.html#mentions-of-love-vs-hate",
-    "href": "FinalPresentation.html#mentions-of-love-vs-hate",
-    "title": "Recap: Final Presentation",
-    "section": "Mentions of ‘Love’ vs ‘Hate’",
-    "text": "Mentions of ‘Love’ vs ‘Hate’\n\nlove_hate_img &lt;- image_read(\"/Users/jgoldhaber/IntroDataScience/jogo2002.github.io/images/LoveVHate.png\")\nimage_write(love_hate_img, path = \"LoveVsHate.png\", format = \"png\")\n\n\n\nLove dominates Netflix descriptions, highlighting the platform’s focus on romantic and emotional themes.\nHate appears far less frequently, suggesting a lesser emphasis on negative emotions."
-  },
-  {
-    "objectID": "FinalPresentation.html#introduction",
-    "href": "FinalPresentation.html#introduction",
-    "title": "Recap: Final Presentation",
-    "section": "Introduction",
-    "text": "Introduction\n\n\n\n\n\n\n\n\n\nVisualization the distribution of release years\n\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
-  },
-  {
-    "objectID": "FinalPresentation.html#dataset-overview-expansion",
-    "href": "FinalPresentation.html#dataset-overview-expansion",
-    "title": "Recap: Final Presentation",
-    "section": "Dataset Overview Expansion",
-    "text": "Dataset Overview Expansion\n\n# Display the first few rows of the dataset\nnetflix_titles |&gt; head() |&gt; as_tibble()\n\n# A tibble: 6 × 12\n  show_id type    title director    cast  country date_added release_year rating\n  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt; \n1 s1      TV Show 3%    &lt;NA&gt;        João… Brazil  August 14…         2020 TV-MA \n2 s2      Movie   7:19  Jorge Mich… Demi… Mexico  December …         2016 TV-MA \n3 s3      Movie   23:59 Gilbert Ch… Tedd… Singap… December …         2011 R     \n4 s4      Movie   9     Shane Acker Elij… United… November …         2009 PG-13 \n5 s5      Movie   21    Robert Luk… Jim … United… January 1…         2008 PG-13 \n6 s6      TV Show 46    Serdar Akar Erda… Turkey  July 1, 2…         2016 TV-MA \n# ℹ 3 more variables: duration &lt;chr&gt;, listed_in &lt;chr&gt;, description &lt;chr&gt;\n\n\n\n# Visualize the distribution of Netflix titles by type\nnetflix_titles |&gt;\n  count(type) |&gt;\n  ggplot(aes(x = type, y = n, fill = type)) +\n  geom_col(show.legend = FALSE) +\n  labs(\n    title = \"Distribution of Netflix Titles by Type\",\n    x = \"Type\",\n    y = \"Count\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n# Visualize the distribution of release years\nnetflix_titles |&gt;\n  count(release_year) |&gt;\n  ggplot(aes(x = release_year, y = n)) +\n  geom_line(color = \"steelblue\") +\n  labs(\n    title = \"Distribution of Netflix Titles by Release Year\",\n    x = \"Release Year\",\n    y = \"Count\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
-  },
-  {
-    "objectID": "FinalPresentation.html#introduction-to-dataset",
-    "href": "FinalPresentation.html#introduction-to-dataset",
-    "title": "Recap: Final Presentation",
-    "section": "Introduction to Dataset",
-    "text": "Introduction to Dataset"
-  },
-  {
-    "objectID": "FinalPresentation.html#extracting-years-from-descriptions-1",
-    "href": "FinalPresentation.html#extracting-years-from-descriptions-1",
-    "title": "Recap: Final Presentation",
-    "section": "Extracting Years from Descriptions",
-    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))\n\n# - \\\\b: Matches a word boundary to ensure we're matching whole words.\n# - (19|20): Matches either \"19\" or \"20\", representing the start of a year in the 1900s or 2000s.\n# - \\\\d{2}: Matches exactly two digits, completing the year (e.g., 1999, 2020).\n# - \\\\b: Ensures the match is a whole word, avoiding partial matches within longer strings.\n\nyear_counts &lt;- netflix_titles |&gt;\n  unnest(year_mentions) |&gt;\n  count(year_mentions, sort = TRUE) |&gt;\n  slice_head(n = 10) # Select top 10 years"
-  },
-  {
-    "objectID": "FinalPresentation.html#extracting-years-from-descriptions-2",
-    "href": "FinalPresentation.html#extracting-years-from-descriptions-2",
-    "title": "Recap: Final Presentation",
-    "section": "Extracting Years from Descriptions",
-    "text": "Extracting Years from Descriptions\n\nnetflix_titles &lt;- netflix_titles |&gt;\n  mutate(year_mentions = str_extract_all(description, \"\\\\b(19|20)\\\\d{2}\\\\b\"))"
-  },
-  {
-    "objectID": "FinalPresentation.html",
-    "href": "FinalPresentation.html",
-    "title": "Recap: Final Presentation",
-    "section": "",
-    "text": "Website Overview Personal website layout and features\nNetflix Title Data Analysis:\nUnderstanding thematic patterns and linguistic structure in Netflix titles and descriptions with Regex"
-  },
-  {
-    "objectID": "FinalPresentation.html#netflix-dataset-fields",
-    "href": "FinalPresentation.html#netflix-dataset-fields",
-    "title": "Recap: Final Presentation",
-    "section": "Netflix Dataset Fields",
-    "text": "Netflix Dataset Fields\n\n# Display the first few rows of the dataset to introduce the fields\nnetflix_titles |&gt; head(5)\n\n# A tibble: 5 × 12\n  show_id type    title director    cast  country date_added release_year rating\n  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt; \n1 s1      TV Show 3%    &lt;NA&gt;        João… Brazil  August 14…         2020 TV-MA \n2 s2      Movie   7:19  Jorge Mich… Demi… Mexico  December …         2016 TV-MA \n3 s3      Movie   23:59 Gilbert Ch… Tedd… Singap… December …         2011 R     \n4 s4      Movie   9     Shane Acker Elij… United… November …         2009 PG-13 \n5 s5      Movie   21    Robert Luk… Jim … United… January 1…         2008 PG-13 \n# ℹ 3 more variables: duration &lt;chr&gt;, listed_in &lt;chr&gt;, description &lt;chr&gt;"
-  },
-  {
-    "objectID": "FinalPresentation.html#introduction-to-dataset-1",
-    "href": "FinalPresentation.html#introduction-to-dataset-1",
-    "title": "Recap: Final Presentation",
-    "section": "Introduction to Dataset",
-    "text": "Introduction to Dataset"
-  },
-  {
-    "objectID": "FinalPresentation.html#citation",
-    "href": "FinalPresentation.html#citation",
-    "title": "Recap: Final Presentation",
-    "section": "Citation",
-    "text": "Citation\n\nSource: Netflix dataset accessed via TidyTuesday (2021-04-20).\nURL: TidyTuesday GitHub Repository\nDescription: The data this week comes from Kaggle w/ credit to Shivam Bansal.\n\nThis dataset consists of tv shows and movies available on Netflix as of 2019. The dataset is collected from Flixable which is a third-party Netflix search engine."
-  },
-  {
-    "objectID": "FinalPresentation.html#plotting-1",
-    "href": "FinalPresentation.html#plotting-1",
-    "title": "Recap: Final Presentation",
-    "section": "Plotting",
-    "text": "Plotting\n\n\nLove dominates Netflix descriptions, highlighting the platform’s focus on romantic and emotional themes.\nHate appears far less frequently, suggesting a lesser emphasis on negative emotions."
-  },
-  {
-    "objectID": "FinalPresentation.html#sourcing",
-    "href": "FinalPresentation.html#sourcing",
-    "title": "Recap: Final Presentation",
-    "section": "Sourcing",
-    "text": "Sourcing\n\nSource: Netflix dataset accessed via TidyTuesday (2021-04-20).\nURL: TidyTuesday GitHub Repository\nDescription: The data this week comes from Kaggle w/ credit to Shivam Bansal.\n\nThis dataset consists of tv shows and movies available on Netflix as of 2019. The dataset is collected from Flixable which is a third-party Netflix search engine."
-  },
-  {
-    "objectID": "FinalPresentation.html#visualization-the-distribution-of-release-years",
-    "href": "FinalPresentation.html#visualization-the-distribution-of-release-years",
-    "title": "Recap: Final Presentation",
-    "section": "Visualization the distribution of release years",
-    "text": "Visualization the distribution of release years\n\n\nSource: Accessed via TidyTuesday (2021-04-20).\nObjective: Analyze text patterns to uncover thematic and linguistic trends."
-  },
-  {
     "objectID": "PermutationTest.html#simulation-type-ii-error-rate-of-the-permutation-test",
     "href": "PermutationTest.html#simulation-type-ii-error-rate-of-the-permutation-test",
     "title": "Permutation Testing: Are Silver’s Factors the same as Gold (August–October)?",
@@ -469,10 +350,10 @@
     "text": "We now simulate a world where gold and silver have different true volatilities, and check how often our permutation test fails to reject the null.\nThis helps us assess the Type II error rate — the probability of failing to detect a true difference.\n\n\nCode\nsimulate_type2_error &lt;- function(n = 30, reps = 20, perms = 100, true_diff = 0.2, seed = 47) {\n  set.seed(seed) \n\n  p_vals &lt;- numeric(reps)\n\n  for (i in 1:reps) {\n    group1 &lt;- rnorm(n, sd = 1)\n    group2 &lt;- rnorm(n, sd = 1 + true_diff)  # Introduce a true difference in volatility\n\n    df &lt;- tibble(\n      Return = c(group1, group2),\n      Metal = rep(c(\"Gold\", \"Silver\"), each = n)\n    )\n\n    obs_diff &lt;- df |&gt;\n      group_by(Metal) |&gt;\n      summarise(sd = sd(Return), .groups = \"drop\") |&gt;\n      summarise(diff_sd = diff(sd)) |&gt;\n      pull(diff_sd)\n\n    sim_diffs &lt;- replicate(perms, {\n      df |&gt;\n        mutate(Metal = sample(Metal)) |&gt;\n        group_by(Metal) |&gt;\n        summarise(sd = sd(Return), .groups = \"drop\") |&gt;\n        summarise(diff_sd = diff(sd)) |&gt;\n        pull(diff_sd)\n    })\n\n    p_vals[i] &lt;- mean(sim_diffs &gt;= obs_diff)\n  }\n\n  mean(p_vals &gt;= 0.05)  # Proportion of times the null is not rejected\n}\n\nsimulate_type2_error(n = 30, reps = 20, perms = 100, true_diff = 0.2)\n\n\n[1] 0.8\n\n\nInterpretation:\nThis number tells us that the permutation test fails to reject H₀ 80% of the time when there is a true difference in volatility (with a true difference of 0.2 in standard deviations).\n\nAn 80% Type II error rate indicates that the test has low power under these conditions. This could be due to factors such as:\n\nSmall sample size (n = 30): With limited data, it becomes harder to detect subtle differences.\nSubtle true difference (true_diff = 0.2): The actual difference in volatility may not be large enough to be consistently detected.\nNumber of repetitions (reps = 20): Increasing the number of repetitions could provide a more reliable estimate of the error rate.\n\nTo reduce the Type II error rate and increase the power of the test, one could:\n\nIncrease the sample size (n).\nIncrease the number of permutations (perms).\nUse a larger true difference (true_diff) to simulate more pronounced effects."
   },
   {
-    "objectID": "FifaData_New.html",
-    "href": "FifaData_New.html",
-    "title": "FIFA Data Analysis",
+    "objectID": "PermutationTest.html#final-conclusion",
+    "href": "PermutationTest.html#final-conclusion",
+    "title": "Permutation Testing: Are Silver’s Factors the same as Gold (August–October)?",
     "section": "",
-    "text": "Introduction\nThis report analyzes FIFA World Cup attendance data, focusing on the relationship between population share and TV audience share across countries. The data is sourced from the TidyTuesday project.\n\n\nPopulation vs. TV Audience Share\n\n\n\n\n\n\n\n\n\n\n\nTV Audience Share by Confederation\n\n\n\n\n\n\n\n\n\n\n\nData Source\n\nSource: TidyTuesday GitHub Repository\nData Provider: FIFA"
+    "text": "This simulation-based test supports the claim that silver exhibits greater daily price variability than gold from August to October 2025.\nGiven the industrial use of silver and its smaller market size, this result is consistent with economic intuition: silver’s price tends to react more sharply to both macroeconomic shocks and commodity supply disruptions.\nThe one-tailed permutation test not only confirms this difference but does so without relying on normality assumptions, making it a robust method for comparing volatility in real-world financial data."
   }
 ]
