@@ -50,12 +50,12 @@ library(infer)
 library(purrr)
 
 # Download daily futures prices (August 2025 – Present)
-getSymbols("GC=F", src = "yahoo", from = "2025-08-01", to = Sys.Date(), auto.assign = FALSE)
-getSymbols("SI=F", src = "yahoo", from = "2025-08-01", to = Sys.Date(), auto.assign = FALSE)
+GC_F <- getSymbols("GC=F", src = "yahoo", from = "2025-08-01", to = Sys.Date(), auto.assign = FALSE)
+SI_F <- getSymbols("SI=F", src = "yahoo", from = "2025-08-01", to = Sys.Date(), auto.assign = FALSE)
 
 # Compute log returns
-gold_ret <- dailyReturn(Cl(`GC=F`), type = "log")
-silver_ret <- dailyReturn(Cl(`SI=F`), type = "log")
+gold_ret <- dailyReturn(Cl(GC_F), type = "log")
+silver_ret <- dailyReturn(Cl(SI_F), type = "log")
 
 # Combine and reshape to long format
 returns_long <- tibble(
