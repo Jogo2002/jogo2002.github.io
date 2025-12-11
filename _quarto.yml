@@ -10,8 +10,6 @@ website:
         text: Home
       - href: about.qmd
         text: About
-      - href: resources.qmd
-        text: "All my fav resources!"
       - href: analysis.qmd
         text: "Text Analysis"
       - href: PermutationTest.qmd
