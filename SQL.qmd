@@ -122,8 +122,8 @@ I present two bar charts to compare rates across cities and racial groups. Visua
 ## Figure 1: Citation rates by race and city
 
 ```{r}
+#| fig-alt: "Bar chart showing citation rates by race across three cities: New Orleans, Madison, and Louisville. The x-axis represents the cities, and the y-axis shows the citation rates as a proportion of stops. Bars are grouped by race, with each race category represented by a different color. The chart highlights differences in citation rates both across cities and within racial groups, with New Orleans generally having lower citation rates compared to Madison and Louisville."
 
-#| fig-alt: there  
 ggplot(race_city_summary, aes(x = city, y = citation_rate, fill = subject_race)) +
   geom_col(position = "dodge") +
   labs(
