@@ -43,8 +43,15 @@ avg_cal %>%
   theme_minimal()
 
 ```
-Source:
-https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv#L4
 
-Data From:
-fastfoodnutrition.com
+## Analysis:
+This chart shows the fast-food chains with the highest average calories per menu item, highlighting meaningful differences across major brands. McDonald’s, Sonic, and Burger King top the list, each averaging over 600 calories per item—indicating that their menus tend to feature larger portions or more calorie-dense foods.
+
+Restaurants like Arby’s, Dairy Queen, and Subway fall in the mid-range (roughly 520–560 calories), suggesting a mix of lighter and heavier options. At the lower end of the top ten, Taco Bell and Chick-fil-A average under 450 calories, indicating comparatively lighter items on average.
+
+Overall, the data shows substantial variation across chains, with some offering consistently higher-calorie options. This may reflect differences in menu composition (e.g., fried foods, desserts, portion sizes), target customers, or brand positioning within the fast-food market.
+
+
+## Source:
+Hughes, E. (2018). Fast food entrée data [Data set]. TidyTuesday, rfordatascience.
+Retrieved from https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-09-04/fastfood_calories.csv

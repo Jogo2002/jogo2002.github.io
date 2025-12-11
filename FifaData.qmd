@@ -32,13 +32,16 @@ ggplot(fifa, aes(x = population_share, y = tv_audience_share, color = confederat
     color = "Confederation"
   ) +
   theme_minimal()
-
-
 ```
 
-Source:
 
-https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv#L4
+## Analysis:
+The scatterplot reveals a strong positive relationship between a country's share of the world population and its share of the FIFA World Cup TV audience. 
+Most points lie above the red dashed 45-degree line, indicating that many countries have a disproportionately high TV audience relative to their population share. 
+This suggests that smaller countries, in terms of population, often punch above their weight in terms of World Cup viewership. 
+Confederations also show distinct patterns, with some regions consistently outperforming others in audience share relative to population.
 
-Data from: FIFA
 
+## Source:
+FIFA. FIFA Audience Data. TidyTuesday, rfordatascience, 12 June 2018.
+https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv
