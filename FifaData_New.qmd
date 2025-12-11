@@ -1,0 +1,69 @@
+---
+title: "FIFA Data Analysis"
+description: |
+  A detailed analysis of FIFA World Cup attendance data, exploring population and TV audience shares.
+author: Josh Goldhaber
+date: September 24, 2025
+format: 
+  html: 
+    code-fold: true
+    echo: false
+    warning: false
+    message: false
+---
+
+# Introduction
+
+This report analyzes FIFA World Cup attendance data, focusing on the relationship between population share and TV audience share across countries. The data is sourced from the TidyTuesday project.
+
+# Population vs. TV Audience Share
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+
+# Read the FIFA dataset
+fifa <- read_csv("data/week11_fifa_audience.csv", show_col_types = FALSE)
+
+# Scatterplot: Population Share vs. TV Audience Share
+fifa_plot <- ggplot(fifa, aes(x = population_share, y = tv_audience_share, color = confederation)) +
+  geom_point(alpha = 0.7, size = 3) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  scale_x_log10(labels = scales::percent_format(accuracy = 0.01)) +
+  scale_y_log10(labels = scales::percent_format(accuracy = 0.01)) +
+  labs(
+    title = "FIFA World Cup: Population Share vs. TV Audience Share",
+    subtitle = "Log-log scale comparison by confederation",
+    x = "Share of World Population (log scale)",
+    y = "Share of World Cup TV Audience (log scale)",
+    color = "Confederation"
+  ) +
+  theme_minimal()
+
+fifa_plot
+```
+
+# TV Audience Share by Confederation
+
+```{r}
+# Bar plot: Average TV Audience Share by Confederation
+confederation_plot <- fifa |>
+  group_by(confederation) |>
+  summarise(avg_audience_share = mean(tv_audience_share, na.rm = TRUE)) |>
+  ggplot(aes(x = reorder(confederation, -avg_audience_share), y = avg_audience_share, fill = confederation)) +
+  geom_col(show.legend = FALSE) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
+  labs(
+    title = "Average TV Audience Share by Confederation",
+    x = "Confederation",
+    y = "Average TV Audience Share"
+  ) +
+  theme_minimal()
+
+confederation_plot
+```
+
+# Data Source
+
+- **Source**: [TidyTuesday GitHub Repository](https://github.com/rfordatascience/tidytuesday/blob/cd0df1831dc506ea0a6f1295d7605142120d6dbd/data/2018/2018-06-12/week11_fifa_audience.csv#L4)
+- **Data Provider**: FIFA

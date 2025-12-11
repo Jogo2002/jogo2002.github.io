@@ -30,9 +30,11 @@ We compare the **standard deviations of daily log returns** for gold and silver.
 
 -   **Null Hypothesis (H₀):** Gold and Silver are driven by the same market factors and their difference in volatility can be explained by chance and randomness of markets.
 
--   **Alternative Hypothesis (H₁):** The underlying market dynamics for Silver lead to greater daily price variability than Gold that can be explained by randomness or chance.
+-   **Alternative Hypothesis (H₁):** The underlying market dynamics for Silver lead to greater daily price variability than Gold that can't be explained by randomness or chance.
 
 Instead of relying on a theoretical distribution (like a t-test or F-test), we use a **permutation test**, which simulates what differences we’d expect **purely due to chance** under the null hypothesis.
+
+We look at market volatility and price to conclude wether or not these two metals are influenced by the same factors.
 
 ------------------------------------------------------------------------
 
@@ -41,14 +43,15 @@ Instead of relying on a theoretical distribution (like a t-test or F-test), we u
 We use `quantmod` to pull daily futures data from Yahoo Finance and `tidyverse` for data wrangling. Log returns are computed using `dailyReturn(..., type = "log")` for stability and symmetry.
 
 ```{r setup, message=FALSE, warning=FALSE}
+
 library(quantmod)
 library(tidyverse)
 library(infer)
 library(purrr)
 
 # Download daily futures prices (August 2025 – Present)
-getSymbols("GC=F", src = "yahoo", from = "2025-08-01", to = Sys.Date())
-getSymbols("SI=F", src = "yahoo", from = "2025-08-01", to = Sys.Date())
+getSymbols("GC=F", src = "yahoo", from = "2025-08-01", to = Sys.Date(), auto.assign = FALSE)
+getSymbols("SI=F", src = "yahoo", from = "2025-08-01", to = Sys.Date(), auto.assign = FALSE)
 
 # Compute log returns
 gold_ret <- dailyReturn(Cl(`GC=F`), type = "log")
@@ -153,6 +156,8 @@ The red dashed line represents the actual observed difference.\
 If it's far to the right, that provides evidence that silver is truly more volatile.
 
 ```{r plot-null}
+#| fig-alt: "Histogram showing the permutation distribution of the difference in standard deviations (Silver − Gold). The x-axis represents the difference in SD under the null hypothesis, while the y-axis shows the count of permutations. A red dashed vertical line indicates the observed difference, which lies far in the upper tail."
+
 ggplot(sim_df, aes(x = diff_sd)) +
   geom_histogram(bins = 30, fill = "skyblue", color = "white") +
   geom_vline(xintercept = obs_diff, color = "red", linetype = "dashed", size = 1) +
@@ -173,7 +178,7 @@ The observed value lies far in the upper tail of the distribution — suggesting
 ## Calculate One-Tailed p-value
 
 We calculate the **proportion of permuted SD differences** that are greater than or equal to the observed one.\
-This gives a **right-tailed p-value** for the hypothesis that silver is more volatile than gold.
+This gives a **right-tailed p-value** 
 
 ```{r p-value}
 # One-tailed test: is Silver more volatile than Gold?
@@ -186,7 +191,7 @@ cat("Approximate one-tailed permutation p-value:",
 
 **Interpretation:**\
 A very small p-value implies that the observed volatility difference is unlikely under the null —\
-we have statistical evidence to **reject the null hypothesis** and conclude that **silver is more volatile**.
+we have statistical evidence to **reject the null hypothesis** and conclude that there is in fact a difference in factors driving silver's volatility and price, that can't be explained by market randommness or chance. 
 
 ## Simulation: Type I Error Rate of the Permutation Test
 
@@ -238,6 +243,66 @@ simulate_type1_error(n = 30, reps = 20, perms = 100)
 This number tells us how often the permutation test **incorrectly rejects H₀** when there is no true difference.
 
 While it differs depending on the seed, 47 gives us .05. The test is behaving well, giving us a Type I Error only .05 of the time If much higher or lower, it may be too liberal or conservative under certain conditions.
+
+## Simulation: Type II Error Rate of the Permutation Test
+
+We now simulate a world where **gold and silver have different true volatilities**, and check how often our permutation test **fails to reject the null**.
+
+This helps us assess the Type II error rate — the probability of failing to detect a true difference.
+
+```{r simulate-type2}
+simulate_type2_error <- function(n = 30, reps = 20, perms = 100, true_diff = 0.2, seed = 47) {
+  set.seed(seed) 
+
+  p_vals <- numeric(reps)
+
+  for (i in 1:reps) {
+    group1 <- rnorm(n, sd = 1)
+    group2 <- rnorm(n, sd = 1 + true_diff)  # Introduce a true difference in volatility
+
+    df <- tibble(
+      Return = c(group1, group2),
+      Metal = rep(c("Gold", "Silver"), each = n)
+    )
+
+    obs_diff <- df |>
+      group_by(Metal) |>
+      summarise(sd = sd(Return), .groups = "drop") |>
+      summarise(diff_sd = diff(sd)) |>
+      pull(diff_sd)
+
+    sim_diffs <- replicate(perms, {
+      df |>
+        mutate(Metal = sample(Metal)) |>
+        group_by(Metal) |>
+        summarise(sd = sd(Return), .groups = "drop") |>
+        summarise(diff_sd = diff(sd)) |>
+        pull(diff_sd)
+    })
+
+    p_vals[i] <- mean(sim_diffs >= obs_diff)
+  }
+
+  mean(p_vals >= 0.05)  # Proportion of times the null is not rejected
+}
+
+simulate_type2_error(n = 30, reps = 20, perms = 100, true_diff = 0.2)
+```
+
+**Interpretation:**\
+This number tells us that the permutation test **fails to reject H₀** 80% of the time when there is a true difference in volatility (with a true difference of 0.2 in standard deviations).\
+
+An 80% Type II error rate indicates that the test has low power under these conditions. This could be due to factors such as:
+
+- **Small sample size (n = 30):** With limited data, it becomes harder to detect subtle differences.
+- **Subtle true difference (true_diff = 0.2):** The actual difference in volatility may not be large enough to be consistently detected.
+- **Number of repetitions (reps = 20):** Increasing the number of repetitions could provide a more reliable estimate of the error rate.
+
+To reduce the Type II error rate and increase the power of the test, one could:
+
+- Increase the sample size (n).
+- Increase the number of permutations (perms).
+- Use a larger true difference (true_diff) to simulate more pronounced effects.
 
 ## Final Conclusion
 

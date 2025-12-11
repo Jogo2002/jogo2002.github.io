@@ -3,7 +3,6 @@ title: "Project 2: Netflix Text Analysis"
 author: "Josh Goldhaber"
 format:
   html:
-    code-fold: true
     echo: true
     warning: false
     message: false
@@ -187,6 +186,17 @@ repeated_word_counts <- netflix_titles |>
 repeated_word_counts
 ```
 
+# Analysis of Results
+
+The results indicate that out of 7,787 Netflix titles:
+
+- **7,560 titles (97.1%)** do not contain repeated words in their titles.
+- **227 titles (2.9%)** contain repeated words in their titles.
+
+### Interpretation:
+
+The overwhelming majority of Netflix titles avoid repeated words, suggesting a preference for unique and concise naming conventions. Titles with repeated words, while rare, may be used deliberately to emphasize certain themes or create a memorable effect. For example, repetition can evoke rhythm or reinforce key ideas, as seen in titles like "Bye Bye Birdie" or "Run Lola Run."
+
 ### Extracting Sentences with "Love" or "Hate"
 ```{r}
 #| fig-alt: "Bar chart comparing the frequency of sentences mentioning 'love' versus 'hate' in Netflix descriptions."
@@ -223,6 +233,35 @@ ggplot(love_hate_counts, aes(x = keyword, y = n, fill = keyword)) +
   )
 ```
 
+
+### Extracting Titles with Question Marks
+
+```{r}
+#| fig-alt: "Bar chart showing the count of Netflix titles with and without question marks."
+
+# Identify titles containing question marks
+netflix_titles <- netflix_titles |>
+  mutate(has_question_mark = str_detect(title, "\\?"))
+
+# Count titles with and without question marks
+question_mark_counts <- netflix_titles |>
+  count(has_question_mark)
+
+# Plot the counts
+ggplot(question_mark_counts, aes(x = has_question_mark, y = n, fill = has_question_mark)) +
+  geom_col(show.legend = FALSE) +
+  scale_x_discrete(labels = c("No Question Mark", "Has Question Mark")) +
+  labs(
+    title = "Count of Netflix Titles with Question Marks",
+    x = "Presence of Question Mark",
+    y = "Count of Titles"
+  ) +
+  theme_minimal()
+```
+
+### Interpretation:
+
+The plot shows the distribution of Netflix titles based on whether they contain a question mark. Titles with question marks are relatively rare, reflecting their use in specific contexts such as rhetorical or intriguing titles (e.g., "What Happened to Monday?"). This suggests that question marks are employed strategically to evoke curiosity or highlight uncertainty in the title's theme.
 
 ## Summary of Insights
 

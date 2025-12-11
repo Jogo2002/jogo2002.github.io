@@ -197,8 +197,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#extracting-years-from-descriptions" id="toc-extracting-years-from-descriptions" class="nav-link" data-scroll-target="#extracting-years-from-descriptions">Extracting Years from Descriptions</a></li>
   <li><a href="#identifying-titles-with-repeated-words" id="toc-identifying-titles-with-repeated-words" class="nav-link" data-scroll-target="#identifying-titles-with-repeated-words">Identifying Titles with Repeated Words</a></li>
-  <li><a href="#extracting-sentences-with-love-or-hate" id="toc-extracting-sentences-with-love-or-hate" class="nav-link" data-scroll-target="#extracting-sentences-with-love-or-hate">Extracting Sentences with “Love” or “Hate”</a></li>
   </ul></li>
+  </ul></li>
+  <li><a href="#analysis-of-results" id="toc-analysis-of-results" class="nav-link" data-scroll-target="#analysis-of-results">Analysis of Results</a>
+  <ul class="collapse">
+  <li><a href="#interpretation-1" id="toc-interpretation-1" class="nav-link" data-scroll-target="#interpretation-1">Interpretation:</a></li>
+  <li><a href="#extracting-sentences-with-love-or-hate" id="toc-extracting-sentences-with-love-or-hate" class="nav-link" data-scroll-target="#extracting-sentences-with-love-or-hate">Extracting Sentences with “Love” or “Hate”</a></li>
+  <li><a href="#extracting-titles-with-question-marks" id="toc-extracting-titles-with-question-marks" class="nav-link" data-scroll-target="#extracting-titles-with-question-marks">Extracting Titles with Question Marks</a></li>
+  <li><a href="#interpretation-2" id="toc-interpretation-2" class="nav-link" data-scroll-target="#interpretation-2">Interpretation:</a></li>
   <li><a href="#summary-of-insights" id="toc-summary-of-insights" class="nav-link" data-scroll-target="#summary-of-insights">Summary of Insights</a></li>
   </ul></li>
   </ul>
@@ -236,53 +242,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Introduction</h1>
 <p>This report analyzes Netflix movie and TV show descriptions using text mining techniques. The dataset, accessed from TidyTuesday (2021-04-20) , includes thousands of titles from a variety of genres and regions, spanning many years. My goal is to uncover patterns in naming and description practices that reveal thematic or marketing trends.</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-04-20/netflix_titles.csv"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <section id="what-proportion-of-netflix-titles-contain-numbers" class="level2">
 <h2 class="anchored" data-anchor-id="what-proportion-of-netflix-titles-contain-numbers">What proportion of Netflix Titles Contain Numbers?</h2>
 <p>We begin by checking how common it is for Netflix titles to contain numbers (e.g., 13 Reasons Why, 3%). This could reflect stylistic choices aimed at emphasizing uniqueness or mystery.</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">has_number =</span> <span class="fu">str_detect</span>(title, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>))</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(netflix_titles<span class="sc">$</span>has_number)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 FALSE  TRUE 
  7361   426 </code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(netflix_titles<span class="sc">$</span>has_number))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      FALSE       TRUE 
 0.94529344 0.05470656 </code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Here, we use the `str_detect()` function with the regular expression `\\d+` to check whether each title contains a **number** (like *13 Reasons Why* or *3%*).  </span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#This tells us how common numeric titles are — a pattern that can reflect marketing or thematic choices.</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#The table above shows how many Netflix titles contain numbers compared to those that do not.')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <p>The results show that only 426 out of 7,787 Netflix titles (about 5.5%) contain a number, while the remaining 94.5% do not. This tells us that numeric titles are relatively rare in Netflix’s catalog. When they do appear, they tend to be used deliberately—often to signal a countdown (3%), a sequence (Part 2), an age or milestone (13 Reasons Why), or some other device meant to catch attention or provide context.</p>
 </section>
 <section id="counting-thematic-keywords-in-descriptions" class="level2">
 <h2 class="anchored" data-anchor-id="counting-thematic-keywords-in-descriptions">Counting Thematic Keywords in Descriptions</h2>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">love_mentions    =</span> <span class="fu">str_count</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b(?i)love</span><span class="sc">\\</span><span class="st">b"</span>),</span>
@@ -307,7 +299,6 @@ FALSE  TRUE
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Theme"</span></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -324,8 +315,6 @@ We can see that “love” dominates, revealing that romantic themes are heavily
 <p>This visualization illustrates how simple word counting can reveal broad narrative trends.</p>
 <p>Finding Adjectives That Appear Before “Story” (Lookaround Example)</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>story_words <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">adj_before_story =</span> <span class="fu">str_extract</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b</span><span class="sc">\\</span><span class="st">w+(?= story)"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(adj_before_story)) <span class="sc">|&gt;</span></span>
@@ -334,7 +323,6 @@ We can see that “love” dominates, revealing that romantic themes are heavily
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(adj_before_story, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(story_words, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    adj_before_story     n
@@ -356,8 +344,6 @@ For example, in a phrase like “an incredible story”, the pattern will captur
 <p>Interpretation: Looking at the top 10 words preceding story, it is clear that “true” is a clear winner. After a sharp fall off, love, life and origin take places 2-4. This trend reveals that almost all of the words before ‘story’ are adjectives describing the story.</p>
 <p>Most Frequent Words in Descriptions (Excluding filler)</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"stop_words"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>top_words <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
@@ -375,7 +361,6 @@ For example, in a phrase like “an incredible story”, the pattern will captur
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -396,8 +381,6 @@ This kind of frequency analysis helps identify how streaming services position t
 <section id="extracting-years-from-descriptions" class="level3">
 <h3 class="anchored" data-anchor-id="extracting-years-from-descriptions">Extracting Years from Descriptions</h3>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year_mentions =</span> <span class="fu">str_extract_all</span>(description, <span class="st">"</span><span class="sc">\\</span><span class="st">b(19|20)</span><span class="sc">\\</span><span class="st">d{2}</span><span class="sc">\\</span><span class="st">b"</span>))</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -417,7 +400,6 @@ This kind of frequency analysis helps identify how streaming services position t
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -430,8 +412,6 @@ This kind of frequency analysis helps identify how streaming services position t
 <section id="identifying-titles-with-repeated-words" class="level3">
 <h3 class="anchored" data-anchor-id="identifying-titles-with-repeated-words">Identifying Titles with Repeated Words</h3>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">repeated_words =</span> <span class="fu">str_detect</span>(title, <span class="st">"</span><span class="sc">\\</span><span class="st">b(</span><span class="sc">\\</span><span class="st">w+)</span><span class="sc">\\</span><span class="st">b.*</span><span class="sc">\\</span><span class="st">b</span><span class="sc">\\</span><span class="st">1</span><span class="sc">\\</span><span class="st">b"</span>))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -441,7 +421,6 @@ This kind of frequency analysis helps identify how streaming services position t
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the counts</span></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>repeated_word_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   repeated_words     n
@@ -451,11 +430,22 @@ This kind of frequency analysis helps identify how streaming services position t
 </div>
 </div>
 </section>
+</section>
+</section>
+<section id="analysis-of-results" class="level1">
+<h1>Analysis of Results</h1>
+<p>The results indicate that out of 7,787 Netflix titles:</p>
+<ul>
+<li><strong>7,560 titles (97.1%)</strong> do not contain repeated words in their titles.</li>
+<li><strong>227 titles (2.9%)</strong> contain repeated words in their titles.</li>
+</ul>
+<section id="interpretation-1" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-1">Interpretation:</h3>
+<p>The overwhelming majority of Netflix titles avoid repeated words, suggesting a preference for unique and concise naming conventions. Titles with repeated words, while rare, may be used deliberately to emphasize certain themes or create a memorable effect. For example, repetition can evoke rhythm or reinforce key ideas, as seen in titles like “Bye Bye Birdie” or “Run Lola Run.”</p>
+</section>
 <section id="extracting-sentences-with-love-or-hate" class="level3">
 <h3 class="anchored" data-anchor-id="extracting-sentences-with-love-or-hate">Extracting Sentences with “Love” or “Hate”</h3>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">love_hate_sentences =</span> <span class="fu">str_extract_all</span>(description, <span class="st">"[A-Z][^.!?]*(love|hate)[^.!?]*[.!?]"</span>))</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -487,7 +477,6 @@ This kind of frequency analysis helps identify how streaming services position t
 <span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"#DDDDDD"</span>),</span>
 <span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
 <span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -497,6 +486,39 @@ This kind of frequency analysis helps identify how streaming services position t
 </div>
 </div>
 </section>
+<section id="extracting-titles-with-question-marks" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-titles-with-question-marks">Extracting Titles with Question Marks</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify titles containing question marks</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>netflix_titles <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">has_question_mark =</span> <span class="fu">str_detect</span>(title, <span class="st">"</span><span class="sc">\\</span><span class="st">?"</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Count titles with and without question marks</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>question_mark_counts <span class="ot">&lt;-</span> netflix_titles <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(has_question_mark)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the counts</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(question_mark_counts, <span class="fu">aes</span>(<span class="at">x =</span> has_question_mark, <span class="at">y =</span> n, <span class="at">fill =</span> has_question_mark)) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No Question Mark"</span>, <span class="st">"Has Question Mark"</span>)) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Count of Netflix Titles with Question Marks"</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Presence of Question Mark"</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count of Titles"</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" alt="Bar chart showing the count of Netflix titles with and without question marks." width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interpretation-2" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-2">Interpretation:</h3>
+<p>The plot shows the distribution of Netflix titles based on whether they contain a question mark. Titles with question marks are relatively rare, reflecting their use in specific contexts such as rhetorical or intriguing titles (e.g., “What Happened to Monday?”). This suggests that question marks are employed strategically to evoke curiosity or highlight uncertainty in the title’s theme.</p>
 </section>
 <section id="summary-of-insights" class="level2">
 <h2 class="anchored" data-anchor-id="summary-of-insights">Summary of Insights</h2>
