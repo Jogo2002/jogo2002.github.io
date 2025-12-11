@@ -144,8 +144,8 @@ Within-city racial patterns also vary. In Madison, citation rates are relatively
 ## Figure 2: Warning rates by race and city
 
 ```{r}
+#| fig-alt: "Bar chart showing warning rates by race across three cities: New Orleans, Madison, and Louisville. The x-axis represents the cities, and the y-axis shows the warning rates as a proportion of stops. Bars are grouped by race, with each race category represented by a different color. The chart highlights differences in warning rates both across cities and within racial groups, with Madison generally having the highest warning rates and Louisville the lowest."
 
-#| fig-alt: there  
 ggplot(race_city_summary, aes(x = city, y = warning_rate, fill = subject_race)) +
   geom_col(position = "dodge") +
   labs(
