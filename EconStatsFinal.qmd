@@ -597,6 +597,7 @@ B-P Test (Learned in Foundations of Data Science):
 
 The studentized Breusch–Pagan test strongly rejects the null hypothesis of homoskedasticity (BP = 10,823, p < 2.2e−16), indicating that the variance of the regression errors is not constant across observations. This confirms the presence of heteroskedasticity in the model, which is consistent with earlier diagnostics showing larger errors for long sentences. As a result, standard OLS standard errors may be unreliable, and the use of heteroskedasticity-robust standard errors is appropriate for inference.
 
+
 ```{r q4b-anova}
  
 # Q4(b): Does adding judge improve fit? (nested F-test)
@@ -608,6 +609,44 @@ anova(m2, m3)
 The nested F-test compares Model 2, which includes legally relevant case characteristics, to Model 3, which additionally includes judge identity as a set of predictors. The test strongly rejects the null hypothesis that the coefficients on the judge indicators are jointly equal to zero (F = 39.12, p < 2.2e−16). This indicates that, taken together, judge identity explains a statistically significant amount of additional variation in log sentence length beyond offense type, charge class, sentence type, and other case characteristics.
 
 Although the increase in overall model fit is modest in magnitude, the highly significant F-statistic reflects both the large sample size and the systematic differences in average sentencing severity across judges. Substantively, this result suggests that judicial assignment is meaningfully associated with sentencing outcomes, even after accounting for legally relevant case factors. However, this finding should be interpreted as descriptive rather than causal, as judge assignment is not assumed to be random and the test does not identify the sources of judicial variation.
+
+### Residual Analysis for Zero Conditional Mean Assumption
+
+To test the Zero Conditional Mean (Exogeneity) assumption, we perform a residual analysis. This involves regressing the residuals from the main regression model on the independent variables. If the coefficients in this regression are statistically significant, it suggests that the residuals are correlated with the predictors, indicating a potential violation of the assumption.
+
+```{r residual-analysis}
+# Fit the main regression model
+main_model <- lm(log_years ~ race_clean + gender_clean + age_at_incident +
+                   charge_count + length_of_case_in_days +
+                   offense_group + disp_class_group + sentence_type +
+                   judge_group + sentencing_year_num, data = sent_clean)
+
+# Extract residuals
+residuals <- resid(main_model)
+
+# Regress residuals on independent variables
+residual_test <- lm(residuals ~ race_clean + gender_clean + age_at_incident +
+                      charge_count + length_of_case_in_days +
+                      offense_group + disp_class_group + sentence_type +
+                      judge_group + sentencing_year_num, data = sent_clean)
+
+# Summary of the residual regression
+summary(residual_test)
+```
+
+**Interpretation:**
+Residual Standard Error (0.3161):
+This measures the average deviation of the residuals from the regression line. A small value indicates that the residuals are close to zero, which is expected if the Zero Conditional Mean assumption holds.
+
+Multiple R-squared (7.144e-29):
+This value is effectively zero, meaning that the independent variables explain almost none of the variation in the residuals. This supports the assumption that the residuals are uncorrelated with the predictors.
+
+Adjusted R-squared (-0.000405):
+The negative value arises because the model's explanatory power is so low that adding predictors reduces the adjusted R-squared. This further confirms that the predictors do not explain the residuals.
+
+F-statistic (1.764e-25) and p-value (1):
+The F-statistic tests whether the predictors collectively explain a significant amount of variation in the residuals. The extremely small F-statistic and p-value of 1 indicate that the predictors have no significant relationship with the residuals.
+
 
 
 # 5. Conclusions
@@ -626,4 +665,5 @@ My reccomendations to the Cook County State's Attorney's Office are mainly to lo
 
 This class has been a refreshing one- many times I feel that college courses focus too heavily on theory and not enough on practical application. This course struck a great balance between the two, allowing me to both understand the theoretical underpinnings of predictive modeling while also getting hands-on experience implementing models in R. The assignments were challenging but manageable, and I appreciated the opportunity to work with real-world datasets. Overall, I feel much more confident in my ability to conduct data analysis and build predictive models after taking this class.
 
-Even though I have some prior experience with R and statistics, this course helped me solidify my understanding of key concepts, especially in model testing, an essential skill in today's world. The lectures were clear and well-organized, I also enjoyed the collaborative aspects of the class, such as group test-prep and project reviews, which allowed me to learn from my classmates and see different approaches to problem-solving. Thank you!! 
+Even though I have some prior experience with R and statistics, this course helped me solidify my understanding of key concepts, especially in model testing, an essential skill in today's world. The lectures were clear and well-organized, I also enjoyed the collaborative aspects of the class, such as group test-prep and project reviews, which allowed me to learn from my classmates and see different approaches to problem-solving. Thank you!!
+
