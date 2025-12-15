@@ -256,6 +256,7 @@ window.Quarto = {
   <li><a href="#corrplot" id="toc-corrplot" class="nav-link" data-scroll-target="#corrplot">Corrplot</a></li>
   <li><a href="#qq-plot" id="toc-qq-plot" class="nav-link" data-scroll-target="#qq-plot">QQ plot</a></li>
   <li><a href="#heteroskedasticity-test" id="toc-heteroskedasticity-test" class="nav-link" data-scroll-target="#heteroskedasticity-test">Heteroskedasticity test</a></li>
+  <li><a href="#residual-analysis-for-zero-conditional-mean-assumption" id="toc-residual-analysis-for-zero-conditional-mean-assumption" class="nav-link" data-scroll-target="#residual-analysis-for-zero-conditional-mean-assumption">Residual Analysis for Zero Conditional Mean Assumption</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">5. Conclusions</a>
@@ -2056,6 +2057,211 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>The nested F-test compares Model 2, which includes legally relevant case characteristics, to Model 3, which additionally includes judge identity as a set of predictors. The test strongly rejects the null hypothesis that the coefficients on the judge indicators are jointly equal to zero (F = 39.12, p &lt; 2.2e−16). This indicates that, taken together, judge identity explains a statistically significant amount of additional variation in log sentence length beyond offense type, charge class, sentence type, and other case characteristics.</p>
 <p>Although the increase in overall model fit is modest in magnitude, the highly significant F-statistic reflects both the large sample size and the systematic differences in average sentencing severity across judges. Substantively, this result suggests that judicial assignment is meaningfully associated with sentencing outcomes, even after accounting for legally relevant case factors. However, this finding should be interpreted as descriptive rather than causal, as judge assignment is not assumed to be random and the test does not identify the sources of judicial variation.</p>
 </section>
+<section id="residual-analysis-for-zero-conditional-mean-assumption" class="level3">
+<h3 class="anchored" data-anchor-id="residual-analysis-for-zero-conditional-mean-assumption">Residual Analysis for Zero Conditional Mean Assumption</h3>
+<p>To test the Zero Conditional Mean (Exogeneity) assumption, we perform a residual analysis. This involves regressing the residuals from the main regression model on the independent variables. If the coefficients in this regression are statistically significant, it suggests that the residuals are correlated with the predictors, indicating a potential violation of the assumption.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the main regression model</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>main_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_years <span class="sc">~</span> race_clean <span class="sc">+</span> gender_clean <span class="sc">+</span> age_at_incident <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                   charge_count <span class="sc">+</span> length_of_case_in_days <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                   offense_group <span class="sc">+</span> disp_class_group <span class="sc">+</span> sentence_type <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                   judge_group <span class="sc">+</span> sentencing_year_num, <span class="at">data =</span> sent_clean)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract residuals</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>residuals <span class="ot">&lt;-</span> <span class="fu">resid</span>(main_model)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Regress residuals on independent variables</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>residual_test <span class="ot">&lt;-</span> <span class="fu">lm</span>(residuals <span class="sc">~</span> race_clean <span class="sc">+</span> gender_clean <span class="sc">+</span> age_at_incident <span class="sc">+</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                      charge_count <span class="sc">+</span> length_of_case_in_days <span class="sc">+</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>                      offense_group <span class="sc">+</span> disp_class_group <span class="sc">+</span> sentence_type <span class="sc">+</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>                      judge_group <span class="sc">+</span> sentencing_year_num, <span class="at">data =</span> sent_clean)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of the residual regression</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(residual_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = residuals ~ race_clean + gender_clean + age_at_incident + 
+    charge_count + length_of_case_in_days + offense_group + disp_class_group + 
+    sentence_type + judge_group + sentencing_year_num, data = sent_clean)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.4630 -0.2223 -0.0175  0.1955  4.4978 
+
+Coefficients:
+                                                         Estimate Std. Error
+(Intercept)                                             6.285e-15  3.795e-01
+race_cleanAmerican Indian                               7.395e-14  3.320e-02
+race_cleanAsian                                         6.277e-15  9.394e-03
+race_cleanBlack                                        -6.732e-16  2.238e-03
+race_cleanHispanic/Latino                               2.664e-15  6.255e-03
+race_cleanMissing                                      -4.581e-15  1.188e-02
+race_cleanOther/Unknown                                 6.092e-14  5.201e-02
+race_cleanWhite (Hispanic/Latino)                      -9.009e-16  2.704e-03
+gender_cleanFemale                                     -3.920e-15  2.292e-03
+gender_cleanMissing                                     2.222e-14  1.809e-02
+gender_cleanOther/Unknown                              -2.789e-14  6.454e-02
+age_at_incident                                         5.056e-17  6.561e-05
+charge_count                                           -8.613e-17  1.032e-03
+length_of_case_in_days                                  1.266e-20  5.604e-07
+offense_groupAggravated Battery Police Officer         -1.718e-16  7.148e-03
+offense_groupAggravated DUI                            -2.527e-16  6.473e-03
+offense_groupArmed Robbery                             -1.009e-16  8.101e-03
+offense_groupBurglary                                  -3.154e-16  6.621e-03
+offense_groupDriving With Suspended Or Revoked License -3.251e-16  6.844e-03
+offense_groupNarcotics                                 -1.701e-16  6.085e-03
+offense_groupOther Offense                             -1.367e-16  8.113e-03
+offense_groupPossession of Stolen Motor Vehicle         2.914e-16  7.510e-03
+offense_groupPROMIS Conversion                         -6.353e-16  1.102e-02
+offense_groupResidential Burglary                      -2.168e-16  7.459e-03
+offense_groupRetail Theft                              -2.234e-16  6.428e-03
+offense_groupRobbery                                   -2.478e-16  7.817e-03
+offense_groupTheft                                     -4.428e-16  7.003e-03
+offense_groupUUW - Unlawful Use of Weapon              -5.725e-16  6.225e-03
+offense_groupOther offenses                             6.276e-17  6.011e-03
+disp_class_group2                                      -6.021e-17  3.337e-03
+disp_class_group3                                      -3.004e-17  3.493e-03
+disp_class_group4                                      -2.480e-17  3.079e-03
+disp_class_groupA                                      -3.332e-16  4.165e-03
+disp_class_groupB                                      -4.363e-16  1.316e-02
+disp_class_groupC                                      -1.614e-15  1.514e-02
+disp_class_groupM                                      -1.175e-15  1.318e-02
+disp_class_groupX                                      -4.450e-16  4.868e-03
+disp_class_groupZ                                       5.395e-15  5.137e-02
+disp_class_groupOther/Unknown                          -6.707e-16  5.690e-02
+sentence_type2nd Chance Probation                      -1.233e-16  6.442e-03
+sentence_typeConditional Discharge                     -1.580e-16  6.833e-03
+sentence_typeConditional Release                       -2.299e-15  3.107e-02
+sentence_typeConversion                                -1.172e-14  9.577e-02
+sentence_typeCook County Boot Camp                     -7.149e-16  2.052e-02
+sentence_typeDeath                                      6.386e-15  4.663e-02
+sentence_typeInpatient Mental Health Services          -4.502e-16  4.229e-02
+sentence_typeJail                                      -1.509e-16  4.011e-03
+sentence_typePrison                                    -2.078e-16  1.676e-03
+sentence_typeProbation Terminated Instanter             2.110e-15  4.265e-02
+sentence_typeProbation Terminated Satisfactorily       -9.146e-16  7.073e-02
+sentence_typeProbation Terminated Unsatisfactorily     -2.341e-15  2.387e-02
+sentence_typeSupervision                                2.017e-15  6.765e-03
+judge_groupBrian K Flaherty                            -2.017e-16  8.680e-03
+judge_groupCarol M Howard                              -1.122e-16  8.340e-03
+judge_groupCatherine Marie Haberkorn                    1.255e-16  8.914e-03
+judge_groupCharles P Burns                              8.507e-16  8.169e-03
+judge_groupColleen Ann Hyland                          -5.294e-17  8.383e-03
+judge_groupGeary W Kull                                 4.348e-16  8.610e-03
+judge_groupJames B Linn                                 9.707e-17  8.190e-03
+judge_groupJames Michael Obbish                         1.103e-16  8.300e-03
+judge_groupJoseph  Cataldo                             -1.469e-16  9.305e-03
+judge_groupJoseph Michael Claps                        -1.239e-17  8.742e-03
+judge_groupKenneth J Wadas                             -1.437e-17  8.430e-03
+judge_groupLauren Gottainer Edidin                      9.649e-16  8.784e-03
+judge_groupLawrence Edward Flood                       -3.811e-16  8.298e-03
+judge_groupMary Margaret Brosnahan                     -1.950e-16  8.544e-03
+judge_groupMichele M Pitman                            -1.851e-16  8.753e-03
+judge_groupNeera  Walsh                                -2.489e-17  9.063e-03
+judge_groupNicholas R Ford                             -1.836e-16  8.212e-03
+judge_groupShelley  Sutker-Dermer                      -1.904e-16  8.890e-03
+judge_groupStanley  Sacks                              -3.906e-16  8.466e-03
+judge_groupThaddeus L Wilson                            1.028e-15  8.609e-03
+judge_groupThomas J Hennelly                           -2.105e-16  8.751e-03
+judge_groupVincent M Gaughan                           -1.080e-16  8.700e-03
+judge_groupWilliam H Hooks                              1.192e-16  8.785e-03
+judge_groupWilliam T O'Brien                            6.608e-16  8.372e-03
+judge_groupOther judges                                -6.741e-17  6.390e-03
+sentencing_year_num                                    -3.213e-18  1.884e-04
+                                                       t value Pr(&gt;|t|)
+(Intercept)                                                  0        1
+race_cleanAmerican Indian                                    0        1
+race_cleanAsian                                              0        1
+race_cleanBlack                                              0        1
+race_cleanHispanic/Latino                                    0        1
+race_cleanMissing                                            0        1
+race_cleanOther/Unknown                                      0        1
+race_cleanWhite (Hispanic/Latino)                            0        1
+gender_cleanFemale                                           0        1
+gender_cleanMissing                                          0        1
+gender_cleanOther/Unknown                                    0        1
+age_at_incident                                              0        1
+charge_count                                                 0        1
+length_of_case_in_days                                       0        1
+offense_groupAggravated Battery Police Officer               0        1
+offense_groupAggravated DUI                                  0        1
+offense_groupArmed Robbery                                   0        1
+offense_groupBurglary                                        0        1
+offense_groupDriving With Suspended Or Revoked License       0        1
+offense_groupNarcotics                                       0        1
+offense_groupOther Offense                                   0        1
+offense_groupPossession of Stolen Motor Vehicle              0        1
+offense_groupPROMIS Conversion                               0        1
+offense_groupResidential Burglary                            0        1
+offense_groupRetail Theft                                    0        1
+offense_groupRobbery                                         0        1
+offense_groupTheft                                           0        1
+offense_groupUUW - Unlawful Use of Weapon                    0        1
+offense_groupOther offenses                                  0        1
+disp_class_group2                                            0        1
+disp_class_group3                                            0        1
+disp_class_group4                                            0        1
+disp_class_groupA                                            0        1
+disp_class_groupB                                            0        1
+disp_class_groupC                                            0        1
+disp_class_groupM                                            0        1
+disp_class_groupX                                            0        1
+disp_class_groupZ                                            0        1
+disp_class_groupOther/Unknown                                0        1
+sentence_type2nd Chance Probation                            0        1
+sentence_typeConditional Discharge                           0        1
+sentence_typeConditional Release                             0        1
+sentence_typeConversion                                      0        1
+sentence_typeCook County Boot Camp                           0        1
+sentence_typeDeath                                           0        1
+sentence_typeInpatient Mental Health Services                0        1
+sentence_typeJail                                            0        1
+sentence_typePrison                                          0        1
+sentence_typeProbation Terminated Instanter                  0        1
+sentence_typeProbation Terminated Satisfactorily             0        1
+sentence_typeProbation Terminated Unsatisfactorily           0        1
+sentence_typeSupervision                                     0        1
+judge_groupBrian K Flaherty                                  0        1
+judge_groupCarol M Howard                                    0        1
+judge_groupCatherine Marie Haberkorn                         0        1
+judge_groupCharles P Burns                                   0        1
+judge_groupColleen Ann Hyland                                0        1
+judge_groupGeary W Kull                                      0        1
+judge_groupJames B Linn                                      0        1
+judge_groupJames Michael Obbish                              0        1
+judge_groupJoseph  Cataldo                                   0        1
+judge_groupJoseph Michael Claps                              0        1
+judge_groupKenneth J Wadas                                   0        1
+judge_groupLauren Gottainer Edidin                           0        1
+judge_groupLawrence Edward Flood                             0        1
+judge_groupMary Margaret Brosnahan                           0        1
+judge_groupMichele M Pitman                                  0        1
+judge_groupNeera  Walsh                                      0        1
+judge_groupNicholas R Ford                                   0        1
+judge_groupShelley  Sutker-Dermer                            0        1
+judge_groupStanley  Sacks                                    0        1
+judge_groupThaddeus L Wilson                                 0        1
+judge_groupThomas J Hennelly                                 0        1
+judge_groupVincent M Gaughan                                 0        1
+judge_groupWilliam H Hooks                                   0        1
+judge_groupWilliam T O'Brien                                 0        1
+judge_groupOther judges                                      0        1
+sentencing_year_num                                          0        1
+
+Residual standard error: 0.3161 on 190139 degrees of freedom
+Multiple R-squared:  7.144e-29, Adjusted R-squared:  -0.000405 
+F-statistic: 1.764e-25 on 77 and 190139 DF,  p-value: 1</code></pre>
+</div>
+</div>
+<p><strong>Interpretation:</strong> Residual Standard Error (0.3161): This measures the average deviation of the residuals from the regression line. A small value indicates that the residuals are close to zero, which is expected if the Zero Conditional Mean assumption holds.</p>
+<p>Multiple R-squared (7.144e-29): This value is effectively zero, meaning that the independent variables explain almost none of the variation in the residuals. This supports the assumption that the residuals are uncorrelated with the predictors.</p>
+<p>Adjusted R-squared (-0.000405): The negative value arises because the model’s explanatory power is so low that adding predictors reduces the adjusted R-squared. This further confirms that the predictors do not explain the residuals.</p>
+<p>F-statistic (1.764e-25) and p-value (1): The F-statistic tests whether the predictors collectively explain a significant amount of variation in the residuals. The extremely small F-statistic and p-value of 1 indicate that the predictors have no significant relationship with the residuals.</p>
+</section>
 </section>
 </section>
 <section id="conclusions" class="level1">
@@ -2071,7 +2277,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 <section id="d" class="level2">
 <h2 class="anchored" data-anchor-id="d">5(d)</h2>
-<p>This class has been a refreshing one- many times I feel that college courses focus too heavily on theory and not enough on practical application. This course struck a great balance between the two, allowing me to both understand the theoretical underpinnings of predictive modeling while also getting hands-on experience implementing models in R. The assignments were challenging but manageable, and I appreciated the opportunity to work with real-world datasets. Overall, I feel much more confident in my ability to conduct data analysis and build predictive models after taking this class.</p>
+<p>This class has been a refreshing one: many times I feel that college courses focus too heavily on theory and not enough on practical application. This course struck a great balance between the two, allowing me to both understand the theoretical underpinnings of predictive modeling while also getting hands-on experience implementing models in R. The assignments were challenging but manageable, and I appreciated the opportunity to work with real-world datasets. Overall, I feel much more confident in my ability to conduct data analysis and build predictive models after taking this class.</p>
 <p>Even though I have some prior experience with R and statistics, this course helped me solidify my understanding of key concepts, especially in model testing, an essential skill in today’s world. The lectures were clear and well-organized, I also enjoyed the collaborative aspects of the class, such as group test-prep and project reviews, which allowed me to learn from my classmates and see different approaches to problem-solving. Thank you!!</p>
 
 

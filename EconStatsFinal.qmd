@@ -647,8 +647,6 @@ The negative value arises because the model's explanatory power is so low that a
 F-statistic (1.764e-25) and p-value (1):
 The F-statistic tests whether the predictors collectively explain a significant amount of variation in the residuals. The extremely small F-statistic and p-value of 1 indicate that the predictors have no significant relationship with the residuals.
 
-
-
 # 5. Conclusions
 
 ## 5(a) Implications of this model
@@ -663,7 +661,7 @@ My reccomendations to the Cook County State's Attorney's Office are mainly to lo
 
 ## 5(d) 
 
-This class has been a refreshing one- many times I feel that college courses focus too heavily on theory and not enough on practical application. This course struck a great balance between the two, allowing me to both understand the theoretical underpinnings of predictive modeling while also getting hands-on experience implementing models in R. The assignments were challenging but manageable, and I appreciated the opportunity to work with real-world datasets. Overall, I feel much more confident in my ability to conduct data analysis and build predictive models after taking this class.
+This class has been a refreshing one: many times I feel that college courses focus too heavily on theory and not enough on practical application. This course struck a great balance between the two, allowing me to both understand the theoretical underpinnings of predictive modeling while also getting hands-on experience implementing models in R. The assignments were challenging but manageable, and I appreciated the opportunity to work with real-world datasets. Overall, I feel much more confident in my ability to conduct data analysis and build predictive models after taking this class.
 
 Even though I have some prior experience with R and statistics, this course helped me solidify my understanding of key concepts, especially in model testing, an essential skill in today's world. The lectures were clear and well-organized, I also enjoyed the collaborative aspects of the class, such as group test-prep and project reviews, which allowed me to learn from my classmates and see different approaches to problem-solving. Thank you!!
 
