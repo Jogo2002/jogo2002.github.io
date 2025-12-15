@@ -26,6 +26,8 @@ website:
             href: FastFoodCals.qmd
       - href: FinalPresentation.qmd
         text: "Final Presentation"
+      - href: EconStatsFinal.qmd
+        text: "Econ Stats Final Project"
 
 
 format:

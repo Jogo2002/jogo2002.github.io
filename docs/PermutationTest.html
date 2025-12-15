@@ -168,6 +168,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./FinalPresentation.html"> 
 <span class="menu-text">Final Presentation</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./EconStatsFinal.html"> 
+<span class="menu-text">Econ Stats Final Project</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -231,9 +235,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>In this project, I investigate whether there is a fundamental difference in the forces that drive prices of gold and silver.</p>
-<p>Gold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver has heavy industrial demand. Silver has historically traded with higher volatiliy, Although, in recent months, there has been momentum in both metals due to macroeconomic uncertainty.</p>
-<p>My analysis aims to determine if there remains a fundamental difference in the factors influencing their price volatility. My permutation test aims to reveal whether Silver’s increased volatility can be explained by chance, reflecting a true underlying difference in market dynamics.</p>
+<p>In this project, I investigate whether there is a fundamental difference in the underlying factors driving the prices of gold and silver.</p>
+<p>Gold and silver are both precious metals often used as investment hedges against inflation and market risk, but their price behaviors differ: gold functions more as a monetary store of value, while silver has heavy industrial demand. Silver has historically traded with higher volatility. Although, in recent months, there has been momentum in both metals due to macroeconomic uncertainty.</p>
+<p>My analysis aims to determine if there remains a fundamental difference in the factors influencing their price volatility. By examining differences in volatility, measured by standard deviation, my permutation test seeks to reveal whether these differences provide evidence of distinct underlying market dynamics for gold and silver.</p>
 <p>Using daily price data from Yahoo Finance (tickers <code>GC=F</code> for gold and <code>SI=F</code> for silver), I compute daily log returns and perform a one-tailed permutation test under the null hypothesis that the two metals have equal volatility.</p>
 <p>Because financial returns are often non-normal, a permutation test is a robust, simulation-based way to test this difference without assuming normality.</p>
 <hr>
@@ -344,7 +348,7 @@ A positive value means silver is more volatile than gold.</p>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>obs_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.009689959</code></pre>
+<pre><code>[1] 0.01050667</code></pre>
 </div>
 </div>
 <p><strong>Interpretation:</strong><br>
@@ -413,7 +417,7 @@ This gives a <strong>right-tailed p-value</strong></p>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Observed difference in SD (Silver − Gold):"</span>, <span class="fu">round</span>(obs_diff, <span class="dv">5</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Observed difference in SD (Silver − Gold): 0.00969 </code></pre>
+<pre><code>Observed difference in SD (Silver − Gold): 0.01051 </code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -487,7 +491,7 @@ This number tells us how often the permutation test <strong>incorrectly rejects 
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>simulate_type2_error <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">reps =</span> <span class="dv">20</span>, <span class="at">perms =</span> <span class="dv">100</span>, <span class="at">true_diff =</span> <span class="fl">0.2</span>, <span class="at">seed =</span> <span class="dv">47</span>) {</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>simulate_type2_error <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">reps =</span> <span class="dv">100</span>, <span class="at">perms =</span> <span class="dv">1000</span>, <span class="at">true_diff =</span> <span class="fl">0.2</span>, <span class="at">seed =</span> <span class="dv">47</span>) {</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed) </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  p_vals <span class="ot">&lt;-</span> <span class="fu">numeric</span>(reps)</span>
@@ -522,16 +526,16 @@ This number tells us how often the permutation test <strong>incorrectly rejects 
 <span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(p_vals <span class="sc">&gt;=</span> <span class="fl">0.05</span>)  <span class="co"># Proportion of times the null is not rejected</span></span>
 <span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="fu">simulate_type2_error</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">reps =</span> <span class="dv">20</span>, <span class="at">perms =</span> <span class="dv">100</span>, <span class="at">true_diff =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="fu">simulate_type2_error</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">reps =</span> <span class="dv">100</span>, <span class="at">perms =</span> <span class="dv">1000</span>, <span class="at">true_diff =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8</code></pre>
+<pre><code>[1] 0.69</code></pre>
 </div>
 </div>
 <p><strong>Interpretation:</strong><br>
-This number tells us that the permutation test <strong>fails to reject H₀</strong> 80% of the time when there is a true difference in volatility (with a true difference of 0.2 in standard deviations).<br>
+This number tells us that the permutation test <strong>fails to reject H₀</strong> 69% of the time when there is in fact a true difference in volatility (with a true difference of 0.2 in standard deviations).<br>
 </p>
-<p>An 80% Type II error rate indicates that the test has low power under these conditions. This could be due to factors such as:</p>
+<p>An 69% Type II error rate indicates that the test has low power under these conditions. This could be due to factors such as:</p>
 <ul>
 <li><strong>Small sample size (n = 30):</strong> With limited data, it becomes harder to detect subtle differences.</li>
 <li><strong>Subtle true difference (true_diff = 0.2):</strong> The actual difference in volatility may not be large enough to be consistently detected.</li>
@@ -546,8 +550,8 @@ This number tells us that the permutation test <strong>fails to reject H₀</str
 </section>
 <section id="final-conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="final-conclusion">Final Conclusion</h2>
-<p>This simulation-based test supports the claim that silver exhibits <strong>greater daily price variability</strong> than gold from August to October 2025.<br>
-Given the industrial use of silver and its smaller market size, this result is consistent with economic intuition: silver’s price tends to react more sharply to both macroeconomic shocks and commodity supply disruptions.</p>
+<p>This simulation-based test supports the claim that silver exhibits <strong>greater daily price variability</strong> than gold from August to October 2025. This difference in volatility, measured by standard deviation, provides evidence of distinct underlying factors driving the prices of these metals.</p>
+<p>Given the industrial use of silver and its smaller market size, this result aligns with economic intuition: silver’s price tends to react more sharply to both macroeconomic shocks and commodity supply disruptions.</p>
 <p>The one-tailed permutation test not only confirms this difference but does so <strong>without relying on normality assumptions</strong>, making it a robust method for comparing volatility in real-world financial data.</p>
 
 
