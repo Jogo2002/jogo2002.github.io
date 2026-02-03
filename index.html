@@ -1,49 +1,130 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Josh's Website</title>
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<body>
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v24.0&appId=APP_ID"></script>
-    
-  <h1>Hello world</h1>
-  <p>This is my GitHub Pages site.
-    <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-width="" data-layout="" data-action="" data-size="" data-share="true"></div>
-  </p>
-  <h2>Some Fruits that I like </h2>
-  <ul>
-    <li><a href="apple.html">apple</a></li>
-    <li><a href="banana.html">banana</a></li>
-    <li><a href="pear.html">pear</a></li>
-  </ul>
+    <title>Josh's Website</title>
+    <meta
+      name="description"
+      content="Josh's GitHub Pages site with favorite fruits, navigation links, and consistent styling."
+    />
 
-  <p>Links to Professor Izbicki's websites
-    <ul>
-        <li>
-            <a href="https://github.com/mikeizbicki/cmc-csci040">blue text</a>
-            <a href="https://izbicki.me">blue text</a>
-        </li>
-    </ul>
-  </p>
-  <hr>
-  <!-- Creative Commons License -->
-  <p style="font-size: 0.9em;">
-    <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">
-      <img
-        alt="CC0"
-        src="https://licensebuttons.net/p/zero/1.0/88x31.png"
-        style="border-width:0"
-      />
-    </a>
-    <br>
-    This work is dedicated to the public domain under
-    <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">
-      CC0 1.0
-    </a>.
-  </p>
+    <link rel="stylesheet" href="style.css" />
 
-</body>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VH888WRDRW"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VH888WRDRW');
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <h1>Josh's Website</h1>
+
+      <nav class="nav">
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link" href="apple.html">Apple</a>
+        <a class="nav__link" href="banana.html">Banana</a>
+        <a class="nav__link" href="pear.html">Pear</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>Welcome</h2>
+        <p>
+          This is my GitHub Pages site. It’s a simple homepage designed to meet
+          HTML and CSS standards while linking to other pages.
+        </p>
+        <p>
+          I am practicing clean structure and
+          <span class="highlight">consistent formatting</span> across every page
+          on the site.
+        </p>
+        <p>
+          The layout uses reusable CSS styles so updates can be made easily in
+          one place.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>My Top Fruits</h2>
+        <p>Click a fruit below to learn more:</p>
+
+        <div class="fruit-links">
+          <a class="button" href="apple.html">Apple</a>
+          <a class="button" href="banana.html">Banana</a>
+          <a class="button" href="pear.html">Pear</a>
+        </div>
+
+        <img
+          class="hero-image"
+          src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Culinary_fruits_front_view.jpg"
+          alt="A variety of fruits displayed together"
+        />
+      </section>
+
+      <section class="card">
+        <h2>Links</h2>
+        <p>Links to Professor Izbicki’s websites:</p>
+        <ul>
+          <li>
+            <a href="https://github.com/mikeizbicki/cmc-csci040">
+              Course GitHub repository
+            </a>
+          </li>
+          <li>
+            <a href="https://izbicki.me">Personal website</a>
+          </li>
+        </ul>
+        <p>
+          These external links are included for reference and should always work
+          correctly.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Social</h2>
+
+        <div id="fb-root"></div>
+        <script
+          async
+          defer
+          crossorigin="anonymous"
+          src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v24.0&appId=APP_ID"
+        ></script>
+
+        <div
+          class="fb-like"
+          data-href="https://developers.facebook.com/docs/plugins/"
+          data-layout="standard"
+          data-action="like"
+          data-size="small"
+          data-share="true"
+        ></div>
+      </section>
+
+      <footer class="footer card">
+        <h2>License</h2>
+        <p class="license">
+          <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">
+            <img
+              src="https://licensebuttons.net/p/zero/1.0/88x31.png"
+              alt="Creative Commons CC0 license"
+            />
+          </a>
+          <br />
+          This work is dedicated to the public domain under
+          <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">
+            CC0 1.0
+          </a>.
+        </p>
+      </footer>
+    </main>
+  </body>
 </html>
