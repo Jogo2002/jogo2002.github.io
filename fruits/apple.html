@@ -1,6 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<body>
-    <h1>Apples</h1>
-</body>
+    <title>Apple | Josh's Website</title>
+    <meta
+      name="description"
+      content="A simple page about apples with an image, consistent styling, and navigation links."
+    />
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VH888WRDRW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-VH888WRDRW');
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <h1>Apple</h1>
+
+      <nav class="nav">
+        <a class="nav__link" href="../index.html">Home</a>
+        <a class="nav__link" href="apple.html">Apple</a>
+        <a class="nav__link" href="banana.html">Banana</a>
+        <a class="nav__link" href="pear.html">Pear</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="card">
+        <h2>About apples</h2>
+        <p>
+          Apples are a popular fruit that come in many varieties, from tart to sweet.
+          This page uses the same layout and CSS as the rest of the site for
+          <span class="highlight">consistent formatting</span>.
+        </p>
+        <p>
+          People eat apples fresh, bake them into pies, or slice them for snacks.
+          They’re also commonly used in juices and sauces.
+        </p>
+        <p>
+          Below is an image of an apple that should display correctly on GitHub Pages.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Image</h2>
+        <img
+          class="hero-image"
+          src="https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg"
+          alt="A red apple on a white background"
+        />
+      </div>
+
+      <div class="card footer">
+        <h2>Back to fruit list</h2>
+        <p>
+          Use the navigation bar above to explore the other fruit pages.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,6 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<body>
-    <h1>app</h1>
-</body>
+    <title>Banana | Josh's Website</title>
+    <meta
+      name="description"
+      content="A simple page about bananas with an image, consistent styling, and navigation links."
+    />
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VH888WRDRW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-VH888WRDRW');
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <h1>Banana</h1>
+
+      <nav class="nav">
+        <a class="nav__link" href="../index.html">Home</a>
+        <a class="nav__link" href="apple.html">Apple</a>
+        <a class="nav__link" href="banana.html">Banana</a>
+        <a class="nav__link" href="pear.html">Pear</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="card">
+        <h2>About bananas</h2>
+        <p>
+          Bananas are a soft, sweet fruit that are easy to eat on the go.
+          This page follows the same structure as the rest of the site for
+          <span class="highlight">consistent formatting</span>.
+        </p>
+        <p>
+          They’re often used in smoothies, cereal, and desserts like banana bread.
+          Because they’re naturally sweet, they’re also common in snacks.
+        </p>
+        <p>
+          Below is an image of bananas that should display correctly on GitHub Pages.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Image</h2>
+        <img
+          class="hero-image"
+          src="https://upload.wikimedia.org/wikipedia/c

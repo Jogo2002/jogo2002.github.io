@@ -1,6 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<body>
-    <h1>Pear</h1>
-</body>
+    <title>Pear | Josh's Website</title>
+    <meta
+      name="description"
+      content="A simple page about pears with an image, consistent styling, and navigation links."
+    />
+
+    <link rel="stylesheet" href="../style.css" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VH888WRDRW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-VH888WRDRW');
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <h1>Pear</h1>
+
+      <nav class="nav">
+        <a class="nav__link" href="../index.html">Home</a>
+        <a class="nav__link" href="apple.html">Apple</a>
+        <a class="nav__link" href="banana.html">Banana</a>
+        <a class="nav__link" href="pear.html">Pear</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="card">
+        <h2>About pears</h2>
+        <p>
+          Pears are a juicy fruit with a soft texture when ripe.
+          This page uses the same CSS and layout as the others for
+          <span class="highlight">consistent formatting</span>.
+        </p>
+        <p>
+          They can be eaten fresh, sliced into salads, or cooked into desserts.
+          Different varieties have different levels of sweetness and firmness.
+        </p>
+        <p>
+          Below is an image of a pear that should display correctly on GitHub Pages.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Image</h2>
+        <img
+          class="hero-image"
+          src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Pears.jpg"
+          alt="Several pears grouped together"
+        />
+      </div>
+
+      <div class="card footer">
+        <h2>Back to fruit list</h2>
+        <p>
+          Use the navigation bar above to explore the other fruit pages.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
