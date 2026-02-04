@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>apples</title>
+    <title>Apple | Josh's Website</title>
     <meta
       name="description"
-      content="A simple page about apples with an image, consistent styling, and navigation links."
+      content="A page about apples with images, consistent styling, and site navigation."
     />
 
-    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="stylesheet.css" />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VH888WRDRW"></script>
     <script>
@@ -25,41 +25,53 @@
     <header class="site-header">
       <h1>Apple</h1>
 
-      <nav class="nav">
-        <a class="nav__link" href="index.html">Home</a>
-        <a class="nav__link" href="fruits/apple.html">Apple</a>
-        <a class="nav__link" href="fruits/banana.html">Banana</a>
-        <a class="nav__link" href="fruits/pear.html">Pear</a>
-      </nav>
+      <div class="nav-wrapper" id="apple-nav">
+        <ul class="page-links">
+          <li><a class="button" href="index.html">Home</a></li>
+          <li><a class="button" href="apple.html">Apple</a></li>
+          <li><a class="button" href="banana.html">Banana</a></li>
+          <li><a class="button" href="pear.html">Pear</a></li>
+        </ul>
+      </div>
     </header>
 
     <main class="container">
-      <div class="card">
+      <div class="content-section card" id="about-apples">
         <h2>About apples</h2>
         <p>
-          Apples are a popular fruit that come in many varieties, from tart to sweet.
-          This page uses the same layout and CSS as the rest of the site for
-          <span class="highlight">consistent formatting</span>.
+          Apples come in many varieties, from tart to sweet. This page keeps
+          <span class="highlight">consistent formatting</span> with the rest of the site.
         </p>
         <p>
-          Below is an image of an apple.
+          Apples are eaten fresh, baked into desserts, and used in juices and sauces.
+        </p>
+        <p>
+          Below are images of apples from the web.
         </p>
       </div>
 
-      <div class="card">
-        <h2>Image</h2>
+      <div class="content-section card" id="apple-images">
+        <h2>Images</h2>
         <img
-          class="hero-image"
+          class="image"
           src="https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg"
           alt="A red apple on a white background"
         />
+        <img
+          class="image"
+          src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Granny_Smith.jpg"
+          alt="A green Granny Smith apple"
+        />
+        <img
+          class="image"
+          src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Apple_pie.jpg"
+          alt="A baked apple pie"
+        />
       </div>
 
-      <div class="card footer">
-        <h2>Back to fruit list</h2>
-        <p>
-          Use the navigation bar above to explore the other fruit pages.
-        </p>
+      <div class="footer card" id="apple-footer">
+        <h2>Navigation</h2>
+        <p>Use the navigation bar above to explore the other fruit pages.</p>
       </div>
     </main>
   </body>

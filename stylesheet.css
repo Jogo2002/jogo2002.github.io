@@ -2,12 +2,32 @@ body {
     font-family: Arial, sans-serif;
   }
   
+  
+  image {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+  
+
   a {
     color: blue;
   }
   
   a:hover {
     color: darkred;
+  }
+
+  #fb {
+    background-color: royalblue;
+    border: black;
+    color:aliceblue;
+
+  }
+
+  #footer {
+    outline: gray;
   }
   
   .card {

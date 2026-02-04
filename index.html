@@ -10,7 +10,7 @@
       content="Josh's GitHub Pages site with favorite fruits, navigation links, and consistent styling."
     />
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="stylesheet.css" />
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VH888WRDRW"></script>
@@ -36,17 +36,20 @@
         <h2>My Top Fruits</h2>
         <p>Click a fruit below to learn more:</p>
 
-        <div class="fruit-links">
-          <a class="button" href="fruits/apple.html">Apple</a>
-          <a class="button" href="fruits/banana.html">Banana</a>
-          <a class="button" href="fruits/pear.html">Pear</a>
-        </div>
-
+        <ul class="Page Links">
+          <li><a class="button" href="index.html">Home</a></li>
+          <li><a class="button" href="fruits/apple.html">Apple</a></li>
+          <li><a class="button" href="fruits/banana.html">Banana</a></li>
+          <li><a class="button" href="fruits/pear.html">Pear</a></li>
+        </ul>
+        
+      <div class="image">
         <img
-          class="hero-image"
-          src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Culinary_fruits_front_view.jpg"
-        />
-      </section>
+        class="hero-image"
+        src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Culinary_fruits_front_view.jpg"
+      />
+    </section>
+      </div>
 
       <section class="card">
         <h2>Links</h2>
@@ -70,7 +73,7 @@
       <section class="card">
         <h2>Social</h2>
 
-        <div id="fb-root"></div>
+        <div id="fb">facebook</div>
         <script
           async
           defer
@@ -88,7 +91,7 @@
         ></div>
       </section>
 
-      <footer class="footer card">
+      <div id="footer">
         <h2>License</h2>
         <p class="license">
           <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">
@@ -103,7 +106,7 @@
             CC0 1.0
           </a>.
         </p>
-      </footer>
+      </div>
     </main>
   </body>
 </html>

@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Pears</title>
+    <title>Pear | Josh's Website</title>
     <meta
       name="description"
-      content="A simple page about pears with an image, consistent styling, and navigation links."
+      content="A page about pears with images, consistent styling, and site navigation."
     />
 
-    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="stylesheet.css" />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VH888WRDRW"></script>
     <script>
@@ -25,39 +25,53 @@
     <header class="site-header">
       <h1>Pear</h1>
 
-      <nav class="nav">
-        <a class="nav__link" href="../index.html">Home</a>
-        <a class="nav__link" href="fruits/apple.html">Apple</a>
-        <a class="nav__link" href="fruits/banana.html">Banana</a>
-        <a class="nav__link" href="fruits/pear.html">Pear</a>
-      </nav>
+      <div class="nav-wrapper" id="pear-nav">
+        <ul class="page-links">
+          <li><a class="button" href="index.html">Home</a></li>
+          <li><a class="button" href="apple.html">Apple</a></li>
+          <li><a class="button" href="banana.html">Banana</a></li>
+          <li><a class="button" href="pear.html">Pear</a></li>
+        </ul>
+      </div>
     </header>
 
     <main class="container">
-      <div class="card">
+      <div class="content-section card" id="about-pears">
         <h2>About pears</h2>
         <p>
-            Pears are nice. 
+          Pears are juicy fruits that can be eaten fresh or used in recipes. This page keeps
+          <span class="highlight">consistent formatting</span> with the rest of the site.
         </p>
         <p>
-          Here is an image of a pear as a reference
+          Different pear varieties can be crisp or soft depending on ripeness.
+        </p>
+        <p>
+          Below are three images of pears from the web.
         </p>
       </div>
 
-      <div class="card">
-        <h2>Image</h2>
+      <div class="content-section card" id="pear-images">
+        <h2>Images</h2>
         <img
-          class="hero-image"
+          class="image"
           src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Pears.jpg"
           alt="Several pears grouped together"
         />
+        <img
+          class="image"
+          src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Pear_DS.jpg"
+          alt="A single pear on a neutral background"
+        />
+        <img
+          class="image"
+          src="https://upload.wikimedia.org/wikipedia/commons/4/43/Poire_belle_helene.jpg"
+          alt="A pear dessert served with sauce"
+        />
       </div>
 
-      <div class="card footer">
-        <h2>Back to fruit list</h2>
-        <p>
-          Use the navigation bar above to explore the other fruit pages.
-        </p>
+      <div class="footer card" id="pear-footer">
+        <h2>Navigation</h2>
+        <p>Use the navigation bar above to explore the other fruit pages.</p>
       </div>
     </main>
   </body>
