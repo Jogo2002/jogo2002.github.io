@@ -10,15 +10,18 @@
       content="Josh's GitHub Pages site with favorite fruits, navigation links, and consistent styling."
     />
 
+    <!-- FIXED stylesheet link -->
     <link rel="stylesheet" href="stylesheet.css" />
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VH888WRDRW"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-VH888WRDRW');
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-VH888WRDRW");
     </script>
   </head>
 
@@ -32,24 +35,26 @@
         <h2>Welcome</h2>
       </section>
 
+      <!-- FIXED image section nesting -->
       <section class="card">
         <h2>My Top Fruits</h2>
         <p>Click a fruit below to learn more:</p>
 
-        <ul class="Page Links">
+        <ul class="page-links">
           <li><a class="button" href="index.html">Home</a></li>
-          <li><a class="button" href="fruits/apple.html">Apple</a></li>
-          <li><a class="button" href="fruits/banana.html">Banana</a></li>
-          <li><a class="button" href="fruits/pear.html">Pear</a></li>
+          <li><a class="button" href="apple.html">Apple</a></li>
+          <li><a class="button" href="banana.html">Banana</a></li>
+          <li><a class="button" href="pear.html">Pear</a></li>
         </ul>
-        
-      <div class="image">
-        <img
-        class="hero-image"
-        src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Culinary_fruits_front_view.jpg"
-      />
-    </section>
-      </div>
+
+        <div class="image">
+          <img
+            class="image"
+            src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Culinary_fruits_front_view.jpg"
+            alt="A variety of fruits"
+          />
+        </div>
+      </section>
 
       <section class="card">
         <h2>Links</h2>
@@ -64,16 +69,13 @@
             <a href="https://izbicki.me">Personal website</a>
           </li>
         </ul>
-        <p>
-          These external links are included for reference and should always work
-          correctly.
-        </p>
       </section>
 
       <section class="card">
         <h2>Social</h2>
 
         <div id="fb">facebook</div>
+
         <script
           async
           defer
@@ -94,7 +96,10 @@
       <div id="footer">
         <h2>License</h2>
         <p class="license">
-          <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">
+          <a
+            rel="license"
+            href="https://creativecommons.org/publicdomain/zero/1.0/"
+          >
             <img
               src="https://licensebuttons.net/p/zero/1.0/88x31.png"
               alt="Creative Commons CC0 license"
@@ -102,7 +107,10 @@
           </a>
           <br />
           This work is dedicated to the public domain under
-          <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">
+          <a
+            rel="license"
+            href="https://creativecommons.org/publicdomain/zero/1.0/"
+          >
             CC0 1.0
           </a>.
         </p>
