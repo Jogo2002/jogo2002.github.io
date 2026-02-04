@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  a {
+    color: blue;
+  }
+  
+  a:hover {
+    color: darkred;
+  }
+  
+  .card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  .highlight {
+    background-color: yellow;
+    font-weight: bold;
+  }
+  
+  #fb-root {
+    min-height: 1px;
+  }
+  
+  @media (max-width: 600px) {
+    body {
+      font-size: 14px;
+    }
+  }
+  
