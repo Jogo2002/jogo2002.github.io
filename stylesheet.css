@@ -19,7 +19,11 @@ body {
   #pear {
     background-color: lightgreen;
   }
-  
+
+  .about-section{
+    outline: black;
+  }
+
   .content-section-card{
     outline: green;
   }
